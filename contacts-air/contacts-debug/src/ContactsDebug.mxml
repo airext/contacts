@@ -24,6 +24,13 @@
 
             trace(result.length, result);
         }
+
+        private function getContactCount_clickHandler(event:MouseEvent):void
+        {
+            var result:uint = Contacts.getInstance().getContactCount();
+
+            trace(result);
+        }
         ]]>
     </fx:Script>
 
@@ -34,5 +41,7 @@
     <s:Button label="isModified" click=" isModified_clickHandler(event)" />
 
     <s:Button label="getContacts" click="getContacts_clickHandler(event)" />
+
+    <s:Button label="getContactCount" click="getContactCount_clickHandler(event)" />
 
 </s:Application>

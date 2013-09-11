@@ -64,9 +64,9 @@ public class Contacts
             return context.call("getContacts", rangeArray, options) as Array;
     }
 
-    public function getContactsCount():uint
+    public function getContactCount():uint
     {
-        return context.call("getContactsCount") as uint;
+        return context.call("getContactCount") as uint;
     }
 }
 }

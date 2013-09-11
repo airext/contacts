@@ -26,6 +26,7 @@
 //
 //-(BOOL) getRecords;
 
+-(NSInteger) getPersonCount;
 -(NSArray*) getPeople:(NSRange) range withOptions:(NSDictionary*) options;
 
 //-(BOOL) getGroups;

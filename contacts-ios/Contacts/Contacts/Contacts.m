@@ -78,6 +78,23 @@ static Contacts* _sharedInstance = nil;
     });
 }
 
+-(void) getContactCountAsync
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    ^(void)
+    {
+        NSInteger result = [self getContactCount];
+                       
+        dispatch_async(dispatch_get_main_queue(),
+        ^(void)
+        {
+            NSLog(@"getContactCountAsync=%@", result);
+                                          
+            // notify AIR
+        });
+    });
+}
+
 -(void) updateContactAsync:(NSDictionary*) contact
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
@@ -142,6 +159,29 @@ static Contacts* _sharedInstance = nil;
             result = [provider getPeople:range withOptions:options];
         }
     }];
+    
+    return result;
+}
+
+-(NSInteger) getContactCount
+{
+    __block NSInteger result = -1;
+    
+    [AddressBookAccessor request:^(ABAddressBookRef addressBook, BOOL available)
+     {
+         if (available)
+         {
+             AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+             provider.addressBook = addressBook;
+             
+             result = [provider getPersonCount];
+         }
+         else
+         {
+             // notify AIR
+         }
+     }];
     
     return result;
 }
@@ -249,11 +289,20 @@ FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FRE
     return result;
 }
 
+FREObject getContactCount(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    FREObject result;
+    
+    FRENewObjectFromInt32((int32_t) [[Contacts sharedInstance] getContactCount], &result);
+    
+    return result;
+}
+
 #pragma mark ContextInitialize/ContextFinalizer
 
 void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-    *numFunctionsToTest = 2;
+    *numFunctionsToTest = 3;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * (*numFunctionsToTest));
     
@@ -264,6 +313,10 @@ void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     func[1].name = (const uint8_t*) "getContacts";
     func[1].functionData = NULL;
     func[1].function = &getContacts;
+    
+    func[2].name = (const uint8_t*) "getContactCount";
+    func[2].functionData = NULL;
+    func[2].function = &getContactCount;
     
     *functionsToSet = func;
 }

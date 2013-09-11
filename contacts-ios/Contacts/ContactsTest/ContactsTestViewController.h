@@ -14,5 +14,6 @@
 
 - (IBAction)isModifiedAction:(id)sender;
 - (IBAction)getContacts:(id)sender;
+- (IBAction)getContactCountAction:(id)sender;
 
 @end

@@ -123,4 +123,9 @@
     return result;
 }
 
+-(NSInteger) getPersonCount
+{
+    return ABAddressBookGetPersonCount(_addressBook);
+}
+
 @end

@@ -26,6 +26,7 @@
 #pragma mark Asyncronous wrappers
 
 -(void) isModifiedAsync:(NSDate*) since;
+-(void) getContactCountAsync;
 -(void) getContactsAsync:(NSRange) range;
 -(void) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
 -(void) updateContactAsync:(NSDictionary*) contact;
@@ -33,6 +34,7 @@
 #pragma mark AddressBook methods
 
 -(BOOL) isModified:(NSDate*) since;
+-(NSInteger) getContactCount;
 -(NSArray*) getContacts:(NSRange) range;
 -(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
 -(BOOL) updateContact:(NSDictionary*) contact;
@@ -42,9 +44,11 @@
 #pragma mark FRE Functions
 
 FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject getContactCount(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 
 FREObject isModifiedAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject getContactCountAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 
 #pragma mark FRE ContextInitializer/ContextFinalizer

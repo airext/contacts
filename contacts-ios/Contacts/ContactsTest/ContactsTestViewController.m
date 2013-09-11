@@ -55,4 +55,11 @@
     NSLog(@"There are %i contacts", [result count]);
 }
 
+- (IBAction)getContactCountAction:(id)sender
+{
+    NSInteger count = [[Contacts sharedInstance] getContactCount];
+    
+    NSLog(@"Contact count is %i", count);
+}
+
 @end
