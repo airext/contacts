@@ -26,6 +26,13 @@
 		0E85671C17DDCF2400927073 /* Contacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E85671B17DDCF2400927073 /* Contacts.m */; };
 		0E85672417DDE8BC00927073 /* AddressBookAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E85672317DDE8BC00927073 /* AddressBookAccessor.m */; };
 		0E85672717DDE9A600927073 /* AddressBookProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E85672617DDE9A600927073 /* AddressBookProvider.m */; };
+		0EE759A917DF6B79001C7ABD /* Contacts.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E85671917DDCF2400927073 /* Contacts.h */; };
+		0EE759AA17DF6B79001C7ABD /* AddressBookAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E85672217DDE8BC00927073 /* AddressBookAccessor.h */; };
+		0EE759AB17DF6B79001C7ABD /* AddressBookProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E85672517DDE9A600927073 /* AddressBookProvider.h */; };
+		0EE759AC17DF6B79001C7ABD /* AddressBookProviderRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E09667517DF20B20071D966 /* AddressBookProviderRoutines.h */; };
+		0EE759AD17DF6B79001C7ABD /* Contacts-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0E85671817DDCF2400927073 /* Contacts-Prefix.pch */; };
+		0EE759AE17DF6B97001C7ABD /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E09666D17DE5F7D0071D966 /* AddressBook.framework */; };
+		0EE759B017DF6B97001C7ABD /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE759AF17DF6B97001C7ABD /* AddressBookUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +87,14 @@
 		0E85672517DDE9A600927073 /* AddressBookProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProvider.h; sourceTree = "<group>"; };
 		0E85672617DDE9A600927073 /* AddressBookProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProvider.m; sourceTree = "<group>"; };
 		0E85672817DE1A6E00927073 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../../../../sdks/air/3.8.0.1350/include/FlashRuntimeExtensions.h; sourceTree = "<group>"; };
+		0EE759AF17DF6B97001C7ABD /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		0EE759F117DFA207001C7ABD /* ContactsDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0EE759F717DFA207001C7ABD /* ContactsDebug-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ContactsDebug-Info.plist"; sourceTree = "<group>"; };
+		0EE759F917DFA207001C7ABD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0EE759FB17DFA207001C7ABD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0EE759FD17DFA207001C7ABD /* ContactsDebug-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ContactsDebug-Prefix.pch"; sourceTree = "<group>"; };
+		0EE759FE17DFA207001C7ABD /* ContactsDebugAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsDebugAppDelegate.h; sourceTree = "<group>"; };
+		0EE759FF17DFA207001C7ABD /* ContactsDebugAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsDebugAppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +114,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE759B017DF6B97001C7ABD /* AddressBookUI.framework in Frameworks */,
+				0EE759AE17DF6B97001C7ABD /* AddressBook.framework in Frameworks */,
 				0E85671517DDCF2400927073 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,10 +153,12 @@
 		0E85670817DDCF2400927073 = {
 			isa = PBXGroup;
 			children = (
+				0EE759AF17DF6B97001C7ABD /* AddressBookUI.framework */,
 				0E09666D17DE5F7D0071D966 /* AddressBook.framework */,
 				0E85672817DE1A6E00927073 /* FlashRuntimeExtensions.h */,
 				0E85671617DDCF2400927073 /* Contacts */,
 				0E09664F17DE55A40071D966 /* ContactsTest */,
+				0EE759F517DFA207001C7ABD /* ContactsDebug */,
 				0E85671317DDCF2400927073 /* Frameworks */,
 				0E85671217DDCF2400927073 /* Products */,
 			);
@@ -150,6 +169,7 @@
 			children = (
 				0E85671117DDCF2400927073 /* libContacts.a */,
 				0E09664917DE55A40071D966 /* ContactsTest.app */,
+				0EE759F117DFA207001C7ABD /* ContactsDebug.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,7 +208,43 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0EE759F517DFA207001C7ABD /* ContactsDebug */ = {
+			isa = PBXGroup;
+			children = (
+				0EE759FE17DFA207001C7ABD /* ContactsDebugAppDelegate.h */,
+				0EE759FF17DFA207001C7ABD /* ContactsDebugAppDelegate.m */,
+				0EE759F617DFA207001C7ABD /* Supporting Files */,
+			);
+			path = ContactsDebug;
+			sourceTree = "<group>";
+		};
+		0EE759F617DFA207001C7ABD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0EE759F717DFA207001C7ABD /* ContactsDebug-Info.plist */,
+				0EE759F817DFA207001C7ABD /* InfoPlist.strings */,
+				0EE759FB17DFA207001C7ABD /* main.m */,
+				0EE759FD17DFA207001C7ABD /* ContactsDebug-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0EE759A817DF6B52001C7ABD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0EE759A917DF6B79001C7ABD /* Contacts.h in Headers */,
+				0EE759AA17DF6B79001C7ABD /* AddressBookAccessor.h in Headers */,
+				0EE759AB17DF6B79001C7ABD /* AddressBookProvider.h in Headers */,
+				0EE759AC17DF6B79001C7ABD /* AddressBookProviderRoutines.h in Headers */,
+				0EE759AD17DF6B79001C7ABD /* Contacts-Prefix.pch in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		0E09664817DE55A40071D966 /* ContactsTest */ = {
@@ -216,6 +272,7 @@
 				0E85670D17DDCF2400927073 /* Sources */,
 				0E85670E17DDCF2400927073 /* Frameworks */,
 				0E85670F17DDCF2400927073 /* CopyFiles */,
+				0EE759A817DF6B52001C7ABD /* Headers */,
 			);
 			buildRules = (
 			);
@@ -225,6 +282,21 @@
 			productName = Contacts;
 			productReference = 0E85671117DDCF2400927073 /* libContacts.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		0EE759F017DFA207001C7ABD /* ContactsDebug */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0EE75A0117DFA207001C7ABD /* Build configuration list for PBXNativeTarget "ContactsDebug" */;
+			buildPhases = (
+				0EE75A0417DFA22F001C7ABD /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ContactsDebug;
+			productName = ContactsDebug;
+			productReference = 0EE759F117DFA207001C7ABD /* ContactsDebug.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -249,6 +321,7 @@
 			targets = (
 				0E85671017DDCF2400927073 /* Contacts */,
 				0E09664817DE55A40071D966 /* ContactsTest */,
+				0EE759F017DFA207001C7ABD /* ContactsDebug */,
 			);
 		};
 /* End PBXProject section */
@@ -267,6 +340,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0EE75A0417DFA22F001C7ABD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\necho \"Please provide the complete path of the IPA before building this target\"\n#PATH_TO_IPA=`~/dev/contacts/contacts-ios/Contacts/ContactsDebug.ipa`\n\n#IPA_DIR=`/usr/bin/dirname \"$PATH_TO_IPA\"`\nIPA_DIR=`~/dev/contacts/contacts-ios/Contacts`\n#IPA_NAME=`/usr/bin/basename \"$PATH_TO_IPA\"`\nIPA_NAME=\"ContactsDebug.ipa\"\n#IPA_BASE_NAME=`/usr/bin/basename \"$PATH_TO_IPA\" .ipa`\nIPA_BASE_NAME=\"ContactsDebug\"\n\necho start\necho \"$IPA_DIR\"\necho $IPA_NAME\necho $IPA_BASE_NAME\n\n# change to the proper directory\npushd \"$IPA_DIR\"\n\n# extract the IPA\ncp \"$IPA_NAME\" \"$IPA_NAME\".zip\nunzip -o \"$IPA_NAME\".zip\nrm \"$IPA_NAME\".zip\n\n# copy the contents of the IPA to the location xcode wants\ncp -r Payload/\"$IPA_BASE_NAME\".app/ \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/\"\ncp -r \"$IPA_BASE_NAME\".app.dSYM \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/\"\n\n# remove the following files and folders to avoid signature errors when installing the app\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/_CodeSignature/CodeResources\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/_CodeSignature\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/CodeResources\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/PkgInfo\" 2>/dev/null\n\n\n# restore working directory\npopd";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0E09664517DE55A40071D966 /* Sources */ = {
@@ -315,6 +404,14 @@
 				0E09666217DE55A40071D966 /* en */,
 			);
 			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+		0EE759F817DFA207001C7ABD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0EE759F917DFA207001C7ABD /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -406,7 +503,8 @@
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Contacts/Contacts-Prefix.pch";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				"OTHER_CFLAGS[arch=*]" = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -423,12 +521,38 @@
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Contacts/Contacts-Prefix.pch";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				"OTHER_CFLAGS[arch=*]" = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		0EE75A0217DFA207001C7ABD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ContactsDebug/ContactsDebug-Prefix.pch";
+				INFOPLIST_FILE = "ContactsDebug/ContactsDebug-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		0EE75A0317DFA207001C7ABD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ContactsDebug/ContactsDebug-Prefix.pch";
+				INFOPLIST_FILE = "ContactsDebug/ContactsDebug-Info.plist";
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
@@ -458,6 +582,15 @@
 			buildConfigurations = (
 				0E85672017DDCF2400927073 /* Debug */,
 				0E85672117DDCF2400927073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0EE75A0117DFA207001C7ABD /* Build configuration list for PBXNativeTarget "ContactsDebug" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0EE75A0217DFA207001C7ABD /* Debug */,
+				0EE75A0317DFA207001C7ABD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

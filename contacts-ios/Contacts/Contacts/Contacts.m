@@ -194,11 +194,11 @@ FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FRE
 
 #pragma mark ContextInitialize/ContextFinalizer
 
-void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctions, const FRENamedFunction* functions)
+void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-    *numFunctions = 2;
+    *numFunctionsToTest = 2;
     
-    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * (*numFunctions));
+    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * (*numFunctionsToTest));
     
     func[0].name = (const uint8_t*) "isModified";
     func[0].functionData = NULL;
@@ -208,6 +208,7 @@ void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     func[1].functionData = NULL;
     func[1].function = &getContacts;
     
+    *functionsToSet = func;
 }
 
 void ContactsContextFinalizer(FREContext ctx)
@@ -219,7 +220,10 @@ void ContactsContextFinalizer(FREContext ctx)
 
 void ContactsInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet)
 {
-
+    *extDataToSet = NULL;
+    
+    *ctxInitializerToSet = &ContactsContextInitializer;
+	*ctxFinalizerToSet = &ContactsContextFinalizer;
 }
 
 void ContactsFinalizer(void* extData)

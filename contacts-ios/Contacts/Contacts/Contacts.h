@@ -44,7 +44,7 @@ FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc
 
 #pragma mark FRE ContextInitializer/ContextFinalizer
 
-void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctions, const FRENamedFunction* functions);
+void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet);
 void ContactsContextFinalizer(FREContext ctx);
 
 #pragma mark FRE Initializer/Finalizer
