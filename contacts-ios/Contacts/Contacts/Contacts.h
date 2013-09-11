@@ -15,9 +15,19 @@
 
 @interface Contacts : NSObject
 
-#pragma mark Default Instance
+#pragma mark Shared Instance
 
 +(Contacts*) sharedInstance;
+
+#pragma mark Properties
+
+@property FREContext context;
+
+@property BOOL isModifiedResult;
+
+@property NSInteger getContactCountResult;
+
+@property NSArray* getContactsResult;
 
 #pragma mark ANE methods
 
@@ -26,9 +36,15 @@
 #pragma mark Asyncronous wrappers
 
 -(void) isModifiedAsync:(NSDate*) since;
+-(BOOL) pickIsModifiedResult;
+
 -(void) getContactCountAsync;
 -(void) getContactsAsync:(NSRange) range;
+-(NSInteger) pickGetContactCountResult;
+
 -(void) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
+-(NSArray*) pickGetContactsResult;
+
 -(void) updateContactAsync:(NSDictionary*) contact;
 
 #pragma mark AddressBook methods
@@ -48,8 +64,13 @@ FREObject getContactCount(FREContext context, void* functionData, uint32_t argc,
 FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 
 FREObject isModifiedAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject pickIsModifiedResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+
 FREObject getContactCountAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject pickGetContactCountResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+
 FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 
 #pragma mark FRE ContextInitializer/ContextFinalizer
 

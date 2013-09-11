@@ -36,7 +36,44 @@ void setStringProperty(FREObject contact, const uint8_t* name, NSString* value)
     }
 }
 
+#pragma mark Event functions
+
+void dispatchErrorEvent(FREContext context, NSString* code)
+{
+    NSLog(@"Dispatch error event with code: %@", code);
+    
+    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "error");
+}
+
+void dispatchStatusEvent(FREContext context, NSString* code)
+{
+    NSLog(@"Dispatch status event with code: %@", code);
+    
+    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
+}
+
 #pragma mark Conversion functions
+
+NSRange convertToNSRange(FREObject source)
+{
+    FREObject freOffset;
+    FREObject freLimit;
+    
+    FREGetArrayElementAt(source, 0, &freOffset);
+    FREGetArrayElementAt(source, 1, &freLimit);
+    
+    uint32_t offset;
+    uint32_t limit;
+    
+    FREGetObjectAsUint32(freOffset, &offset);
+    FREGetObjectAsUint32(freLimit, &limit);
+    
+    NSLog(@"ofsset: %i, limit: %i", offset, limit);
+    
+    NSRange range = NSMakeRange(offset, limit);
+    
+    return range;
+}
 
 FREObject personToContact(NSDictionary* person)
 {
@@ -77,4 +114,29 @@ FREObject personToContact(NSDictionary* person)
     //    }
     
     return contact;
+}
+
+FREObject peopleToContacts(NSArray* people)
+{
+    FREObject result = NULL;
+    
+    if (people != NULL)
+    {
+        FRENewObject((const uint8_t*) "Array", 0, NULL, &result, NULL);
+        
+        NSUInteger n = [people count];
+        
+        FRESetArrayLength(result, (uint32_t) n);
+        
+        for (NSUInteger i = 0; i < n; i++)
+        {
+            NSDictionary* person = [people objectAtIndex:i];
+            
+            FREObject contact = personToContact(person);
+            
+            FRESetArrayElementAt(result, (uint32_t) i, contact);
+        }
+    }
+    
+    return result;
 }

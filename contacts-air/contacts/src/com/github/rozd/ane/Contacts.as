@@ -7,11 +7,22 @@
  */
 package com.github.rozd.ane
 {
+import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.data.IRange;
+
+import flash.events.ErrorEvent;
+
+import flash.events.EventDispatcher;
+
+import flash.events.StatusEvent;
 
 import flash.external.ExtensionContext;
 
-public class Contacts
+[Event(name="error", type="flash.events.ErrorEvent")]
+
+[Event(name="status", type="flash.events.StatusEvent")]
+
+public class Contacts extends EventDispatcher
 {
     public static const EXTENSION_ID:String = "com.github.rozd.ane.Contacts";
 
@@ -44,10 +55,28 @@ public class Contacts
         return instance;
     }
 
+    //--------------------------------------------------------------------------
+    //
+    //  Constructor
+    //
+    //--------------------------------------------------------------------------
+
     public function Contacts()
     {
         super();
+
+        context.addEventListener(StatusEvent.STATUS, statusHandler);
     }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Methods
+    //
+    //--------------------------------------------------------------------------
+
+    //-------------------------------------
+    //  Methods: Synchronous
+    //-------------------------------------
 
     public function isModified(since:Date):Boolean
     {
@@ -67,6 +96,59 @@ public class Contacts
     public function getContactCount():uint
     {
         return context.call("getContactCount") as uint;
+    }
+
+    //-------------------------------------
+    //  Methods: Asynchronous
+    //-------------------------------------
+
+    public function isModifiedAsync(since:Date, response:Response=null):void
+    {
+        function handler(event:StatusEvent):void
+        {
+            switch (event.code)
+            {
+                case "Contacts.IsModified.Result" :
+
+                        context.removeEventListener(StatusEvent.STATUS, handler);
+
+                        try
+                        {
+                            response.result(context.call("pickIsModifiedResult"));
+                        }
+                        catch (error:Error)
+                        {
+                            dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, error.message));
+                        }
+
+                    break;
+
+                case "Contacts.IsModified.Failed" :
+
+                        context.removeEventListener(StatusEvent.STATUS, handler);
+
+                        response.error(new Error(event.code));
+
+                    break;
+            }
+        }
+
+        context.addEventListener(StatusEvent.STATUS, handler);
+
+        context.call("isModifiedAsync", since.time);
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Handlers
+    //
+    //--------------------------------------------------------------------------
+
+    private function statusHandler(event:StatusEvent):void
+    {
+        trace(event.code);
+
+        dispatchEvent(event.clone());
     }
 }
 }

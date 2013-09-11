@@ -16,7 +16,7 @@
 
 @implementation Contacts
 
-#pragma mark Instantiation methods
+#pragma mark Instantiation
 
 static Contacts* _sharedInstance = nil;
 
@@ -29,6 +29,16 @@ static Contacts* _sharedInstance = nil;
     
     return _sharedInstance;
 }
+
+#pragma mark Properties
+
+@synthesize context;
+
+@synthesize isModifiedResult;
+
+@synthesize getContactCountResult;
+
+@synthesize getContactsResult;
 
 #pragma mark ANE methods
 
@@ -49,11 +59,20 @@ static Contacts* _sharedInstance = nil;
         dispatch_async(dispatch_get_main_queue(),
         ^(void)
         {
-            NSLog(@"isModifiedAsync=%i", result);
+            self.isModifiedResult = result;
             
-            // notify AIR
+            dispatchStatusEvent(self.context, @"Contacts.IsModified.Result");
         });
     });
+}
+
+-(BOOL) pickIsModifiedResult
+{
+    BOOL result = self.isModifiedResult;
+    
+    self.isModifiedResult = FALSE;
+    
+    return result;
 }
 
 -(void) getContactsAsync:(NSRange) range
@@ -71,11 +90,20 @@ static Contacts* _sharedInstance = nil;
         dispatch_async(dispatch_get_main_queue(),
         ^(void)
         {
-            NSLog(@"getContactsAsync=%@", result);
+            self.getContactsResult = result;
             
-            // notify AIR
+            dispatchStatusEvent(self.context, @"Contacts.GetContacts.Result");
         });
     });
+}
+
+-(NSArray*) pickGetContactsResult
+{
+    NSArray* result = self.getContactsResult;
+    
+    self.getContactsResult = NULL;
+    
+    return result;
 }
 
 -(void) getContactCountAsync
@@ -88,11 +116,20 @@ static Contacts* _sharedInstance = nil;
         dispatch_async(dispatch_get_main_queue(),
         ^(void)
         {
-            NSLog(@"getContactCountAsync=%@", result);
-                                          
-            // notify AIR
+            self.getContactCountResult = result;
+            
+            dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
         });
     });
+}
+
+-(NSInteger) pickGetContactCountResult
+{
+    NSInteger result = self.getContactCountResult;
+    
+    self.getContactCountResult = 0;
+    
+    return result;
 }
 
 -(void) updateContactAsync:(NSDictionary*) contact
@@ -107,7 +144,7 @@ static Contacts* _sharedInstance = nil;
         {
             NSLog(@"updateContact=%i", result);
             
-            // notify AIR
+            dispatchStatusEvent(self.context, @"Contacts.UpdateContact.Failed");
         });
     });
 }
@@ -130,7 +167,7 @@ static Contacts* _sharedInstance = nil;
         }
         else
         {
-            // notify AIR
+            dispatchErrorEvent(self.context, @"Contacts.IsModified.Failed");
         }
     }];
     
@@ -158,6 +195,10 @@ static Contacts* _sharedInstance = nil;
             
             result = [provider getPeople:range withOptions:options];
         }
+        else
+        {
+            dispatchErrorEvent(self.context, @"Contacts.GetContacts.Failed");
+        }
     }];
     
     return result;
@@ -179,6 +220,8 @@ static Contacts* _sharedInstance = nil;
          }
          else
          {
+             dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
+             
              // notify AIR
          }
      }];
@@ -217,7 +260,7 @@ static Contacts* _sharedInstance = nil;
 
 #pragma mark C Interface
 
-#pragma mark FRE Functions
+#pragma mark FRE Synchronous functions
 
 FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
@@ -237,54 +280,15 @@ FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREO
 
 FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
-    FREObject result = NULL;
+    FREObject result;
     
-    FREObject freOffset;
-    FREObject freLimit;
-    
-    FREGetArrayElementAt(argv[0], 0, &freOffset);
-    FREGetArrayElementAt(argv[0], 1, &freLimit);
-   
-    uint32_t offset;
-    uint32_t limit;
-    
-    FREGetObjectAsUint32(freOffset, &offset);
-    FREGetObjectAsUint32(freLimit, &limit);
-    
-    NSLog(@"ofsset: %i, limit: %i", offset, limit);
-    
-    NSRange range = NSMakeRange(offset, limit);
+    NSRange range = convertToNSRange(argv[0]);
     
     NSArray* people = NULL;
     
     people = [[Contacts sharedInstance] getContacts:range];
     
-//    if (argc == 2)
-//    {
-//        people = NULL;
-//    }
-//    else
-//    {
-//        people = [[Contacts sharedInstance] getContacts:range];
-//    }
-    
-    if (people != NULL)
-    {
-        FRENewObject((const uint8_t*) "Array", 0, NULL, &result, NULL);
-        
-        NSUInteger n = [people count];
-        
-        FRESetArrayLength(result, (uint32_t) n);
-        
-        for (NSUInteger i = 0; i < n; i++)
-        {
-            NSDictionary* person = [people objectAtIndex:i];
-            
-            FREObject contact = personToContact(person);
-            
-            FRESetArrayElementAt(result, (uint32_t) i, contact);
-        }
-    }
+    result = peopleToContacts(people);
     
     return result;
 }
@@ -298,11 +302,79 @@ FREObject getContactCount(FREContext context, void* functionData, uint32_t argc,
     return result;
 }
 
+#pragma mark FRE Asynchronous functions
+
+FREObject isModifiedAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    double time = 0;
+    
+    if (FREGetObjectAsDouble(argv[0], &time) == FRE_OK)
+    {
+        NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)time];
+        
+        [[Contacts sharedInstance] isModifiedAsync:since];
+    }
+    
+    return NULL;
+}
+
+FREObject pickIsModifiedResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    FREObject result;
+    
+    FRENewObjectFromBool((uint32_t) [[Contacts sharedInstance] pickIsModifiedResult], &result);
+                          
+    return result;
+}
+
+FREObject getContactCountAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    [[Contacts sharedInstance] getContactCountAsync];
+    
+    return NULL;
+}
+
+FREObject pickGetContactCountResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    FREObject result;
+    
+    FRENewObjectFromInt32([[Contacts sharedInstance] pickGetContactCountResult], &result);
+    
+    return result;
+}
+
+FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    NSRange range = convertToNSRange(argv[0]);
+    
+    if (argc == 1)
+    {
+        [[Contacts sharedInstance] getContactsAsync:range];
+    }
+    else if (argc == 2)
+    {
+        [[Contacts sharedInstance] getContactsAsync:range withOptions:nil];
+    }
+    
+    return NULL;
+}
+
+FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    FREObject result;
+    
+    NSArray* people = [[Contacts sharedInstance] pickGetContactsResult];
+    
+    result = peopleToContacts(people);
+    
+    return result;
+}
+
 #pragma mark ContextInitialize/ContextFinalizer
 
 void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-    *numFunctionsToTest = 3;
+    *numFunctionsToTest = 9;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * (*numFunctionsToTest));
     
@@ -318,12 +390,38 @@ void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     func[2].functionData = NULL;
     func[2].function = &getContactCount;
     
+    func[3].name = (const uint8_t*) "isModifiedAsync";
+    func[3].functionData = NULL;
+    func[3].function = &isModifiedAsync;
+    
+    func[4].name = (const uint8_t*) "pickIsModifiedResult";
+    func[4].functionData = NULL;
+    func[4].function = &pickIsModifiedResult;
+    
+    func[5].name = (const uint8_t*) "getContactsAsync";
+    func[5].functionData = NULL;
+    func[5].function = &getContactsAsync;
+    
+    func[6].name = (const uint8_t*) "pickGetContactsResult";
+    func[6].functionData = NULL;
+    func[6].function = &pickGetContactsResult;
+    
+    func[7].name = (const uint8_t*) "getContactCountAsync";
+    func[7].functionData = NULL;
+    func[7].function = &getContactCountAsync;
+    
+    func[8].name = (const uint8_t*) "pickGetContactCountResult";
+    func[8].functionData = NULL;
+    func[8].function = &pickGetContactCountResult;
+    
     *functionsToSet = func;
+    
+    [Contacts sharedInstance].context = ctx;
 }
 
 void ContactsContextFinalizer(FREContext ctx)
 {
-    
+    [Contacts sharedInstance].context = nil;
 }
 
 #pragma mark Initializer/Finalizer

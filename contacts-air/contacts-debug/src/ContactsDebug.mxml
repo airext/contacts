@@ -5,6 +5,7 @@
     <fx:Script>
         <![CDATA[
         import com.github.rozd.ane.Contacts;
+        import com.github.rozd.ane.core.Response;
         import com.github.rozd.ane.data.Range;
 
         private function isModified_clickHandler(event:MouseEvent):void
@@ -31,11 +32,26 @@
 
             trace(result);
         }
+
+        private function isModifiedAsync_clickHandler(event:MouseEvent):void
+        {
+            Contacts.getInstance().isModifiedAsync(new Date(2012),
+            new Response(
+                function(data:Object):void
+                {
+                    trace(data);
+                },
+                function (info:Object):void
+                {
+                    trace(info)
+                })
+            );
+        }
         ]]>
     </fx:Script>
 
     <s:layout>
-        <s:VerticalLayout />
+        <s:VerticalLayout paddingTop="20" paddingBottom="20" horizontalAlign="center" />
     </s:layout>
 
     <s:Button label="isModified" click=" isModified_clickHandler(event)" />
@@ -43,5 +59,7 @@
     <s:Button label="getContacts" click="getContacts_clickHandler(event)" />
 
     <s:Button label="getContactCount" click="getContactCount_clickHandler(event)" />
+
+    <s:Button label="IsModifiedAsync" click="isModifiedAsync_clickHandler(event)" />
 
 </s:Application>

@@ -12,8 +12,15 @@
 
 @interface ContactsRoutines : NSObject
 
-FREObject personToContact(NSDictionary* person);
-
 @end
 
 #pragma mark C Interface
+
+void dispatchErrorEvent(FREContext context, NSString* code);
+void dispatchStatusEvent(FREContext context, NSString* code);
+
+FREObject personToContact(NSDictionary* person);
+
+FREObject peopleToContacts(NSArray* people);
+
+NSRange convertToNSRange(FREObject source);
