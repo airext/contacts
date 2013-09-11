@@ -7,4 +7,9 @@ build/contacts.ane
 
 contacts-air/contacts-debug/bin-debug/
 
+contacts-ios/Contacts/build/
 contacts-ios/Contacts/DerivedData/
+contacts-ios/Contacts/Payload/
+contacts-ios/Contacts/ContactsDebug.app.dSYM/
+contacts-ios/Contacts/ContactsDebug.ipa
+contacts-ios/Contacts/Contacts.xcodeproj/project.xcworkspace/xcuserdata/root.xcuserdatad/
