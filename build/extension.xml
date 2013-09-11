@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension xmlns="http://ns.adobe.com/air/extension/3.6">
+  <id>com.github.rozd.ane.Contacts</id>
+  <versionNumber>1.0.0</versionNumber>
+  <platforms>
+    <platform name="iPhone-ARM">
+      <applicationDeployment>
+        <nativeLibrary>libContacts.a</nativeLibrary>
+        <initializer>ContactsInitializer</initializer>
+        <finalizer>ContactsFinalizer</finalizer>
+      </applicationDeployment>
+    </platform>
+  </platforms>
+</extension>
