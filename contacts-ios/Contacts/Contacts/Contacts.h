@@ -19,6 +19,10 @@
 
 +(Contacts*) sharedInstance;
 
+#pragma mark ANE methods
+
+-(BOOL) isSupported;
+
 #pragma mark Asyncronous wrappers
 
 -(void) isModifiedAsync:(NSDate*) since;
@@ -26,7 +30,7 @@
 -(void) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
 -(void) updateContactAsync:(NSDictionary*) contact;
 
-#pragma mark Main methods
+#pragma mark AddressBook methods
 
 -(BOOL) isModified:(NSDate*) since;
 -(NSArray*) getContacts:(NSRange) range;
@@ -39,6 +43,7 @@
 
 FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+
 FREObject isModifiedAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 

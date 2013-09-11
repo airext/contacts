@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FlashRuntimeExtensions.h"
-
 #import "Contacts.h"
 
 @interface ContactsTestViewController : UIViewController

@@ -84,11 +84,15 @@
 
     NSMutableArray* result = [NSMutableArray array];
     
+    CFIndex total = ABAddressBookGetPersonCount(_addressBook);
+    
     if (range.location == NSNotFound)
         range.location = 0;
     
     if (range.length == NSNotFound)
-        range.length = ABAddressBookGetPersonCount(_addressBook);
+        range.length = total - range.location;
+    else
+        range.length = MIN(range.length, total - range.location);
     
     CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(_addressBook);
     

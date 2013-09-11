@@ -5,12 +5,24 @@
     <fx:Script>
         <![CDATA[
         import com.github.rozd.ane.Contacts;
+        import com.github.rozd.ane.data.Range;
 
         private function isModified_clickHandler(event:MouseEvent):void
         {
             var result:Boolean = Contacts.getInstance().isModified(new Date(2012));
 
             trace(result);
+        }
+
+        private function getContacts_clickHandler(event:MouseEvent):void
+        {
+            var t:Number = getTimer();
+
+            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range());
+
+            trace("elapsed:", getTimer() - t);
+
+            trace(result.length, result);
         }
         ]]>
     </fx:Script>
@@ -20,5 +32,7 @@
     </s:layout>
 
     <s:Button label="isModified" click=" isModified_clickHandler(event)" />
+
+    <s:Button label="getContacts" click="getContacts_clickHandler(event)" />
 
 </s:Application>

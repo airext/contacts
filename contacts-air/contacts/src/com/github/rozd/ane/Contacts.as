@@ -7,6 +7,8 @@
  */
 package com.github.rozd.ane
 {
+import com.github.rozd.ane.data.IRange;
+
 import flash.external.ExtensionContext;
 
 public class Contacts
@@ -27,7 +29,7 @@ public class Contacts
 
     public static function isSupported():Boolean
     {
-        return context != null;
+        return context != null && context.call("isSupported");
     }
 
     private static var instance:Contacts;
@@ -50,6 +52,21 @@ public class Contacts
     public function isModified(since:Date):Boolean
     {
         return context.call("isModified", since.time);
+    }
+
+    public function getContacts(range:IRange, options:Object=null):Array
+    {
+        var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
+
+        if (options == null)
+            return context.call("getContacts", rangeArray) as Array;
+        else
+            return context.call("getContacts", rangeArray, options) as Array;
+    }
+
+    public function getContactsCount():uint
+    {
+        return context.call("getContactsCount") as uint;
     }
 }
 }

@@ -12,6 +12,8 @@
 
 @interface ContactsRoutines : NSObject
 
-+(FREObject*) personConvertToContact:(NSDictionary*) person;
+FREObject personToContact(NSDictionary* person);
 
 @end
+
+#pragma mark C Interface

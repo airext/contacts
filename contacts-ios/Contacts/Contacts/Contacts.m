@@ -12,6 +12,7 @@
 #import "AddressBookProvider.h"
 
 #import "Contacts.h"
+#import "ContactsRoutines.h"
 
 @implementation Contacts
 
@@ -27,6 +28,13 @@ static Contacts* _sharedInstance = nil;
     }
     
     return _sharedInstance;
+}
+
+#pragma mark ANE methods
+
+-(BOOL) isSupported
+{
+    return TRUE;
 }
 
 #pragma mark Asynchronous wrappers
@@ -189,7 +197,56 @@ FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREO
 
 FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
-    return NULL;
+    FREObject result = NULL;
+    
+    FREObject freOffset;
+    FREObject freLimit;
+    
+    FREGetArrayElementAt(argv[0], 0, &freOffset);
+    FREGetArrayElementAt(argv[0], 1, &freLimit);
+   
+    uint32_t offset;
+    uint32_t limit;
+    
+    FREGetObjectAsUint32(freOffset, &offset);
+    FREGetObjectAsUint32(freLimit, &limit);
+    
+    NSLog(@"ofsset: %i, limit: %i", offset, limit);
+    
+    NSRange range = NSMakeRange(offset, limit);
+    
+    NSArray* people = NULL;
+    
+    people = [[Contacts sharedInstance] getContacts:range];
+    
+//    if (argc == 2)
+//    {
+//        people = NULL;
+//    }
+//    else
+//    {
+//        people = [[Contacts sharedInstance] getContacts:range];
+//    }
+    
+    if (people != NULL)
+    {
+        FRENewObject((const uint8_t*) "Array", 0, NULL, &result, NULL);
+        
+        NSUInteger n = [people count];
+        
+        FRESetArrayLength(result, (uint32_t) n);
+        
+        for (NSUInteger i = 0; i < n; i++)
+        {
+            NSDictionary* person = [people objectAtIndex:i];
+            
+            FREObject contact = personToContact(person);
+            
+            FRESetArrayElementAt(result, (uint32_t) i, contact);
+        }
+    }
+    
+    return result;
 }
 
 #pragma mark ContextInitialize/ContextFinalizer
