@@ -8,6 +8,7 @@
 package com.github.rozd.ane
 {
 import com.github.rozd.ane.core.Response;
+import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
 
 import flash.events.ErrorEvent;
@@ -21,6 +22,8 @@ import flash.external.ExtensionContext;
 [Event(name="error", type="flash.events.ErrorEvent")]
 
 [Event(name="status", type="flash.events.StatusEvent")]
+
+use namespace contacts;
 
 public class Contacts extends EventDispatcher
 {
@@ -93,9 +96,9 @@ public class Contacts extends EventDispatcher
             return context.call("getContacts", rangeArray, options) as Array;
     }
 
-    public function getContactCount():uint
+    public function getContactCount():int
     {
-        return context.call("getContactCount") as uint;
+        return context.call("getContactCount") as int;
     }
 
     //-------------------------------------
@@ -114,11 +117,11 @@ public class Contacts extends EventDispatcher
 
                         try
                         {
-                            response.result(context.call("pickIsModifiedResult"));
+                            response.result(pickIsModifiedResult());
                         }
                         catch (error:Error)
                         {
-                            dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, error.message));
+                            response.error(error);
                         }
 
                     break;
@@ -133,9 +136,114 @@ public class Contacts extends EventDispatcher
             }
         }
 
-        context.addEventListener(StatusEvent.STATUS, handler);
+        if (response != null)
+        {
+            context.addEventListener(StatusEvent.STATUS, handler);
+        }
 
         context.call("isModifiedAsync", since.time);
+    }
+
+    public function getContactsAsync(range:IRange, options:Object=null, response:Response=null):void
+    {
+        function handler(event:StatusEvent):void
+        {
+            switch (event.code)
+            {
+                case "Contacts.GetContacts.Result" :
+
+                    context.removeEventListener(StatusEvent.STATUS, handler);
+
+                    try
+                    {
+                        response.result(pickGetContactsResult());
+                    }
+                    catch (error:Error)
+                    {
+                        response.error(error);
+                    }
+
+                    break;
+
+                case "Contacts.GetContacts.Failed" :
+
+                    context.removeEventListener(StatusEvent.STATUS, handler);
+
+                    response.error(new Error(event.code));
+
+                    break;
+            }
+        }
+
+        if (response != null)
+        {
+            context.addEventListener(StatusEvent.STATUS, handler);
+        }
+
+        var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
+
+        if (options == null)
+            context.call("getContactsAsync", rangeArray);
+        else
+            context.call("getContactsAsync", rangeArray, options);
+    }
+
+    public function getContactCountAsync(response:Response=null):void
+    {
+        function handler(event:StatusEvent):void
+        {
+            switch (event.code)
+            {
+                case "Contacts.GetContactCount.Result" :
+
+                    context.removeEventListener(StatusEvent.STATUS, handler);
+
+                    try
+                    {
+                        response.result(pickGetContactCountResult());
+                    }
+                    catch (error:Error)
+                    {
+                        response.error(error);
+                    }
+
+                    break;
+
+                case "Contacts.GetContactCount.Failed" :
+
+                    context.removeEventListener(StatusEvent.STATUS, handler);
+
+                    response.error(new Error(event.code));
+
+                    break;
+            }
+        }
+
+        if (response != null)
+        {
+            context.addEventListener(StatusEvent.STATUS, handler);
+        }
+
+        context.call("getContactCountAsync");
+    }
+
+    //-------------------------------------
+    //  Methods: Asynchronous Result
+    //-------------------------------------
+
+    contacts function pickIsModifiedResult():Boolean
+    {
+        return context.call("pickIsModifiedResult") as Boolean;
+    }
+
+    contacts function pickGetContactsResult():Array
+    {
+        return context.call("pickGetContactsResult") as Array;
+    }
+
+    contacts function pickGetContactCountResult():int
+    {
+        return context.call("pickGetContactCountResult") as int;
     }
 
     //--------------------------------------------------------------------------

@@ -6,7 +6,13 @@
         <![CDATA[
         import com.github.rozd.ane.Contacts;
         import com.github.rozd.ane.core.Response;
+        import com.github.rozd.ane.core.contacts;
         import com.github.rozd.ane.data.Range;
+
+        use namespace contacts;
+
+        [Bindable]
+        private var bmd:BitmapData;
 
         private function isModified_clickHandler(event:MouseEvent):void
         {
@@ -19,11 +25,15 @@
         {
             var t:Number = getTimer();
 
-            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range());
+            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0, 10));
 
             trace("elapsed:", getTimer() - t);
 
-            trace(result.length, result);
+            bmd = result[0].thumbnail;
+
+            trace(result[0].emails.length > 0 ? result[0].emails[0] : "");
+
+            trace(result ? result.length : 0, result);
         }
 
         private function getContactCount_clickHandler(event:MouseEvent):void
@@ -47,6 +57,52 @@
                 })
             );
         }
+
+        private function getContactsAsync_clickHandler(event:MouseEvent):void
+        {
+            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(0, 10), null,
+                new Response(
+                    function(data:Object):void
+                    {
+                       trace(data);
+                    },
+                    function (info:Object):void
+                    {
+                       trace(info)
+                    })
+            );
+        }
+
+        private function getContactCountAsync_clickHandler(event:MouseEvent):void
+        {
+            Contacts.getInstance().getContactCountAsync(
+                new Response(
+                    function(data:Object):void
+                    {
+                        trace(data);
+                    },
+                    function (info:Object):void
+                    {
+                        trace(info)
+                    })
+            );
+        }
+
+        private function pickIsModifiedResult_clickHandler(event:MouseEvent):void
+        {
+            trace(Contacts.getInstance().pickIsModifiedResult());
+        }
+
+        private function pickGetContactsResult_clickHandler(event:MouseEvent):void
+        {
+            trace(Contacts.getInstance().pickGetContactsResult());
+        }
+
+        private function pickContactCountResult_clickHandler(event:MouseEvent):void
+        {
+            trace(Contacts.getInstance().pickGetContactCountResult());
+        }
+
         ]]>
     </fx:Script>
 
@@ -54,12 +110,21 @@
         <s:VerticalLayout paddingTop="20" paddingBottom="20" horizontalAlign="center" />
     </s:layout>
 
+    <s:Image source="{bmd}" />
+
     <s:Button label="isModified" click=" isModified_clickHandler(event)" />
 
     <s:Button label="getContacts" click="getContacts_clickHandler(event)" />
 
     <s:Button label="getContactCount" click="getContactCount_clickHandler(event)" />
 
-    <s:Button label="IsModifiedAsync" click="isModifiedAsync_clickHandler(event)" />
+    <s:Button label="isModifiedAsync" click="isModifiedAsync_clickHandler(event)" />
+    <s:Button label="pickIsModifiedResult" click="pickIsModifiedResult_clickHandler(event)" />
+
+    <s:Button label="getContactsAsync" click="getContactsAsync_clickHandler(event)" />
+    <s:Button label="pickGetContactsResult" click="pickGetContactsResult_clickHandler(event)" />
+
+    <s:Button label="getContactCountAsync" click="getContactCountAsync_clickHandler(event)" />
+    <s:Button label="pickContactCountResult" click="pickContactCountResult_clickHandler(event)" />
 
 </s:Application>
