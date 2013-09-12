@@ -20,9 +20,9 @@
     
     // recordId
     
-    ABRecordID recordId = ABRecordGetRecordID(person);
+    NSNumber* recordId = [NSNumber numberWithInt:ABRecordGetRecordID(person)];
     
-    [contact setValue:[NSNumber numberWithInt:recordId] forKey:@"recordId"];
+    [contact setValue:recordId forKey:@"recordId"];
     
     // compositeName
     
@@ -64,18 +64,6 @@
     
     [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty) forKey:@"middleNamePhonetic"];
     
-    // middleNamePhonetic
-    
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty) forKey:@"middleNamePhonetic"];
-    
-    // middleNamePhonetic
-    
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty) forKey:@"middleNamePhonetic"];
-    
-    // middleNamePhonetic
-    
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty) forKey:@"middleNamePhonetic"];
-    
     // organization
     
     [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonOrganizationProperty) forKey:@"organization"];
@@ -94,11 +82,11 @@
     
     // emails
     
-    [self setStringMultiValueProperty:contact withValue:ABRecordCopyValue(person, kABPersonEmailProperty) forKey:@"emails"];
+    [self setMultiStringValueProperty:contact withValue:ABRecordCopyValue(person, kABPersonEmailProperty) forKey:@"emails"];
     
     // phones
     
-    [self setStringMultiValueProperty:contact withValue:ABRecordCopyValue(person, kABPersonPhoneProperty) forKey:@"phones"];
+    [self setMultiStringValueProperty:contact withValue:ABRecordCopyValue(person, kABPersonPhoneProperty) forKey:@"phones"];
     
     // birthday
     
@@ -124,14 +112,13 @@
     }
     else
     {
-        [contact setValue:[NSNull null] forKey:@"thumbnail"];
+        [contact setValue:nil forKey:@"thumbnail"];
     }
     
     return contact;
 }
 
 #pragma mark Utility methods
-
 
 +(void) setStringProperty:(NSDictionary*) contact withValue:(CFStringRef) value forKey:(NSString*) key
 {
@@ -141,11 +128,11 @@
     }
     else
     {
-        [contact setValue:[NSNull null] forKey:key];
+        [contact setValue:nil forKey:key];
     }
 }
 
-+(void) setStringMultiValueProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value forKey:(NSString*) key
++(void) setMultiStringValueProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value forKey:(NSString*) key
 {
     if (value)
     {
@@ -155,7 +142,21 @@
         
         for (CFIndex i = 0; i < n; i++)
         {
-            [array insertObject:CFBridgingRelease(ABMultiValueCopyValueAtIndex(value, i)) atIndex:i];
+            CFStringRef propertyLabel = ABMultiValueCopyLabelAtIndex(value, i);
+            CFStringRef propertyValue = ABMultiValueCopyValueAtIndex(value, i);
+
+            NSDictionary* item;
+            
+            if (propertyLabel)
+            {
+                item = [NSDictionary dictionaryWithObject:CFBridgingRelease(propertyValue) forKey:CFBridgingRelease(propertyLabel)];
+            }
+            else
+            {
+                item = [NSDictionary dictionaryWithObject:CFBridgingRelease(propertyValue) forKey:@""];
+            }
+
+            [array insertObject:item atIndex:i];
         }
         
         [contact setValue:array forKey:key];
@@ -164,7 +165,7 @@
     }
     else
     {
-        [contact setValue:[NSNull null] forKey:key];
+        [contact setValue:nil forKey:key];
     }
     
 }
@@ -177,7 +178,7 @@
     }
     else
     {
-        [contact setValue:[NSNull null] forKey:key];
+        [contact setValue:nil forKey:key];
     }
 }
 
