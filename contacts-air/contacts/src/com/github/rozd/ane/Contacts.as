@@ -117,12 +117,14 @@ public class Contacts extends EventDispatcher
 
                         try
                         {
-                            response.result(pickIsModifiedResult());
+                            var result:Object = pickIsModifiedResult();
                         }
                         catch (error:Error)
                         {
                             response.error(error);
                         }
+
+                        response.result(result);
 
                     break;
 
@@ -156,12 +158,14 @@ public class Contacts extends EventDispatcher
 
                     try
                     {
-                        response.result(pickGetContactsResult());
+                        var result:Object = pickGetContactsResult();
                     }
                     catch (error:Error)
                     {
                         response.error(error);
                     }
+
+                    response.result(result);
 
                     break;
 
@@ -200,12 +204,14 @@ public class Contacts extends EventDispatcher
 
                     try
                     {
-                        response.result(pickGetContactCountResult());
+                        var result:Object = pickGetContactCountResult();
                     }
                     catch (error:Error)
                     {
                         response.error(error);
                     }
+
+                    response.result(result);
 
                     break;
 

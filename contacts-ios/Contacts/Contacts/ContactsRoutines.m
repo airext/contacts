@@ -59,7 +59,7 @@ void setIntegerProperty(FREObject object, const uint8_t* name, NSInteger value)
     FRESetObjectProperty(object, name, propertyValue, NULL);
 }
 
-void setArrayProperty(FREObject object, const uint8_t* name, NSArray* value)
+void setArrayStringsProperty(FREObject object, const uint8_t* name, NSArray* value)
 {
     NSUInteger itemCount = [value count];
     
@@ -97,6 +97,45 @@ void setArrayProperty(FREObject object, const uint8_t* name, NSArray* value)
             FRENewObjectFromUTF8(strlen(itemLabelInUTF8) + 1, (const uint8_t*) itemLabelInUTF8, &itemToInsertLabel);
             
             FRESetObjectProperty(itemToInsert, (const uint8_t *) "label", itemToInsertLabel, NULL);
+        }
+        
+        FRESetArrayElementAt(array, (uint32_t) i, itemToInsert);
+    }
+    
+    FRESetObjectProperty(object, name, array, NULL);
+}
+
+void setArrayObjectsProperty(FREObject object, const uint8_t* name, NSArray* value)
+{
+    FREObject array;
+    FRENewObject((const uint8_t*) "Array", 0, NULL, &array, NULL);
+    
+    NSUInteger n = [value count];
+    
+    FRESetArrayLength(array, (uint32_t) n);
+    
+    for (NSUInteger i = 0; i < n; i++)
+    {
+        NSDictionary* item = [value objectAtIndex:i];
+        
+        FREObject itemToInsert;
+        FRENewObject((const uint8_t*) "Object", 0, NULL, &itemToInsert, NULL);
+        
+        NSArray* allKeys = [item allKeys];
+        NSArray* allValues = [item allValues];
+        
+        NSUInteger m = [allValues count];
+        for (NSUInteger j = 0; j < m; j++)
+        {
+            NSString* itemKey = [allKeys objectAtIndex:j];
+            NSString* itemValue = [allValues objectAtIndex:j];
+            
+            if (itemKey && itemValue)
+            {
+                const char* itemKeyInUTF8 = [itemKey UTF8String];
+                
+                setStringProperty(itemToInsert, (const uint8_t*) itemKeyInUTF8, itemValue);
+            }
         }
         
         FRESetArrayElementAt(array, (uint32_t) i, itemToInsert);
@@ -333,19 +372,27 @@ FREObject personToContact(NSDictionary* person)
 
     NSArray* emails = [person valueForKey:@"emails"];
     
-    setArrayProperty(contact, (const uint8_t*) "emails", emails);
+    setArrayStringsProperty(contact, (const uint8_t*) "emails", emails);
 
     // phones
     
     NSArray* phones = [person valueForKey:@"phones"];
     
-    setArrayProperty(contact, (const uint8_t*) "phones", phones);
+    setArrayStringsProperty(contact, (const uint8_t*) "phones", phones);
     
     // thumbnail
     
     NSData* thumbnail = [person valueForKey:@"thumbnail"];
     
     setBitmapProperty(contact, (const uint8_t*) "thumbnail", thumbnail);
+    
+    // profiles
+    
+    NSArray* profiles = [person valueForKey:@"profiles"];
+    
+    setArrayObjectsProperty(contact, (const uint8_t*) "profiles", profiles);
+    
+//    set
     
     // return contact object
     

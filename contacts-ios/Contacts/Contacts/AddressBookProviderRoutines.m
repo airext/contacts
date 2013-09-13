@@ -115,8 +115,20 @@
         [contact setValue:nil forKey:@"thumbnail"];
     }
     
+    // profiles
+    
+    ABMultiValueRef profiles = ABRecordCopyValue(person, kABPersonSocialProfileProperty);
+    
+    [self setMultiDictionaryProperty:contact withValue:profiles forKey:@"profiles"];
+    
     return contact;
 }
+
+
+//void SaveName(const void* key, const void* value, void* context)
+//{
+//
+//}
 
 #pragma mark Utility methods
 
@@ -130,6 +142,45 @@
     {
         [contact setValue:nil forKey:key];
     }
+}
+
++(void) setMultiDictionaryProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value forKey:(NSString*) key
+{
+    if (value)
+    {
+        CFIndex n = ABMultiValueGetCount(value);
+        
+        NSMutableArray* array = [NSMutableArray arrayWithCapacity:n];
+        
+        for (NSUInteger i = 0; i < n; i++)
+        {
+            CFDictionaryRef profile = ABMultiValueCopyValueAtIndex(value, i);
+            
+            NSMutableDictionary* profiles = [NSMutableDictionary dictionary];
+            
+            CFDictionaryApplyFunction(profile, setDictionaryProperty, (void*) profiles);
+            
+            CFDictionaryGetValue(profile, kABPersonSocialProfileServiceTwitter);
+            
+            [array insertObject:profiles atIndex:i];
+        }
+        
+        [contact setValue:array forKey:key];
+    }
+    else
+    {
+        [contact setValue:nil forKey:key];
+    }
+}
+
+void setDictionaryProperty(const void *key, const void *value, void *context)
+{
+    NSMutableDictionary* dictionary = (__bridge NSMutableDictionary*) context;
+    
+    NSString* profileKey = CFBridgingRelease(key);
+    NSString* profileValue = CFBridgingRelease(value);
+    
+    [dictionary setValue:profileValue forKey:profileKey];
 }
 
 +(void) setMultiStringValueProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value forKey:(NSString*) key

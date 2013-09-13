@@ -15,7 +15,7 @@
 @end
 
 #pragma mark C Interface
-
+     
 void dispatchErrorEvent(FREContext context, NSString* code);
 void dispatchStatusEvent(FREContext context, NSString* code);
 
