@@ -28,7 +28,7 @@
             var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0, 10));
 
             trace("elapsed:", getTimer() - t);
-
+            Date().setMilliseconds()
             bmd = result[0].thumbnail;
 
             trace(result[0].emails.length > 0 ? result[0].emails[0] : "");

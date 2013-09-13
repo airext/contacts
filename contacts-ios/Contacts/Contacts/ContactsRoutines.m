@@ -22,12 +22,12 @@
 
 void dispatchErrorEvent(FREContext context, NSString* code)
 {
-    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "error");
+//    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "error");
 }
 
 void dispatchStatusEvent(FREContext context, NSString* code)
 {
-    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
+//    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
 }
 
 #pragma mark Utility functions
@@ -57,6 +57,32 @@ void setIntegerProperty(FREObject object, const uint8_t* name, NSInteger value)
     FRENewObjectFromInt32((int32_t) value, &propertyValue);
     
     FRESetObjectProperty(object, name, propertyValue, NULL);
+}
+
+void setDateProperty(FREObject object, const uint8_t* name, NSDate* value)
+{
+    if (value)
+    {
+        FREObject propertyValue = NULL;
+        FRENewObject((const uint8_t*) "Date", 0, NULL, &propertyValue, NULL);
+        
+        NSTimeInterval valueSince1970 = [value timeIntervalSince1970] * 1000;
+        
+        FREObject time;
+        FRENewObjectFromDouble(valueSince1970, &time);
+        
+        FREObject args[] = {time};
+        
+        FREObject result;
+        FRECallObjectMethod(propertyValue, (const uint8_t*) "setTime", 1, args, &result, NULL);
+        
+        
+        FRESetObjectProperty(object, name, propertyValue, NULL);
+    }
+    else
+    {
+        FRESetObjectProperty(object, name, NULL, NULL);
+    }
 }
 
 void setArrayStringsProperty(FREObject object, const uint8_t* name, NSArray* value)
@@ -344,6 +370,12 @@ FREObject personToContact(NSDictionary* person)
     
     setStringProperty(contact, (const uint8_t*) "middleNamePhonetic", middleNamePhonetic);
     
+    // birthday
+    
+    NSDate* birthday = [person valueForKey:@"birthday"];
+
+    setDateProperty(contact, (const uint8_t*) "birthday", birthday);
+    
     // organization
     
     NSString* organization = [person valueForKey:@"organization"];
@@ -392,7 +424,17 @@ FREObject personToContact(NSDictionary* person)
     
     setArrayObjectsProperty(contact, (const uint8_t*) "profiles", profiles);
     
-//    set
+    // creationDate
+    
+    NSDate* creationDate = [person valueForKey:@"creationDate"];
+    
+    setDateProperty(contact, (const uint8_t*) "creationDate", creationDate);
+    
+    // modificationDate
+    
+    NSDate* modificationDate = [person valueForKey:@"modificationDate"];
+    
+    setDateProperty(contact, (const uint8_t*) "modificationDate", modificationDate);
     
     // return contact object
     
