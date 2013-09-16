@@ -11,12 +11,8 @@ import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
 
-import flash.events.ErrorEvent;
-
 import flash.events.EventDispatcher;
-
 import flash.events.StatusEvent;
-
 import flash.external.ExtensionContext;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
@@ -27,9 +23,21 @@ use namespace contacts;
 
 public class Contacts extends EventDispatcher
 {
-    public static const EXTENSION_ID:String = "com.github.rozd.ane.Contacts";
+    //--------------------------------------------------------------------------
+    //
+    //  Class constants
+    //
+    //--------------------------------------------------------------------------
+
+    contacts static const EXTENSION_ID:String = "com.github.rozd.ane.Contacts";
 
     private static var _context:ExtensionContext;
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class properties
+    //
+    //--------------------------------------------------------------------------
 
     private static function get context():ExtensionContext
     {
@@ -41,13 +49,19 @@ public class Contacts extends EventDispatcher
         return _context;
     }
 
+    //--------------------------------------------------------------------------
+    //
+    //  Class methods
+    //
+    //--------------------------------------------------------------------------
+
+
     public static function isSupported():Boolean
     {
         return context != null && context.call("isSupported");
     }
 
     private static var instance:Contacts;
-
     public static function getInstance():Contacts
     {
         if (instance == null)
@@ -69,6 +83,40 @@ public class Contacts extends EventDispatcher
         super();
 
         context.addEventListener(StatusEvent.STATUS, statusHandler);
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Variables
+    //
+    //--------------------------------------------------------------------------
+
+    private var isModifiedQueue:Array = [];
+
+    private var getContactsQueue:Array = [];
+
+    private var getContactCountQueue:Array = [];
+
+    //--------------------------------------------------------------------------
+    //
+    //  Getters
+    //
+    //--------------------------------------------------------------------------
+
+    //-------------------------------------
+    //  Getters: Call Id
+    //-------------------------------------
+
+    private var callId:uint = 0;
+
+    private function getNextCallId():uint
+    {
+        if (callId == uint.MAX_VALUE)
+            callId = 0;
+        else
+            callId++;
+
+        return callId;
     }
 
     //--------------------------------------------------------------------------
@@ -107,13 +155,20 @@ public class Contacts extends EventDispatcher
 
     public function isModifiedAsync(since:Date, response:Response=null):void
     {
+        var callId:uint = getNextCallId();
+
+        isModifiedQueue.push(callId);
+
         function handler(event:StatusEvent):void
         {
+            if (isModifiedQueue[0] != callId)
+                return;
+
             switch (event.code)
             {
                 case "Contacts.IsModified.Result" :
 
-                        context.removeEventListener(StatusEvent.STATUS, handler);
+                        removeEventListener(StatusEvent.STATUS, handler);
 
                         try
                         {
@@ -130,7 +185,7 @@ public class Contacts extends EventDispatcher
 
                 case "Contacts.IsModified.Failed" :
 
-                        context.removeEventListener(StatusEvent.STATUS, handler);
+                        removeEventListener(StatusEvent.STATUS, handler);
 
                         response.error(new Error(event.code));
 
@@ -140,7 +195,7 @@ public class Contacts extends EventDispatcher
 
         if (response != null)
         {
-            context.addEventListener(StatusEvent.STATUS, handler);
+            addEventListener(StatusEvent.STATUS, handler);
         }
 
         context.call("isModifiedAsync", since.time);
@@ -148,13 +203,20 @@ public class Contacts extends EventDispatcher
 
     public function getContactsAsync(range:IRange, options:Object=null, response:Response=null):void
     {
+        var callId:uint = getNextCallId();
+
+        getContactsQueue.push(callId);
+
         function handler(event:StatusEvent):void
         {
+            if (getContactsQueue[0] != callId)
+                return;
+
             switch (event.code)
             {
                 case "Contacts.GetContacts.Result" :
 
-                    context.removeEventListener(StatusEvent.STATUS, handler);
+                    removeEventListener(StatusEvent.STATUS, handler);
 
                     try
                     {
@@ -171,7 +233,7 @@ public class Contacts extends EventDispatcher
 
                 case "Contacts.GetContacts.Failed" :
 
-                    context.removeEventListener(StatusEvent.STATUS, handler);
+                    removeEventListener(StatusEvent.STATUS, handler);
 
                     response.error(new Error(event.code));
 
@@ -181,7 +243,7 @@ public class Contacts extends EventDispatcher
 
         if (response != null)
         {
-            context.addEventListener(StatusEvent.STATUS, handler);
+            addEventListener(StatusEvent.STATUS, handler);
         }
 
         var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
@@ -194,13 +256,18 @@ public class Contacts extends EventDispatcher
 
     public function getContactCountAsync(response:Response=null):void
     {
+        var callId:uint = getNextCallId();
+
         function handler(event:StatusEvent):void
         {
+            if (getContactCountQueue[0] != callId)
+                return;
+
             switch (event.code)
             {
                 case "Contacts.GetContactCount.Result" :
 
-                    context.removeEventListener(StatusEvent.STATUS, handler);
+                    removeEventListener(StatusEvent.STATUS, handler);
 
                     try
                     {
@@ -217,7 +284,7 @@ public class Contacts extends EventDispatcher
 
                 case "Contacts.GetContactCount.Failed" :
 
-                    context.removeEventListener(StatusEvent.STATUS, handler);
+                    removeEventListener(StatusEvent.STATUS, handler);
 
                     response.error(new Error(event.code));
 
@@ -227,7 +294,7 @@ public class Contacts extends EventDispatcher
 
         if (response != null)
         {
-            context.addEventListener(StatusEvent.STATUS, handler);
+            addEventListener(StatusEvent.STATUS, handler);
         }
 
         context.call("getContactCountAsync");
@@ -260,9 +327,34 @@ public class Contacts extends EventDispatcher
 
     private function statusHandler(event:StatusEvent):void
     {
-        trace(event.code);
-
         dispatchEvent(event.clone());
+
+        switch (event.code)
+        {
+            case "Contacts.IsModified.Result" :
+            case "Contacts.IsModified.Failed" :
+
+                    if (isModifiedQueue.length > 0)
+                        isModifiedQueue.shift();
+
+                break;
+
+            case "Contacts.GetContacts.Result" :
+            case "Contacts.GetContacts.Failed" :
+
+                    if (getContactsQueue.length > 0)
+                        getContactsQueue.shift();
+
+                break;
+
+            case "Contacts.GetContactCount.Result" :
+            case "Contacts.GetContactCount.Failed" :
+
+                    if (getContactCountQueue.length > 0)
+                        getContactCountQueue.shift();
+
+                break;
+        }
     }
 }
 }

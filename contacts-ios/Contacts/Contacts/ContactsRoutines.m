@@ -22,12 +22,12 @@
 
 void dispatchErrorEvent(FREContext context, NSString* code)
 {
-//    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "error");
+    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "error");
 }
 
 void dispatchStatusEvent(FREContext context, NSString* code)
 {
-//    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
+    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
 }
 
 #pragma mark Utility functions
