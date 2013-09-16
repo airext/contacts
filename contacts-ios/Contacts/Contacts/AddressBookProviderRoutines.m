@@ -102,6 +102,20 @@
     
     // TODO: Add address
     
+    // address
+    
+    ABMultiValueRef address  = ABRecordCopyValue(person, kABPersonAddressProperty);
+    
+    [self setMultiDictionaryProperty:contact withValue:address forKey:@"address"];
+    
+    // profiles
+    
+    ABMultiValueRef profiles = ABRecordCopyValue(person, kABPersonSocialProfileProperty);
+    
+    [self setMultiDictionaryProperty:contact withValue:profiles forKey:@"profiles"];
+    
+    return contact;
+    
     // thumbnail
     
     if (ABPersonHasImageData(person))
@@ -114,14 +128,6 @@
     {
         [contact setValue:nil forKey:@"thumbnail"];
     }
-    
-    // profiles
-    
-    ABMultiValueRef profiles = ABRecordCopyValue(person, kABPersonSocialProfileProperty);
-    
-    [self setMultiDictionaryProperty:contact withValue:profiles forKey:@"profiles"];
-    
-    return contact;
 }
 
 

@@ -424,6 +424,12 @@ FREObject personToContact(NSDictionary* person)
     
     setArrayObjectsProperty(contact, (const uint8_t*) "profiles", profiles);
     
+    // address
+    
+    NSArray* address = [person valueForKey:@"address"];
+    
+    setArrayObjectsProperty(contact, (const uint8_t*) "address", address);
+    
     // creationDate
     
     NSDate* creationDate = [person valueForKey:@"creationDate"];
