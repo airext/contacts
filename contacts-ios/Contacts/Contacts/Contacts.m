@@ -49,8 +49,10 @@ static Contacts* _sharedInstance = nil;
 
 #pragma mark Asynchronous wrappers
 
--(void) isModifiedAsync:(NSDate*) since
+-(NSUInteger) isModifiedAsync:(NSDate*) since
 {
+    NSUInteger callId = [self getNextCallId];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
     ^(void)
     {
@@ -59,29 +61,26 @@ static Contacts* _sharedInstance = nil;
         dispatch_async(dispatch_get_main_queue(),
         ^(void)
         {
-            self.isModifiedResult = result;
+            [self holdAsyncCallResult:[NSNumber numberWithBool:result] forCallId:callId];
+            
+            dispatchResponseEvent(self.context, callId, @"result", @"isModifiedAsync");
             
             dispatchStatusEvent(self.context, @"Contacts.IsModified.Result");
         });
     });
-}
-
--(BOOL) pickIsModifiedResult
-{
-    BOOL result = self.isModifiedResult;
     
-    self.isModifiedResult = FALSE;
+    return callId;
+}
+
+-(NSUInteger) getContactsAsync:(NSRange) range
+{
+    return [self getContactsAsync:range withOptions:NULL];
+}
+
+-(NSUInteger) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options
+{
+    NSUInteger callId = [self getNextCallId];
     
-    return result;
-}
-
--(void) getContactsAsync:(NSRange) range
-{
-    [self getContactsAsync:range withOptions:NULL];
-}
-
--(void) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options
-{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
     ^(void)
     {
@@ -90,24 +89,21 @@ static Contacts* _sharedInstance = nil;
         dispatch_async(dispatch_get_main_queue(),
         ^(void)
         {
-            self.getContactsResult = result;
+            [self holdAsyncCallResult:result forCallId:callId];
+            
+            dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync");
             
             dispatchStatusEvent(self.context, @"Contacts.GetContacts.Result");
         });
     });
+    
+    return callId;
 }
 
--(NSArray*) pickGetContactsResult
+-(NSUInteger) getContactCountAsync
 {
-    NSArray* result = self.getContactsResult;
+    NSUInteger callId = [self getNextCallId];
     
-    self.getContactsResult = NULL;
-    
-    return result;
-}
-
--(void) getContactCountAsync
-{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
     ^(void)
     {
@@ -116,24 +112,21 @@ static Contacts* _sharedInstance = nil;
         dispatch_async(dispatch_get_main_queue(),
         ^(void)
         {
-            self.getContactCountResult = result;
+            [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
+            
+            dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync");
             
             dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
         });
     });
+    
+    return callId;
 }
 
--(NSInteger) pickGetContactCountResult
+-(NSUInteger) updateContactAsync:(NSDictionary*) contact
 {
-    NSInteger result = self.getContactCountResult;
+    NSUInteger callId = [self getNextCallId];
     
-    self.getContactCountResult = 0;
-    
-    return result;
-}
-
--(void) updateContactAsync:(NSDictionary*) contact
-{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
     ^(void)
     {
@@ -144,12 +137,95 @@ static Contacts* _sharedInstance = nil;
         {
             NSLog(@"updateContact=%i", result);
             
+            dispatchResponseEvent(self.context, callId, @"result", @"updateContactAsync");
+            
             dispatchStatusEvent(self.context, @"Contacts.UpdateContact.Failed");
         });
     });
+    
+    return callId;
 }
 
-#pragma mark Checks
+// 
+
+-(NSUInteger) getNextCallId
+{
+    if (currentCallId == NSUIntegerMax)
+        currentCallId = 0;
+    else
+        currentCallId++;
+    
+    return currentCallId;
+}
+
+// hold method
+
+-(void) holdAsyncCallResult:(NSObject*) result forCallId:(NSUInteger) callId
+{
+    if (resultStorage == nil)
+        resultStorage = [NSMutableDictionary dictionary];
+    
+    [resultStorage setValue:result forKey:[NSString stringWithFormat:@"%i", callId]];
+}
+
+// pick methods
+
+-(BOOL) pickIsModifiedResult:(NSUInteger) callId
+{
+    if (resultStorage == nil)
+        return FALSE;
+    
+    NSString* key = [NSString stringWithFormat:@"%i", callId];
+    
+    NSNumber* result = [resultStorage objectForKey:key];
+    
+    if (result)
+    {
+        [resultStorage removeObjectForKey:key];
+        
+        return [result boolValue];
+    }
+    
+    return FALSE;
+}
+
+-(NSArray*) pickGetContactsResult:(NSUInteger) callId
+{
+    if (resultStorage == nil)
+        return nil;
+    
+    NSString* key = [NSString stringWithFormat:@"%i", callId];
+    
+    NSArray* result = [resultStorage objectForKey:key];
+    
+    if (result)
+    {
+        [resultStorage removeObjectForKey:key];
+    }
+    
+    return result;
+}
+
+-(NSInteger) pickGetContactCountResult:(NSUInteger) callId
+{
+    if (resultStorage == nil)
+        return -1;
+    
+    NSString* key = [NSString stringWithFormat:@"%i", callId];
+    
+    NSNumber* result = [resultStorage objectForKey:key];
+    
+    if (result)
+    {
+        [resultStorage removeObjectForKey:key];
+        
+        return [result integerValue];
+    }
+    
+    return -1;
+}
+
+#pragma mark Synchronous methods
 
 -(BOOL) isModified:(NSDate*) since
 {
@@ -173,8 +249,6 @@ static Contacts* _sharedInstance = nil;
     
     return result;
 }
-
-#pragma mark Retrieving data
 
 -(NSArray*) getContacts:(NSRange) range
 {
@@ -221,8 +295,6 @@ static Contacts* _sharedInstance = nil;
          else
          {
              dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
-             
-             // notify AIR
          }
      }];
     
@@ -306,64 +378,80 @@ FREObject getContactCount(FREContext context, void* functionData, uint32_t argc,
 
 FREObject isModifiedAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
+    FREObject result;
+    
     double time = 0;
     
-    if (FREGetObjectAsDouble(argv[0], &time) == FRE_OK)
-    {
-        NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)time];
-        
-        [[Contacts sharedInstance] isModifiedAsync:since];
-    }
+    FREGetObjectAsDouble(argv[0], &time);
     
-    return NULL;
+    NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)time];
+    
+    FRENewObjectFromUint32((uint32_t) [[Contacts sharedInstance] isModifiedAsync:since], &result);
+    
+    return result;
 }
 
 FREObject pickIsModifiedResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
     FREObject result;
     
-    FRENewObjectFromBool((uint32_t) [[Contacts sharedInstance] pickIsModifiedResult], &result);
+    uint32_t callId;
+    
+    FREGetObjectAsUint32(argv[0], &callId);
+    
+    FRENewObjectFromBool((uint32_t) [[Contacts sharedInstance] pickIsModifiedResult:callId], &result);
                           
     return result;
 }
 
 FREObject getContactCountAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
-    [[Contacts sharedInstance] getContactCountAsync];
+    FREObject result;
     
-    return NULL;
+    FRENewObjectFromUint32((uint32_t) [[Contacts sharedInstance] getContactCountAsync], &result);
+    
+    return result;
 }
 
 FREObject pickGetContactCountResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
     FREObject result;
     
-    FRENewObjectFromInt32([[Contacts sharedInstance] pickGetContactCountResult], &result);
+    uint32_t callId;
+    FREGetObjectAsUint32(argv[0], &callId);
+    
+    FRENewObjectFromInt32([[Contacts sharedInstance] pickGetContactCountResult:callId], &result);
     
     return result;
 }
 
 FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
+    FREObject result;
+    
     NSRange range = convertToNSRange(argv[0]);
     
     if (argc == 1)
     {
-        [[Contacts sharedInstance] getContactsAsync:range];
+        FRENewObjectFromUint32((uint32_t) [[Contacts sharedInstance] getContactsAsync:range], &result);
     }
-    else if (argc == 2)
+    else
     {
-        [[Contacts sharedInstance] getContactsAsync:range withOptions:nil];
+        FRENewObjectFromUint32((uint32_t) [[Contacts sharedInstance] getContactsAsync:range withOptions:nil], &result);
     }
     
-    return NULL;
+    return result;
 }
 
 FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
     FREObject result;
     
-    NSArray* people = [[Contacts sharedInstance] pickGetContactsResult];
+    uint32_t callId;
+    
+    FREGetObjectAsUint32(argv[0], &callId);
+    
+    NSArray* people = [[Contacts sharedInstance] pickGetContactsResult: callId];
     
     result = peopleToContacts(people);
     

@@ -100,21 +100,13 @@
     
     [self setDateProperty:contact withValue:ABRecordCopyValue(person, kABPersonModificationDateProperty) forKey:@"modificationDate"];
     
-    // TODO: Add address
-    
     // address
     
-    ABMultiValueRef address  = ABRecordCopyValue(person, kABPersonAddressProperty);
-    
-    [self setMultiDictionaryProperty:contact withValue:address forKey:@"address"];
+    [self setMultiDictionaryProperty:contact withValue:ABRecordCopyValue(person, kABPersonAddressProperty) forKey:@"address"];
     
     // profiles
     
-    ABMultiValueRef profiles = ABRecordCopyValue(person, kABPersonSocialProfileProperty);
-    
-    [self setMultiDictionaryProperty:contact withValue:profiles forKey:@"profiles"];
-    
-    return contact;
+    [self setMultiDictionaryProperty:contact withValue:ABRecordCopyValue(person, kABPersonSocialProfileProperty) forKey:@"profiles"];
     
     // thumbnail
     
@@ -128,13 +120,9 @@
     {
         [contact setValue:nil forKey:@"thumbnail"];
     }
+    
+    return contact;
 }
-
-
-//void SaveName(const void* key, const void* value, void* context)
-//{
-//
-//}
 
 #pragma mark Utility methods
 

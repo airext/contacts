@@ -62,4 +62,18 @@
     NSLog(@"Contact count is %i", count);
 }
 
+- (IBAction)getContactsAsync:(id)sender
+{
+    NSRange range = NSMakeRange(0, 1000);
+    
+    NSUInteger callId = [[Contacts sharedInstance] getContactsAsync:range];
+    
+    NSLog(@"CallId is %i", callId);
+}
+
+- (IBAction)pickGetContactsAction:(id)sender
+{
+    [[Contacts sharedInstance] pickGetContactsResult:0];
+}
+
 @end

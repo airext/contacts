@@ -64,13 +64,49 @@
                 new Response(
                     function(data:Object):void
                     {
-                       trace(data);
+                       trace("0-10", traceContacts(data));
                     },
                     function (info:Object):void
                     {
                        trace(info)
                     })
             );
+
+            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(10, 10), null,
+                new Response(
+                    function(data:Object):void
+                    {
+                       trace("10-10", traceContacts(data));
+                    },
+                    function (info:Object):void
+                    {
+                       trace(info)
+                    })
+            );
+
+            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(20, 10), null,
+                new Response(
+                    function(data:Object):void
+                    {
+                       trace("20-10", traceContacts(data));
+                    },
+                    function (info:Object):void
+                    {
+                       trace(info)
+                    })
+            );
+        }
+
+        private function traceContacts(contacts:Object):String
+        {
+            var str:String = "";
+
+            for each (var contact in contacts)
+            {
+                str += contact.compositeName + ", ";
+            }
+
+            return str;
         }
 
         private function getContactCountAsync_clickHandler(event:MouseEvent):void
@@ -90,17 +126,17 @@
 
         private function pickIsModifiedResult_clickHandler(event:MouseEvent):void
         {
-            trace(Contacts.getInstance().pickIsModifiedResult());
+            trace(Contacts.getInstance().pickIsModifiedResult(0));
         }
 
         private function pickGetContactsResult_clickHandler(event:MouseEvent):void
         {
-            trace(Contacts.getInstance().pickGetContactsResult());
+            trace(Contacts.getInstance().pickGetContactsResult(0));
         }
 
         private function pickContactCountResult_clickHandler(event:MouseEvent):void
         {
-            trace(Contacts.getInstance().pickGetContactCountResult());
+            trace(Contacts.getInstance().pickGetContactCountResult(0));
         }
 
         ]]>

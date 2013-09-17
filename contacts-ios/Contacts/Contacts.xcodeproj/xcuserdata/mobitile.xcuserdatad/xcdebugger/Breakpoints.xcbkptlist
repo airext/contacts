@@ -7,39 +7,26 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Contacts/AddressBookProviderRoutines.m"
-         timestampString = "400796234.162206"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "124"
-         endingLineNumber = "124"
-         landmarkName = "+createContact:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "Contacts/ContactsRoutines.m"
-         timestampString = "400796593.570619"
+         timestampString = "401123260.343044"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "66"
-         endingLineNumber = "66"
-         landmarkName = "setDateProperty()"
+         startingLineNumber = "424"
+         endingLineNumber = "424"
+         landmarkName = "personToContact()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Contacts/ContactsRoutines.m"
-         timestampString = "400796617.699935"
+         timestampString = "401124683.627552"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "84"
-         endingLineNumber = "84"
-         landmarkName = "setDateProperty()"
+         startingLineNumber = "430"
+         endingLineNumber = "430"
+         landmarkName = "personToContact()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

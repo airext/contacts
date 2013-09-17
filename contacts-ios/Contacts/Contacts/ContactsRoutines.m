@@ -30,6 +30,13 @@ void dispatchStatusEvent(FREContext context, NSString* code)
     FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
 }
 
+void dispatchResponseEvent(FREContext context, NSUInteger callId, NSString* status, NSString* method)
+{
+    NSString* code = [NSString stringWithFormat:@"{\"object\":\"response\", \"callId\":%i, \"method\":\"%@\", \"status\":\"%@\"}", callId, method, status];
+    
+    FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "response");
+}
+
 #pragma mark Utility functions
 
 void setStringProperty(FREObject object, const uint8_t* name, NSString* value)

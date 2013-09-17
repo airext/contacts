@@ -14,6 +14,11 @@
 #import "AddressBookProvider.h"
 
 @interface Contacts : NSObject
+{
+    NSUInteger currentCallId;
+    
+    NSMutableDictionary* resultStorage;
+}
 
 #pragma mark Shared Instance
 
@@ -35,17 +40,18 @@
 
 #pragma mark Asyncronous wrappers
 
--(void) isModifiedAsync:(NSDate*) since;
--(BOOL) pickIsModifiedResult;
+-(NSUInteger) isModifiedAsync:(NSDate*) since;
 
--(void) getContactCountAsync;
--(void) getContactsAsync:(NSRange) range;
--(NSInteger) pickGetContactCountResult;
+-(NSUInteger) getContactCountAsync;
 
--(void) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
--(NSArray*) pickGetContactsResult;
+-(NSUInteger) getContactsAsync:(NSRange) range;
+-(NSUInteger) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
 
--(void) updateContactAsync:(NSDictionary*) contact;
+-(NSUInteger) updateContactAsync:(NSDictionary*) contact;
+
+-(BOOL) pickIsModifiedResult:(NSUInteger) callId;
+-(NSArray*) pickGetContactsResult:(NSUInteger) callId;
+-(NSInteger) pickGetContactCountResult:(NSUInteger) callId;
 
 #pragma mark AddressBook methods
 
