@@ -5,7 +5,7 @@ AIR Native Extension for work with Contacts/AddressBook.
 ## Features
 
 * Works in Syncronous and Asyncronous modes
-* Provides almost all properties defined in iOS' AddressBook ([List of supported properties](http://example.com)) 
+* Provides almost all properties defined in iOS' AddressBook ([List of supported properties](https://github.com/rozd/contacts/wiki/Supported-Contact-Properrties)) 
 
 ## Requirements
 
@@ -50,10 +50,8 @@ The contacts extension could operate with Address Book in *syncronous* and *asyn
 Each syncronous method has asyncronous counterpart with name that end on _Async_ string. 
 For detailed description see API reference.
 
-[API Reference](http://example.com/)
+[API Reference](https://github.com/rozd/contacts/wiki/API-Reference/)
 
 ## Related Projects
 
 Some techniques and code has been borrowed from Memler's [ContactEditor](https://github.com/memeller/ContactEditor) and its FreshPlanet [fork](https://github.com/freshplanet/ContactEditor)
-
-https://github.com/memeller/ContactEditor
