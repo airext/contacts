@@ -25,10 +25,10 @@
         {
             var t:Number = getTimer();
 
-            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0, 10));
+            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range());
 
             trace("elapsed:", getTimer() - t);
-            Date().setMilliseconds()
+
             bmd = result[0].thumbnail;
 
             trace(result[0].emails.length > 0 ? result[0].emails[0] : "");
@@ -38,7 +38,7 @@
 
         private function getContactCount_clickHandler(event:MouseEvent):void
         {
-            var result:uint = Contacts.getInstance().getContactCount();
+            var result:int = Contacts.getInstance().getContactCount();
 
             trace(result);
         }
@@ -60,11 +60,15 @@
 
         private function getContactsAsync_clickHandler(event:MouseEvent):void
         {
-            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(0, 10), null,
+            var t:Number = getTimer();
+
+            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(), null,
                 new Response(
                     function(data:Object):void
                     {
-                       trace("0-10", traceContacts(data));
+                        trace("elapsed:", getTimer() - t);
+
+                        trace("0-10", traceContacts(data));
                     },
                     function (info:Object):void
                     {
@@ -72,29 +76,29 @@
                     })
             );
 
-            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(10, 10), null,
-                new Response(
-                    function(data:Object):void
-                    {
-                       trace("10-10", traceContacts(data));
-                    },
-                    function (info:Object):void
-                    {
-                       trace(info)
-                    })
-            );
-
-            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(20, 10), null,
-                new Response(
-                    function(data:Object):void
-                    {
-                       trace("20-10", traceContacts(data));
-                    },
-                    function (info:Object):void
-                    {
-                       trace(info)
-                    })
-            );
+//            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(10, 10), null,
+//                new Response(
+//                    function(data:Object):void
+//                    {
+//                       trace("10-10", traceContacts(data));
+//                    },
+//                    function (info:Object):void
+//                    {
+//                       trace(info)
+//                    })
+//            );
+//
+//            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(20, 10), null,
+//                new Response(
+//                    function(data:Object):void
+//                    {
+//                       trace("20-10", traceContacts(data));
+//                    },
+//                    function (info:Object):void
+//                    {
+//                       trace(info)
+//                    })
+//            );
         }
 
         private function traceContacts(contacts:Object):String
