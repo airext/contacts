@@ -16,8 +16,14 @@ typedef void (^AddressBookRequestHandler) (ABAddressBookRef addressBook, BOOL av
 
 @interface AddressBookAccessor : NSObject
 
-+(BOOL) isAvailable:(ABAuthorizationStatus)status;
+#pragma mark Shared Instance
 
-+(void) request:(AddressBookRequestHandler) handler;
++(AddressBookAccessor*) sharedInstance;
+
+-(BOOL) isAvailable:(ABAuthorizationStatus)status;
+
+-(void) request:(AddressBookRequestHandler) handler;
+
+-(BOOL) isIOS6;
 
 @end

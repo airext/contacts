@@ -17,5 +17,7 @@
 - (IBAction)getContactCountAction:(id)sender;
 - (IBAction)getContactsAsync:(id)sender;
 - (IBAction)pickGetContactsAction:(id)sender;
+- (IBAction)getContactCountAsyncAction:(id)sender;
+- (IBAction)isModifiedAsyncAction:(id)sender;
 
 @end

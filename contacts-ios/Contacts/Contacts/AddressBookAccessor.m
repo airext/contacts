@@ -10,14 +10,28 @@
 
 @implementation AddressBookAccessor
 
+#pragma mark Shared Instance
+
+static AddressBookAccessor* _sharedInstance = nil;
+
++(AddressBookAccessor*) sharedInstance
+{
+    if (_sharedInstance == nil)
+    {
+        _sharedInstance = [[super allocWithZone:NULL] init];
+    }
+    
+    return _sharedInstance;
+}
+
 #pragma mark Main methods
 
-+(BOOL) isAvailable:(ABAuthorizationStatus)status
+-(BOOL) isAvailable:(ABAuthorizationStatus)status
 {
     return status == kABAuthorizationStatusAuthorized || status == kABAuthorizationStatusRestricted;
 }
 
-+(void) request:(AddressBookRequestHandler)handler
+-(void) request:(AddressBookRequestHandler)handler
 {
     ABAddressBookRef addressBook = NULL;
     
@@ -43,15 +57,15 @@
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                     ^(void)
                     {
-                        handler(addressBook, [self isAvailable:status]);
-
+                        handler(addressBook, granted);
+                                                                                
                         CFRelease(addressBook);
                     });
                 });
             }
             else
             {
-                handler(addressBook, [self isAvailable:status]);
+                handler(addressBook, TRUE);
                 
                 if (addressBook != nil)
                 {
@@ -72,7 +86,7 @@
 
 #pragma mark Util methods
 
-+( BOOL ) isIOS6
+-(BOOL) isIOS6
 {
     float currentVersion = 6.0;
     return [[[UIDevice currentDevice] systemVersion] floatValue] >= currentVersion;

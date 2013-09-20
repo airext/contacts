@@ -16,7 +16,7 @@
 
 @implementation Contacts
 
-#pragma mark Instantiation
+#pragma mark Shared Instance
 
 static Contacts* _sharedInstance = nil;
 
@@ -47,27 +47,39 @@ static Contacts* _sharedInstance = nil;
     return TRUE;
 }
 
-#pragma mark Asynchronous wrappers
+#pragma mark Asynchronous methods
 
 -(NSUInteger) isModifiedAsync:(NSDate*) since
 {
     NSUInteger callId = [self getNextCallId];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-    ^(void)
+    __block BOOL result = FALSE;
+    
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
     {
-        BOOL result = [self isModified:since];
-            
-        dispatch_async(dispatch_get_main_queue(),
-        ^(void)
+        if (available)
         {
-            [self holdAsyncCallResult:[NSNumber numberWithBool:result] forCallId:callId];
-            
-            dispatchResponseEvent(self.context, callId, @"result", @"isModifiedAsync");
-            
-            dispatchStatusEvent(self.context, @"Contacts.IsModified.Result");
-        });
-    });
+            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+            [provider setAddressBook:addressBook];
+             
+            result = [provider isModified:since];
+             
+            dispatch_async(dispatch_get_main_queue(),
+            ^(void)
+            {
+                [self holdAsyncCallResult:[NSNumber numberWithBool:result] forCallId:callId];
+                                
+                dispatchResponseEvent(self.context, callId, @"result", @"isModifiedAsync");
+                                
+                dispatchStatusEvent(self.context, @"Contacts.IsModified.Result");
+            });
+        }
+        else
+        {
+            dispatchErrorEvent(self.context, @"Contacts.IsModified.Failed");
+        }
+     }];
     
     return callId;
 }
@@ -81,21 +93,33 @@ static Contacts* _sharedInstance = nil;
 {
     NSUInteger callId = [self getNextCallId];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-    ^(void)
+    __block NSArray* result = NULL;
+    
+    [[AddressBookAccessor sharedInstance] request: ^(ABAddressBookRef addressBook, BOOL available)
     {
-        NSArray* result = [self getContacts:range withOptions:options];
-                       
-        dispatch_async(dispatch_get_main_queue(),
-        ^(void)
+        if (available)
         {
-            [self holdAsyncCallResult:result forCallId:callId];
+            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
             
-            dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync");
+            provider.addressBook = addressBook;
             
-            dispatchStatusEvent(self.context, @"Contacts.GetContacts.Result");
-        });
-    });
+            result = [provider getPeople:range withOptions:options];
+            
+            dispatch_async(dispatch_get_main_queue(),
+            ^(void)
+            {
+                [self holdAsyncCallResult:result forCallId:callId];
+                
+                dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync");
+                
+                dispatchStatusEvent(self.context, @"Contacts.GetContacts.Result");
+            });
+        }
+        else
+        {
+            dispatchErrorEvent(self.context, @"Contacts.GetContacts.Failed");
+        }
+    }];
     
     return callId;
 }
@@ -103,22 +127,34 @@ static Contacts* _sharedInstance = nil;
 -(NSUInteger) getContactCountAsync
 {
     NSUInteger callId = [self getNextCallId];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-    ^(void)
+
+    __block NSInteger result = -1;
+        
+    [[AddressBookAccessor sharedInstance] request: ^(ABAddressBookRef addressBook, BOOL available)
     {
-        NSInteger result = [self getContactCount];
-                       
-        dispatch_async(dispatch_get_main_queue(),
-        ^(void)
+        if (available)
         {
-            [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
-            
-            dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync");
-            
-            dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
-        });
-    });
+            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+                 
+            provider.addressBook = addressBook;
+                 
+            result = [provider getPersonCount];
+                 
+            dispatch_async(dispatch_get_main_queue(),
+            ^(void)
+            {
+                [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
+                                    
+                dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync");
+                                    
+                dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
+            });
+        }
+        else
+        {
+            dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
+        }
+    }];
     
     return callId;
 }
@@ -127,21 +163,33 @@ static Contacts* _sharedInstance = nil;
 {
     NSUInteger callId = [self getNextCallId];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-    ^(void)
+    __block BOOL result = FALSE;
+    
+    [[AddressBookAccessor sharedInstance] request: ^(ABAddressBookRef addressBook, BOOL available)
     {
-        BOOL result = [self updateContact:contact];
-                       
-        dispatch_async(dispatch_get_main_queue(),
-        ^(void)
+        if (available)
         {
-            NSLog(@"updateContact=%i", result);
-            
-            dispatchResponseEvent(self.context, callId, @"result", @"updateContactAsync");
-            
-            dispatchStatusEvent(self.context, @"Contacts.UpdateContact.Failed");
-        });
-    });
+            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+            provider.addressBook = addressBook;
+             
+            // TODO: update contact
+             
+            dispatch_async(dispatch_get_main_queue(),
+            ^(void)
+            {
+                [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
+                                
+                dispatchResponseEvent(self.context, callId, @"result", @"updateContactAsync");
+                                
+                dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
+            });
+        }
+        else
+        {
+            dispatchErrorEvent(self.context, @"Contacts.UpdateContact.Failed");
+        }
+     }];
     
     return callId;
 }
@@ -231,7 +279,7 @@ static Contacts* _sharedInstance = nil;
 {
     __block BOOL result = FALSE;
     
-    [AddressBookAccessor request:^(ABAddressBookRef addressBook, BOOL available)
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
     {
         if (available)
         {
@@ -259,7 +307,7 @@ static Contacts* _sharedInstance = nil;
 {
     __block NSArray* result = NULL;
     
-    [AddressBookAccessor request:^(ABAddressBookRef addressBook, BOOL available)
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
     {
         if (available)
         {
@@ -282,21 +330,21 @@ static Contacts* _sharedInstance = nil;
 {
     __block NSInteger result = -1;
     
-    [AddressBookAccessor request:^(ABAddressBookRef addressBook, BOOL available)
-     {
-         if (available)
-         {
-             AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
+    {
+        if (available)
+        {
+            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
              
-             provider.addressBook = addressBook;
+            provider.addressBook = addressBook;
              
-             result = [provider getPersonCount];
-         }
-         else
-         {
-             dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
-         }
-     }];
+            result = [provider getPersonCount];
+        }
+        else
+        {
+            dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
+        }
+    }];
     
     return result;
 }

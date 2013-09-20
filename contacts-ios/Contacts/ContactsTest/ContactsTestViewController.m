@@ -76,4 +76,21 @@
     [[Contacts sharedInstance] pickGetContactsResult:0];
 }
 
+- (IBAction)getContactCountAsyncAction:(id)sender
+{
+    [[Contacts sharedInstance] getContactCountAsync];
+}
+
+- (IBAction)isModifiedAsyncAction:(id)sender
+{
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyyMMdd"];
+    
+    NSString* lastSyncString = @"20100312";
+    
+    NSDate* since = [formatter dateFromString:lastSyncString];
+    
+    [[Contacts sharedInstance] isModifiedAsync:since];
+}
+
 @end
