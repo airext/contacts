@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
-               xmlns:s="library://ns.adobe.com/flex/spark">
+               xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="creationCompleteHandler(event)">
 
     <fx:Script>
         <![CDATA[
@@ -8,6 +8,8 @@
         import com.github.rozd.ane.core.Response;
         import com.github.rozd.ane.core.contacts;
         import com.github.rozd.ane.data.Range;
+
+        import mx.events.FlexEvent;
 
         use namespace contacts;
 
@@ -46,15 +48,15 @@
         private function isModifiedAsync_clickHandler(event:MouseEvent):void
         {
             Contacts.getInstance().isModifiedAsync(new Date(2012),
-            new Response(
-                function(data:Object):void
-                {
-                    trace(data);
-                },
-                function (info:Object):void
-                {
-                    trace(info)
-                })
+                                                   new Response(
+                                                           function (data:Object):void
+                                                           {
+                                                               trace(data);
+                                                           },
+                                                           function (info:Object):void
+                                                           {
+                                                               trace(info)
+                                                           })
             );
         }
 
@@ -63,17 +65,17 @@
             var t:Number = getTimer();
 
             Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(), null,
-                new Response(
-                    function(data:Object):void
-                    {
-                        trace("elapsed:", getTimer() - t);
+                                                    new Response(
+                                                            function (data:Object):void
+                                                            {
+                                                                trace("elapsed:", getTimer() - t);
 
-                        trace("0-10", traceContacts(data));
-                    },
-                    function (info:Object):void
-                    {
-                       trace(info)
-                    })
+                                                                trace("0-10", traceContacts(data));
+                                                            },
+                                                            function (info:Object):void
+                                                            {
+                                                                trace(info)
+                                                            })
             );
 
 //            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(10, 10), null,
@@ -116,15 +118,15 @@
         private function getContactCountAsync_clickHandler(event:MouseEvent):void
         {
             Contacts.getInstance().getContactCountAsync(
-                new Response(
-                    function(data:Object):void
-                    {
-                        trace(data);
-                    },
-                    function (info:Object):void
-                    {
-                        trace(info)
-                    })
+                    new Response(
+                            function (data:Object):void
+                            {
+                                trace(data);
+                            },
+                            function (info:Object):void
+                            {
+                                trace(info)
+                            })
             );
         }
 
@@ -143,6 +145,15 @@
             trace(Contacts.getInstance().pickGetContactCountResult(0));
         }
 
+        private function creationCompleteHandler(event:FlexEvent):void
+        {
+            Contacts.getInstance().addEventListener(StatusEvent.STATUS, statusHandler);
+        }
+
+        private function statusHandler(event:StatusEvent):void
+        {
+            trace(event.code, event.level);
+        }
         ]]>
     </fx:Script>
 

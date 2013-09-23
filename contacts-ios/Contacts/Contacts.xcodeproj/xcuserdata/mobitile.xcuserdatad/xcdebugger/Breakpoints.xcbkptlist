@@ -16,18 +16,5 @@
          landmarkName = "personToContact()"
          landmarkType = "7">
       </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Contacts/ContactsRoutines.m"
-         timestampString = "401124683.627552"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "430"
-         endingLineNumber = "430"
-         landmarkName = "personToContact()"
-         landmarkType = "7">
-      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

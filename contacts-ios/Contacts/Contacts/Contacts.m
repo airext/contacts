@@ -34,12 +34,6 @@ static Contacts* _sharedInstance = nil;
 
 @synthesize context;
 
-@synthesize isModifiedResult;
-
-@synthesize getContactCountResult;
-
-@synthesize getContactsResult;
-
 #pragma mark ANE methods
 
 -(BOOL) isSupported
@@ -376,9 +370,45 @@ static Contacts* _sharedInstance = nil;
     return NULL;
 }
 
+#pragma mark Internal methods
+
+-(void) registerChangeCallback
+{
+    if (addressBookForChangeCallback)
+    {
+        [self unregisterChangeCallback];
+    }
+    
+    CFErrorRef error = nil;
+    
+    addressBookForChangeCallback = ABAddressBookCreateWithOptions(nil, &error);
+    
+    if (error == NULL)
+    {
+        ABAddressBookRegisterExternalChangeCallback(addressBookForChangeCallback, externalChangeCallback, (__bridge void *)(self));
+    }
+}
+
+-(void) unregisterChangeCallback
+{
+    if (addressBookForChangeCallback)
+    {
+        ABAddressBookUnregisterExternalChangeCallback(addressBookForChangeCallback, externalChangeCallback, (__bridge void *)(self));
+
+        addressBookForChangeCallback = nil;
+    }
+}
+
 @end
 
 #pragma mark C Interface
+
+void externalChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info, void* context)
+{
+    ABAddressBookRevert(addressBook);
+    
+    dispatchStatusEvent([Contacts sharedInstance].context, @"Contacts.AddressBook.Change");
+}
 
 #pragma mark FRE Synchronous functions
 
@@ -553,10 +583,14 @@ void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     *functionsToSet = func;
     
     [Contacts sharedInstance].context = ctx;
+    
+    [[Contacts sharedInstance] registerChangeCallback];
 }
 
 void ContactsContextFinalizer(FREContext ctx)
 {
+    [[Contacts sharedInstance] unregisterChangeCallback];
+    
     [Contacts sharedInstance].context = nil;
 }
 

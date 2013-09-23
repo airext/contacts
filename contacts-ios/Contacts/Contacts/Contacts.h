@@ -18,6 +18,8 @@
     NSUInteger currentCallId;
     
     NSMutableDictionary* resultStorage;
+    
+    ABAddressBookRef addressBookForChangeCallback;
 }
 
 #pragma mark Shared Instance
@@ -28,32 +30,25 @@
 
 @property FREContext context;
 
-@property BOOL isModifiedResult;
-
-@property NSInteger getContactCountResult;
-
-@property NSArray* getContactsResult;
-
 #pragma mark ANE methods
 
 -(BOOL) isSupported;
 
-#pragma mark Asyncronous wrappers
+#pragma mark Asyncronous methods
 
 -(NSUInteger) isModifiedAsync:(NSDate*) since;
-
 -(NSUInteger) getContactCountAsync;
-
 -(NSUInteger) getContactsAsync:(NSRange) range;
 -(NSUInteger) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
-
 -(NSUInteger) updateContactAsync:(NSDictionary*) contact;
+
+#pragma mark Pick last result
 
 -(BOOL) pickIsModifiedResult:(NSUInteger) callId;
 -(NSArray*) pickGetContactsResult:(NSUInteger) callId;
 -(NSInteger) pickGetContactCountResult:(NSUInteger) callId;
 
-#pragma mark AddressBook methods
+#pragma mark Synchronous methods
 
 -(BOOL) isModified:(NSDate*) since;
 -(NSInteger) getContactCount;
@@ -61,7 +56,16 @@
 -(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
 -(BOOL) updateContact:(NSDictionary*) contact;
 
+#pragma mark Internal methods
+
+-(void) registerChangeCallback;
+-(void) unregisterChangeCallback;
+
 #pragma mark C Interface
+
+#pragma mark Change callback
+
+void externalChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info, void* context);
 
 #pragma mark FRE Functions
 

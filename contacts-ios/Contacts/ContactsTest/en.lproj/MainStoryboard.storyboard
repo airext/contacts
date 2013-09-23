@@ -104,23 +104,53 @@
                                     <action selector="isModifiedAsyncAction:" destination="2" eventType="touchUpInside" id="kpV-99-oW8"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6eE-hc-B2u">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="registerChangeCallback">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="registerChangeCallbackAction:" destination="2" eventType="touchUpInside" id="MIY-ii-aoK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePK-hL-uv8">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="unregisterChangeCallback">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="unregisterChangeCallbackAction:" destination="2" eventType="touchUpInside" id="ojv-ng-JSX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="mag-2E-bAD" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="9Xs-lx-xgN"/>
+                            <constraint firstItem="ePK-hL-uv8" firstAttribute="top" secondItem="6eE-hc-B2u" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="F81-L7-HVq"/>
+                            <constraint firstItem="6eE-hc-B2u" firstAttribute="top" secondItem="3" secondAttribute="top" constant="10" id="FMg-bh-EMK"/>
                             <constraint firstItem="AnO-OB-FPS" firstAttribute="centerX" secondItem="2gl-Dj-mpp" secondAttribute="centerX" type="default" id="Kuo-bs-Bn9"/>
-                            <constraint firstItem="Zg0-CW-rs8" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="L11-Nl-KIR"/>
+                            <constraint firstItem="ePK-hL-uv8" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="PCj-Xn-OGk"/>
+                            <constraint firstItem="Zg0-CW-rs8" firstAttribute="leading" secondItem="2gl-Dj-mpp" secondAttribute="leading" type="default" id="Qj2-Lc-LFD"/>
                             <constraint firstAttribute="bottom" secondItem="2gl-Dj-mpp" secondAttribute="bottom" constant="196" id="TYL-eQ-OaU"/>
                             <constraint firstItem="mag-2E-bAD" firstAttribute="top" secondItem="Ozy-KM-OqO" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="WmE-vq-0P6"/>
                             <constraint firstItem="huD-t6-PrI" firstAttribute="centerX" secondItem="bIG-lV-1RL" secondAttribute="centerX" type="default" id="XI2-3w-Dth"/>
                             <constraint firstItem="huD-t6-PrI" firstAttribute="top" secondItem="Zg0-CW-rs8" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="bKt-PF-sFM"/>
                             <constraint firstItem="Zg0-CW-rs8" firstAttribute="centerX" secondItem="huD-t6-PrI" secondAttribute="centerX" type="default" id="czW-pa-MdO"/>
                             <constraint firstItem="Ozy-KM-OqO" firstAttribute="centerX" secondItem="mag-2E-bAD" secondAttribute="centerX" type="default" id="fTJ-zL-Hym"/>
-                            <constraint firstItem="Zg0-CW-rs8" firstAttribute="top" secondItem="3" secondAttribute="top" constant="128" id="gF9-qh-M9x"/>
+                            <constraint firstItem="ePK-hL-uv8" firstAttribute="centerX" secondItem="Zg0-CW-rs8" secondAttribute="centerX" type="default" id="g6U-TW-MeB"/>
                             <constraint firstItem="bIG-lV-1RL" firstAttribute="top" secondItem="huD-t6-PrI" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="hFl-6l-Tct"/>
                             <constraint firstItem="AnO-OB-FPS" firstAttribute="centerX" secondItem="Ozy-KM-OqO" secondAttribute="centerX" type="default" id="inW-c8-tli"/>
-                            <constraint firstItem="bIG-lV-1RL" firstAttribute="centerX" secondItem="2gl-Dj-mpp" secondAttribute="centerX" type="default" id="jPM-oG-mun"/>
+                            <constraint firstItem="Zg0-CW-rs8" firstAttribute="top" secondItem="3" secondAttribute="top" constant="128" id="lNO-ys-YiO"/>
                             <constraint firstItem="Ozy-KM-OqO" firstAttribute="top" secondItem="AnO-OB-FPS" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="pLn-Jb-0p1"/>
+                            <constraint firstItem="ePK-hL-uv8" firstAttribute="centerX" secondItem="6eE-hc-B2u" secondAttribute="centerX" type="default" id="xeS-8s-Lja"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -128,6 +158,25 @@
             </objects>
         </scene>
     </scenes>
+    <classes>
+        <class className="ContactsTestViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactsTestViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="getContactCountAction:"/>
+                <relationship kind="action" name="getContactCountAsyncAction:"/>
+                <relationship kind="action" name="getContacts:"/>
+                <relationship kind="action" name="getContactsAsync:"/>
+                <relationship kind="action" name="isModifiedAction:"/>
+                <relationship kind="action" name="isModifiedAsyncAction:"/>
+                <relationship kind="action" name="pickGetContactsAction:"/>
+                <relationship kind="action" name="registerChangeCallbackAction:"/>
+                <relationship kind="action" name="unregisterChangeCallbackAction:"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

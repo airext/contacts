@@ -93,4 +93,14 @@
     [[Contacts sharedInstance] isModifiedAsync:since];
 }
 
+- (IBAction)registerChangeCallbackAction:(id)sender
+{
+    [[Contacts sharedInstance] registerChangeCallback];
+}
+
+- (IBAction)unregisterChangeCallbackAction:(id)sender
+{
+    [[Contacts sharedInstance] unregisterChangeCallback];
+}
+
 @end
