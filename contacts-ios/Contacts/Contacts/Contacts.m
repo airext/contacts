@@ -41,6 +41,82 @@ static Contacts* _sharedInstance = nil;
     return TRUE;
 }
 
+#pragma mark Synchronous methods
+
+-(BOOL) isModified:(NSDate*) since
+{
+    __block BOOL result = FALSE;
+    
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
+     {
+         if (available)
+         {
+             AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+             [provider setAddressBook:addressBook];
+             
+             result = [provider isModified:since];
+         }
+         else
+         {
+             dispatchErrorEvent(self.context, @"Contacts.IsModified.Failed");
+         }
+     }];
+    
+    return result;
+}
+
+-(NSArray*) getContacts:(NSRange) range
+{
+    return [self getContacts:range withOptions:NULL];
+}
+
+-(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options
+{
+    __block NSArray* result = NULL;
+    
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
+     {
+         if (available)
+         {
+             AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+             provider.addressBook = addressBook;
+             
+             result = [provider getPeople:range withOptions:options];
+         }
+         else
+         {
+             dispatchErrorEvent(self.context, @"Contacts.GetContacts.Failed");
+         }
+     }];
+    
+    return result;
+}
+
+-(NSInteger) getContactCount
+{
+    __block NSInteger result = -1;
+    
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
+     {
+         if (available)
+         {
+             AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+             provider.addressBook = addressBook;
+             
+             result = [provider getPersonCount];
+         }
+         else
+         {
+             dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
+         }
+     }];
+    
+    return result;
+}
+
 #pragma mark Asynchronous methods
 
 -(NSUInteger) isModifiedAsync:(NSDate*) since
@@ -188,7 +264,7 @@ static Contacts* _sharedInstance = nil;
     return callId;
 }
 
-// 
+#pragma mark Asynchronous result methods
 
 -(NSUInteger) getNextCallId
 {
@@ -200,8 +276,6 @@ static Contacts* _sharedInstance = nil;
     return currentCallId;
 }
 
-// hold method
-
 -(void) holdAsyncCallResult:(NSObject*) result forCallId:(NSUInteger) callId
 {
     if (resultStorage == nil)
@@ -209,8 +283,6 @@ static Contacts* _sharedInstance = nil;
     
     [resultStorage setValue:result forKey:[NSString stringWithFormat:@"%i", callId]];
 }
-
-// pick methods
 
 -(BOOL) pickIsModifiedResult:(NSUInteger) callId
 {
@@ -265,82 +337,6 @@ static Contacts* _sharedInstance = nil;
     }
     
     return -1;
-}
-
-#pragma mark Synchronous methods
-
--(BOOL) isModified:(NSDate*) since
-{
-    __block BOOL result = FALSE;
-    
-    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
-    {
-        if (available)
-        {
-            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
-            
-            [provider setAddressBook:addressBook];
-            
-            result = [provider isModified:since];
-        }
-        else
-        {
-            dispatchErrorEvent(self.context, @"Contacts.IsModified.Failed");
-        }
-    }];
-    
-    return result;
-}
-
--(NSArray*) getContacts:(NSRange) range
-{
-    return [self getContacts:range withOptions:NULL];
-}
-
--(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options
-{
-    __block NSArray* result = NULL;
-    
-    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
-    {
-        if (available)
-        {
-            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
-            
-            provider.addressBook = addressBook;
-            
-            result = [provider getPeople:range withOptions:options];
-        }
-        else
-        {
-            dispatchErrorEvent(self.context, @"Contacts.GetContacts.Failed");
-        }
-    }];
-    
-    return result;
-}
-
--(NSInteger) getContactCount
-{
-    __block NSInteger result = -1;
-    
-    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
-    {
-        if (available)
-        {
-            AddressBookProvider* provider = [[AddressBookProvider alloc] init];
-             
-            provider.addressBook = addressBook;
-             
-            result = [provider getPersonCount];
-        }
-        else
-        {
-            dispatchErrorEvent(self.context, @"Contacts.GetContactCount.Failed");
-        }
-    }];
-    
-    return result;
 }
 
 #pragma mark Modification data
@@ -411,6 +407,15 @@ void externalChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info, 
 }
 
 #pragma mark FRE Synchronous functions
+
+FREObject isSupported(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    FREObject result = NULL;
+    
+    FRENewObjectFromBool([[Contacts sharedInstance] isSupported], &result);
+    
+    return result;
+}
 
 FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
@@ -540,45 +545,49 @@ FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t
 
 void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-    *numFunctionsToTest = 9;
+    *numFunctionsToTest = 10;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * (*numFunctionsToTest));
     
-    func[0].name = (const uint8_t*) "isModified";
+    func[0].name = (const uint8_t*) "isSupported";
     func[0].functionData = NULL;
-    func[0].function = &isModified;
+    func[0].function = &isSupported;
     
-    func[1].name = (const uint8_t*) "getContacts";
+    func[1].name = (const uint8_t*) "isModified";
     func[1].functionData = NULL;
-    func[1].function = &getContacts;
+    func[1].function = &isModified;
     
-    func[2].name = (const uint8_t*) "getContactCount";
+    func[2].name = (const uint8_t*) "getContacts";
     func[2].functionData = NULL;
-    func[2].function = &getContactCount;
+    func[2].function = &getContacts;
     
-    func[3].name = (const uint8_t*) "isModifiedAsync";
+    func[3].name = (const uint8_t*) "getContactCount";
     func[3].functionData = NULL;
-    func[3].function = &isModifiedAsync;
+    func[3].function = &getContactCount;
     
-    func[4].name = (const uint8_t*) "pickIsModifiedResult";
+    func[4].name = (const uint8_t*) "isModifiedAsync";
     func[4].functionData = NULL;
-    func[4].function = &pickIsModifiedResult;
+    func[4].function = &isModifiedAsync;
     
-    func[5].name = (const uint8_t*) "getContactsAsync";
+    func[5].name = (const uint8_t*) "pickIsModifiedResult";
     func[5].functionData = NULL;
-    func[5].function = &getContactsAsync;
+    func[5].function = &pickIsModifiedResult;
     
-    func[6].name = (const uint8_t*) "pickGetContactsResult";
+    func[6].name = (const uint8_t*) "getContactsAsync";
     func[6].functionData = NULL;
-    func[6].function = &pickGetContactsResult;
+    func[6].function = &getContactsAsync;
     
-    func[7].name = (const uint8_t*) "getContactCountAsync";
+    func[7].name = (const uint8_t*) "pickGetContactsResult";
     func[7].functionData = NULL;
-    func[7].function = &getContactCountAsync;
+    func[7].function = &pickGetContactsResult;
     
-    func[8].name = (const uint8_t*) "pickGetContactCountResult";
+    func[8].name = (const uint8_t*) "getContactCountAsync";
     func[8].functionData = NULL;
-    func[8].function = &pickGetContactCountResult;
+    func[8].function = &getContactCountAsync;
+    
+    func[9].name = (const uint8_t*) "pickGetContactCountResult";
+    func[9].functionData = NULL;
+    func[9].function = &pickGetContactCountResult;
     
     *functionsToSet = func;
     

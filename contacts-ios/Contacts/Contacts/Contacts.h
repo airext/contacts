@@ -34,6 +34,14 @@
 
 -(BOOL) isSupported;
 
+#pragma mark Synchronous methods
+
+-(BOOL) isModified:(NSDate*) since;
+-(NSInteger) getContactCount;
+-(NSArray*) getContacts:(NSRange) range;
+-(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
+-(BOOL) updateContact:(NSDictionary*) contact;
+
 #pragma mark Asyncronous methods
 
 -(NSUInteger) isModifiedAsync:(NSDate*) since;
@@ -42,19 +50,15 @@
 -(NSUInteger) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
 -(NSUInteger) updateContactAsync:(NSDictionary*) contact;
 
-#pragma mark Pick last result
+#pragma mark Assync result methods
+
+-(NSUInteger) getNextCallId;
+
+-(void) holdAsyncCallResult:(NSObject*) result forCallId:(NSUInteger) callId;
 
 -(BOOL) pickIsModifiedResult:(NSUInteger) callId;
 -(NSArray*) pickGetContactsResult:(NSUInteger) callId;
 -(NSInteger) pickGetContactCountResult:(NSUInteger) callId;
-
-#pragma mark Synchronous methods
-
--(BOOL) isModified:(NSDate*) since;
--(NSInteger) getContactCount;
--(NSArray*) getContacts:(NSRange) range;
--(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
--(BOOL) updateContact:(NSDictionary*) contact;
 
 #pragma mark Internal methods
 
