@@ -124,6 +124,11 @@ public class Contacts extends EventDispatcher
         return context.call("getContactCount") as int;
     }
 
+    public function updateContact(contact:Object, options:Object=null):Boolean
+    {
+        return context.call("updateContact", contact, options);
+    }
+
     //-------------------------------------
     //  Methods: Asynchronous
     //-------------------------------------

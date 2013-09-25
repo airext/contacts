@@ -8,7 +8,10 @@
 
 #import <mach/mach_time.h>
 
+#import "FlashRuntimeExtensions.h"
+
 #import "AddressBookProviderRoutines.h"
+#import "AddressBookProviderUpdateRoutines.h"
 
 #import "AddressBookProvider.h"
 
@@ -126,6 +129,11 @@
 -(NSInteger) getPersonCount
 {
     return ABAddressBookGetPersonCount(_addressBook);
+}
+
+-(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
+{
+    return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
 }
 
 @end

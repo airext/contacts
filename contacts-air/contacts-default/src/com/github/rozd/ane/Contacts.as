@@ -97,6 +97,13 @@ public class Contacts extends EventDispatcher
         return -1;
     }
 
+    public function updateContact(contact:Object, options:Object=null):Boolean
+    {
+        trace("Contacts is not supported for " + Capabilities.os);
+
+        return false;
+    }
+
     //-------------------------------------
     //  Methods: Asynchronous
     //-------------------------------------

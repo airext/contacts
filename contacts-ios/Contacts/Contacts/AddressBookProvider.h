@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
+#import "FlashRuntimeExtensions.h"
 
 @interface AddressBookProvider : NSObject
 {
@@ -32,5 +33,7 @@
 //-(BOOL) getGroups;
 //
 //-(BOOL) updateRecord;
+
+-(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options;
 
 @end

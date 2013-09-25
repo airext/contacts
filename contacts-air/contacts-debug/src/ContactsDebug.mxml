@@ -16,6 +16,8 @@
         [Bindable]
         private var bmd:BitmapData;
 
+        private var contacts:Array;
+
         private function isModified_clickHandler(event:MouseEvent):void
         {
             var result:Boolean = Contacts.getInstance().isModified(new Date(2012));
@@ -30,6 +32,8 @@
             var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range());
 
             trace("elapsed:", getTimer() - t);
+
+            contacts = result;
 
             bmd = result[0].thumbnail;
 
@@ -70,7 +74,7 @@
                                                             {
                                                                 trace("elapsed:", getTimer() - t);
 
-                                                                trace("0-10", traceContacts(data));
+                                                                contacts = data as Array;
                                                             },
                                                             function (info:Object):void
                                                             {
@@ -78,29 +82,6 @@
                                                             })
             );
 
-//            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(10, 10), null,
-//                new Response(
-//                    function(data:Object):void
-//                    {
-//                       trace("10-10", traceContacts(data));
-//                    },
-//                    function (info:Object):void
-//                    {
-//                       trace(info)
-//                    })
-//            );
-//
-//            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(20, 10), null,
-//                new Response(
-//                    function(data:Object):void
-//                    {
-//                       trace("20-10", traceContacts(data));
-//                    },
-//                    function (info:Object):void
-//                    {
-//                       trace(info)
-//                    })
-//            );
         }
 
         private function traceContacts(contacts:Object):String
@@ -154,6 +135,93 @@
         {
             trace(event.code, event.level);
         }
+
+        private function updateContact_clickHandler(event:MouseEvent):void
+        {
+            var contact:Object = contacts[0];
+
+            if (contact.firstName)
+                contact.firstName += "*";
+
+            if (contact.lastName)
+                contact.lastName += "*";
+
+            if (contact.middleName)
+                contact.middleName += "*";
+
+            if (contact.prefix)
+                contact.prefix += "*";
+
+            if (contact.suffix)
+                contact.suffix += "*";
+
+            if (contact.nickname)
+                contact.nickname += "*";
+
+            if (contact.firstNamePhonetic)
+                contact.firstNamePhonetic += "*";
+
+            if (contact.lastNamePhonetic)
+                contact.lastNamePhonetic += "*";
+
+            if (contact.middleNamePhonetic)
+                contact.middleNamePhonetic += "*";
+
+            if (contact.organization)
+                contact.organization += "*";
+
+            if (contact.jobTitle)
+                contact.jobTitle += "*";
+
+            if (contact.department)
+                contact.department += "*";
+
+            if (contact.note)
+                contact.note += "*";
+
+            var hasMobitile:Boolean = false;
+
+            for each (var profile in contact.profiles)
+            {
+//                if (profile.service)
+//                    profile.service += "*";
+
+                hasMobitile = hasMobitile || profile.service == "Mobitile";
+
+                if (profile.url)
+                    profile.url += "*";
+
+                if (profile.username)
+                    profile.username += "*";
+            }
+
+            if (!hasMobitile)
+            {
+                contact.profiles ||= [];
+                contact.profiles.push({"service":"Mobitile", "username":"rozd", "url":"http://mobitile.com/rozd"});
+            }
+
+            for each (var address in contact.address)
+            {
+                for (var p:String in address)
+                {
+                    if (address[p] is String)
+                        address[p] += "*";
+                }
+            }
+
+            for each (var email in contact.emails)
+            {
+                email.value += "*";
+            }
+
+            for each (var phone in contact.phones)
+            {
+                phone.value += "*";
+            }
+
+            Contacts.getInstance().updateContact(contact);
+        }
         ]]>
     </fx:Script>
 
@@ -161,7 +229,9 @@
         <s:VerticalLayout paddingTop="20" paddingBottom="20" horizontalAlign="center" />
     </s:layout>
 
-    <s:Image source="{bmd}" />
+    <!--<s:Image source="{bmd}" />-->
+
+    <s:Button label="updateContact" click="updateContact_clickHandler(event)" />
 
     <s:Button label="isModified" click=" isModified_clickHandler(event)" />
 

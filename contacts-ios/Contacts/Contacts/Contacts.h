@@ -40,7 +40,7 @@
 -(NSInteger) getContactCount;
 -(NSArray*) getContacts:(NSRange) range;
 -(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
--(BOOL) updateContact:(NSDictionary*) contact;
+-(BOOL) updateContact:(FREObject) contact;
 
 #pragma mark Asyncronous methods
 
@@ -48,7 +48,7 @@
 -(NSUInteger) getContactCountAsync;
 -(NSUInteger) getContactsAsync:(NSRange) range;
 -(NSUInteger) getContactsAsync:(NSRange) range withOptions:(NSDictionary*) options;
--(NSUInteger) updateContactAsync:(NSDictionary*) contact;
+-(NSUInteger) updateContactAsync:(FREObject) contact;
 
 #pragma mark Assync result methods
 
@@ -85,6 +85,8 @@ FREObject pickGetContactCountResult(FREContext context, void* functionData, uint
 
 FREObject getContactsAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
+
+FREObject updateContact(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);
 
 #pragma mark FRE ContextInitializer/ContextFinalizer
 
