@@ -10,6 +10,8 @@
 
 #import "FlashRuntimeExtensions.h"
 
+#import "FRETypeConversion.h"
+
 #import "ContactsRoutines.h"
 
 @implementation ContactsRoutines
@@ -45,9 +47,7 @@ void setStringProperty(FREObject object, const uint8_t* name, NSString* value)
     {
         FREObject propertyValue;
         
-        const char* valueInUTF8 = [value UTF8String];
-        
-        FRENewObjectFromUTF8(strlen(valueInUTF8) + 1, (const uint8_t*) valueInUTF8, &propertyValue);
+        [FRETypeConversion convertNSStringToFREString:value asString:&propertyValue];
         
         FRESetObjectProperty(object, name, propertyValue, NULL);
     }
@@ -341,17 +341,17 @@ FREObject personToContact(NSDictionary* person)
     
     setStringProperty(contact, (const uint8_t*) "middleName", middleName);
 
-    // prefixProperty
+    // prefix
     
-    NSString* prefixProperty = [person valueForKey:@"prefixProperty"];
+    NSString* prefix = [person valueForKey:@"prefix"];
     
-    setStringProperty(contact, (const uint8_t*) "prefixProperty", prefixProperty);
+    setStringProperty(contact, (const uint8_t*) "prefix", prefix);
     
-    // suffixProperty
+    // suffix
     
-    NSString* suffixProperty = [person valueForKey:@"suffixProperty"];
+    NSString* suffix = [person valueForKey:@"suffix"];
     
-    setStringProperty(contact, (const uint8_t*) "suffixProperty", suffixProperty);
+    setStringProperty(contact, (const uint8_t*) "suffix", suffix);
     
     // nickname
     

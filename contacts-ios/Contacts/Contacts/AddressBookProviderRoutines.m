@@ -40,13 +40,13 @@
     
     [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonLastNameProperty) forKey:@"lastName"];
     
-    // prefixProperty
+    // prefix
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonPrefixProperty) forKey:@"prefixProperty"];
+    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonPrefixProperty) forKey:@"prefix"];
     
-    // suffixProperty
+    // suffix
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonSuffixProperty) forKey:@"suffixProperty"];
+    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonSuffixProperty) forKey:@"suffix"];
     
     // nickname
     
@@ -153,8 +153,6 @@
             NSMutableDictionary* profiles = [NSMutableDictionary dictionary];
             
             CFDictionaryApplyFunction(profile, setDictionaryProperty, (void*) profiles);
-            
-            CFDictionaryGetValue(profile, kABPersonSocialProfileServiceTwitter);
             
             [array insertObject:profiles atIndex:i];
         }
