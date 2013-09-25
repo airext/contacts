@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E061C1A17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E061C1817F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h */; };
+		0E061C1B17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E061C1917F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m */; };
+		0E061C1E17F2CB9B007BCAAD /* FRETypeConversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E061C1C17F2CB9B007BCAAD /* FRETypeConversion.h */; };
+		0E061C1F17F2CB9B007BCAAD /* FRETypeConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E061C1D17F2CB9B007BCAAD /* FRETypeConversion.m */; };
 		0E09664B17DE55A40071D966 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E09664A17DE55A40071D966 /* UIKit.framework */; };
 		0E09664C17DE55A40071D966 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E85671417DDCF2400927073 /* Foundation.framework */; };
 		0E09664E17DE55A40071D966 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E09664D17DE55A40071D966 /* CoreGraphics.framework */; };
@@ -72,6 +76,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0E061C1817F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderUpdateRoutines.h; sourceTree = "<group>"; };
+		0E061C1917F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProviderUpdateRoutines.m; sourceTree = "<group>"; };
+		0E061C1C17F2CB9B007BCAAD /* FRETypeConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FRETypeConversion.h; sourceTree = "<group>"; };
+		0E061C1D17F2CB9B007BCAAD /* FRETypeConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRETypeConversion.m; sourceTree = "<group>"; };
 		0E09664917DE55A40071D966 /* ContactsTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E09664A17DE55A40071D966 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0E09664D17DE55A40071D966 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -212,7 +220,11 @@
 				0E85672617DDE9A600927073 /* AddressBookProvider.m */,
 				0E09667517DF20B20071D966 /* AddressBookProviderRoutines.h */,
 				0E09667617DF20B20071D966 /* AddressBookProviderRoutines.m */,
+				0E061C1817F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h */,
+				0E061C1917F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m */,
 				0E85671717DDCF2400927073 /* Supporting Files */,
+				0E061C1C17F2CB9B007BCAAD /* FRETypeConversion.h */,
+				0E061C1D17F2CB9B007BCAAD /* FRETypeConversion.m */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -259,6 +271,8 @@
 				0EE759AC17DF6B79001C7ABD /* AddressBookProviderRoutines.h in Headers */,
 				0EE759AD17DF6B79001C7ABD /* Contacts-Prefix.pch in Headers */,
 				0E6A62FD17E07F090071AC01 /* ContactsRoutines.h in Headers */,
+				0E061C1A17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h in Headers */,
+				0E061C1E17F2CB9B007BCAAD /* FRETypeConversion.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +410,8 @@
 				0E85672717DDE9A600927073 /* AddressBookProvider.m in Sources */,
 				0E09667717DF20B20071D966 /* AddressBookProviderRoutines.m in Sources */,
 				0E6A62FF17E07F180071AC01 /* ContactsRoutines.m in Sources */,
+				0E061C1B17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m in Sources */,
+				0E061C1F17F2CB9B007BCAAD /* FRETypeConversion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
