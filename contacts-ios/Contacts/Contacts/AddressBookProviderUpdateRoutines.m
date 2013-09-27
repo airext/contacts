@@ -24,12 +24,11 @@
             
             // firstName
             
-            CFStringRef firstName = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "firstName"];
+            CFStringRef firstName = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "firstName"];
             
             if (firstName != NULL)
             {
                 ABRecordSetValue(person, kABPersonFirstNameProperty, firstName, NULL);
-                
                 
                 CFRelease(firstName);
             }
@@ -37,7 +36,7 @@
             
             // lastName
             
-            CFStringRef lastName = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "lastName"];
+            CFStringRef lastName = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "lastName"];
             
             if (lastName != NULL)
             {
@@ -49,7 +48,7 @@
             
             // middleName
             
-            CFStringRef middleName = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "middleName"];
+            CFStringRef middleName = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "middleName"];
             
             if (middleName != NULL)
             {
@@ -61,20 +60,20 @@
             
             // prefixProperty
             
-            CFStringRef prefixProperty = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "prefixProperty"];
+            CFStringRef prefixProperty = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "prefixProperty"];
             
             if (prefixProperty != NULL)
             {
-                
                 ABRecordSetValue(person, kABPersonPrefixProperty, prefixProperty, NULL);
                 
                 CFRelease(prefixProperty);                
             }
+            
             NSLog(@"prefixProperty is %@", prefixProperty);
             
             // suffixProperty
             
-            CFStringRef suffixProperty = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "suffixProperty"];
+            CFStringRef suffixProperty = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "suffixProperty"];
             
             if (suffixProperty != NULL)
             {
@@ -86,7 +85,7 @@
             
             // nickname
             
-            CFStringRef nickname = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "nickname"];
+            CFStringRef nickname = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "nickname"];
             
             if (nickname != NULL)
             {
@@ -98,7 +97,7 @@
             
             // firstNamePhonetic
             
-            CFStringRef firstNamePhonetic = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "firstNamePhonetic"];
+            CFStringRef firstNamePhonetic = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "firstNamePhonetic"];
             
             if (firstNamePhonetic != NULL)
             {
@@ -110,7 +109,7 @@
             
             // lastNamePhonetic
             
-            CFStringRef lastNamePhonetic = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "lastNamePhonetic"];
+            CFStringRef lastNamePhonetic = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "lastNamePhonetic"];
             
             if (lastNamePhonetic != NULL)
             {
@@ -122,7 +121,7 @@
             
             // middleNamePhonetic
             
-            CFStringRef middleNamePhonetic = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "middleNamePhonetic"];
+            CFStringRef middleNamePhonetic = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "middleNamePhonetic"];
             
             if (middleNamePhonetic != NULL)
             {
@@ -134,7 +133,7 @@
             
             // organization
             
-            CFStringRef organization = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "organization"];
+            CFStringRef organization = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "organization"];
             
             if (organization != NULL)
             {
@@ -146,7 +145,7 @@
             
             // jobTitle
             
-            CFStringRef jobTitle = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "jobTitle"];
+            CFStringRef jobTitle = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "jobTitle"];
             
             if (jobTitle != NULL)
             {
@@ -158,7 +157,7 @@
             
             // department
             
-            CFStringRef department = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "department"];
+            CFStringRef department = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "department"];
             
             if (department != NULL)
             {
@@ -170,7 +169,7 @@
             
             // note
             
-            CFStringRef note = [self getContactPropertyAsString:contact fromProperty:(const uint8_t*) "note"];
+            CFStringRef note = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "note"];
             
             if (note != NULL)
             {
@@ -182,7 +181,7 @@
             
             // emails
             
-            ABMultiValueRef emails = [self getContactPropertyAsMultiString:contact fromProperty:(const uint8_t *) "emails"];
+            ABMultiValueRef emails = [self copyContactMultiStringProperty:contact fromProperty:(const uint8_t *) "emails"];
             
             if (emails != NULL)
             {
@@ -194,7 +193,7 @@
             
             // phones
             
-            ABMultiValueRef phones = [self getContactPropertyAsMultiString:contact fromProperty:(const uint8_t *) "phones"];
+            ABMultiValueRef phones = [self copyContactMultiStringProperty:contact fromProperty:(const uint8_t *) "phones"];
             
             if (phones != NULL)
             {
@@ -224,7 +223,7 @@
                                     (NSString*)kABPersonSocialProfileURLKey,
                                     nil];
             
-            ABMultiValueRef profiles = [self getContactPropertyAsMultiDictionary:contact fromProperty:(const uint8_t *) "profiles" withKeys:profileKeys];
+            ABMultiValueRef profiles = [self copyContactMultiDictionaryProperty:contact fromProperty:(const uint8_t *) "profiles" withKeys:profileKeys];
             
             if (profiles)
             {
@@ -245,7 +244,7 @@
                                     (NSString*)kABPersonAddressCountryCodeKey,
                                     nil];
             
-            ABMultiValueRef address = [self getContactPropertyAsMultiDictionary:contact fromProperty:(const uint8_t *) "address" withKeys:addressKeys];
+            ABMultiValueRef address = [self copyContactMultiDictionaryProperty:contact fromProperty:(const uint8_t *) "address" withKeys:addressKeys];
             
             if (address)
             {
@@ -281,7 +280,7 @@
     return result;
 }
 
-+(CFStringRef) getContactPropertyAsString:(FREObject) contact fromProperty:(const uint8_t*) propertyName
++(CFStringRef) copyContactStringProperty:(FREObject) contact fromProperty:(const uint8_t*) propertyName
 {
     FREObject value = NULL;
     
@@ -322,7 +321,7 @@
     }
 }
 
-+(ABMultiValueRef) getContactPropertyAsMultiString:(FREObject) contact fromProperty:(const uint8_t*) propertyName
++(ABMultiValueRef) copyContactMultiStringProperty:(FREObject) contact fromProperty:(const uint8_t*) propertyName
 {
     FREObject array = NULL;
     FREGetObjectProperty(contact, propertyName, &array, NULL);
@@ -366,7 +365,7 @@
     }
 }
 
-+(ABMultiValueRef) getContactPropertyAsMultiDictionary:(FREObject) contact fromProperty:(const uint8_t*) propertyName withKeys:(NSArray*) dictionaryKeys
++(ABMultiValueRef) copyContactMultiDictionaryProperty:(FREObject) contact fromProperty:(const uint8_t*) propertyName withKeys:(NSArray*) dictionaryKeys
 {
     FREObject array = NULL;
     FREGetObjectProperty(contact, propertyName, &array, NULL);
@@ -412,7 +411,11 @@
 //                NSLog(@"value=%@", value);
             }
             
-            ABMultiValueAddValueAndLabel(result, CFDictionaryCreate(kCFAllocatorDefault, (void*) keys, (void*)values, dictionaryKeyCount, NULL, NULL), NULL, NULL);
+            CFDictionaryRef dict = CFDictionaryCreate(kCFAllocatorDefault, (void*) keys, (void*)values, dictionaryKeyCount, NULL, NULL);
+            
+            ABMultiValueAddValueAndLabel(result, dict, NULL, NULL);
+            
+            CFRelease(dict);
         }
         
         return result;

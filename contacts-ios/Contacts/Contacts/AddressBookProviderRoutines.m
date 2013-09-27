@@ -26,79 +26,105 @@
     
     // compositeName
     
-    [self setStringProperty:contact withValue:ABRecordCopyCompositeName(person) forKey:@"compositeName"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyCompositeName(person)) forKey:@"compositeName"];
     
     // firstName
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonFirstNameProperty) forKey:@"firstName"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonFirstNameProperty)) forKey:@"firstName"];
     
     // lastName
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonLastNameProperty) forKey:@"lastName"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNameProperty)) forKey:@"lastName"];
     
     // middleName
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonLastNameProperty) forKey:@"lastName"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNameProperty)) forKey:@"lastName"];
     
     // prefix
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonPrefixProperty) forKey:@"prefix"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonPrefixProperty)) forKey:@"prefix"];
     
     // suffix
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonSuffixProperty) forKey:@"suffix"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonSuffixProperty)) forKey:@"suffix"];
     
     // nickname
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonNicknameProperty) forKey:@"nickname"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonNicknameProperty)) forKey:@"nickname"];
     
     // firstNamePhonetic
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonFirstNamePhoneticProperty) forKey:@"firstNamePhonetic"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonFirstNamePhoneticProperty)) forKey:@"firstNamePhonetic"];
     
     // lastNamePhonetic
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonLastNamePhoneticProperty) forKey:@"lastNamePhonetic"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNamePhoneticProperty)) forKey:@"lastNamePhonetic"];
     
     // middleNamePhonetic
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty) forKey:@"middleNamePhonetic"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty)) forKey:@"middleNamePhonetic"];
     
     // organization
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonOrganizationProperty) forKey:@"organization"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonOrganizationProperty)) forKey:@"organization"];
     
     // jobTitle
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonJobTitleProperty) forKey:@"jobTitle"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonJobTitleProperty)) forKey:@"jobTitle"];
     
     // department
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonDepartmentProperty) forKey:@"department"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonDepartmentProperty)) forKey:@"department"];
     
     // note
     
-    [self setStringProperty:contact withValue:ABRecordCopyValue(person, kABPersonNoteProperty) forKey:@"note"];
-    
-    // emails
-    
-    [self setMultiStringValueProperty:contact withValue:ABRecordCopyValue(person, kABPersonEmailProperty) forKey:@"emails"];
-    
-    // phones
-    
-    [self setMultiStringValueProperty:contact withValue:ABRecordCopyValue(person, kABPersonPhoneProperty) forKey:@"phones"];
+    [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonNoteProperty)) forKey:@"note"];
     
     // birthday
     
-    [self setDateProperty:contact withValue:ABRecordCopyValue(person, kABPersonBirthdayProperty) forKey:@"birthday"];
+    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonBirthdayProperty)) forKey:@"birthday"];
     
     // creationDate
     
-    [self setDateProperty:contact withValue:ABRecordCopyValue(person, kABPersonCreationDateProperty) forKey:@"creationDate"];
+    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonCreationDateProperty)) forKey:@"creationDate"];
     
     // modificationDate
     
-    [self setDateProperty:contact withValue:ABRecordCopyValue(person, kABPersonModificationDateProperty) forKey:@"modificationDate"];
+    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonModificationDateProperty)) forKey:@"modificationDate"];
+    
+    // emails
+    
+    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+    
+    CFIndex emailCount = ABMultiValueGetCount(emails);
+    
+    if (emailCount > 0)
+    {
+        [self setMultiStringValueProperty:contact withValue:emails inNumber:emailCount forKey:@"emails"];
+    }
+    else
+    {
+        [contact setValue:nil forKey:@"emails"];
+    }
+    
+    CFRelease(emails);
+    
+    // phones
+    
+    ABMultiValueRef phones = ABRecordCopyValue(person, kABPersonPhoneProperty);
+    
+    CFIndex phoneCount = ABMultiValueGetCount(phones);
+    
+    if (phoneCount > 0)
+    {
+        [self setMultiStringValueProperty:contact withValue:phones inNumber:phoneCount forKey:@"phones"];
+    }
+    else
+    {
+        [contact setValue:nil forKey:@"phones"];
+    }
+    
+    CFRelease(phones);
     
     // address
     
@@ -126,11 +152,11 @@
 
 #pragma mark Utility methods
 
-+(void) setStringProperty:(NSDictionary*) contact withValue:(CFStringRef) value forKey:(NSString*) key
++(void) setStringProperty:(NSDictionary*) contact withValue:(NSString*) value forKey:(NSString*) key
 {
     if (value)
     {
-        [contact setValue:CFBridgingRelease(value) forKey:key];
+        [contact setValue:value forKey:key];
     }
     else
     {
@@ -148,16 +174,18 @@
         
         for (NSUInteger i = 0; i < n; i++)
         {
-            CFDictionaryRef profile = ABMultiValueCopyValueAtIndex(value, i);
+            CFDictionaryRef dic = ABMultiValueCopyValueAtIndex(value, i);
             
-            NSMutableDictionary* profiles = [NSMutableDictionary dictionary];
+            NSMutableDictionary* item = [NSMutableDictionary dictionary];
             
-            CFDictionaryApplyFunction(profile, setDictionaryProperty, (void*) profiles);
+            CFDictionaryApplyFunction(dic, setDictionaryProperty, (void*) item);
             
-            [array insertObject:profiles atIndex:i];
+            [array insertObject:item atIndex:i];
         }
         
         [contact setValue:array forKey:key];
+        
+        CFRelease(value);
     }
     else
     {
@@ -167,23 +195,16 @@
 
 void setDictionaryProperty(const void *key, const void *value, void *context)
 {
-    NSMutableDictionary* dictionary = (__bridge NSMutableDictionary*) context;
+    NSMutableDictionary* item = (__bridge NSMutableDictionary*) context;
     
-    NSString* profileKey = CFBridgingRelease(key);
-    NSString* profileValue = CFBridgingRelease(value);
-    
-    [dictionary setValue:profileValue forKey:profileKey];
+    [item setValue:CFBridgingRelease(value) forKey:CFBridgingRelease(key)];
 }
 
-+(void) setMultiStringValueProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value forKey:(NSString*) key
++(void) setMultiStringValueProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value inNumber:(CFIndex) count forKey:(NSString*) key
 {
-    if (value)
-    {
-        CFIndex n = ABMultiValueGetCount(value);
+        NSMutableArray* array = [NSMutableArray arrayWithCapacity:count];
         
-        NSMutableArray* array = [NSMutableArray arrayWithCapacity:n];
-        
-        for (CFIndex i = 0; i < n; i++)
+        for (CFIndex i = 0; i < count; i++)
         {
             CFStringRef propertyLabel = ABMultiValueCopyLabelAtIndex(value, i);
             CFStringRef propertyValue = ABMultiValueCopyValueAtIndex(value, i);
@@ -203,21 +224,14 @@ void setDictionaryProperty(const void *key, const void *value, void *context)
         }
         
         [contact setValue:array forKey:key];
-        
-        CFRelease(value);
-    }
-    else
-    {
-        [contact setValue:nil forKey:key];
-    }
-    
+
 }
 
-+(void) setDateProperty:(NSDictionary*) contact withValue:(CFDateRef) value forKey:(NSString*) key
++(void) setDateProperty:(NSDictionary*) contact withValue:(NSDate*) value forKey:(NSString*) key
 {
     if (value)
     {
-        [contact setValue:CFBridgingRelease(value) forKey:key];
+        [contact setValue:value forKey:key];
     }
     else
     {

@@ -29,7 +29,7 @@
         {
             var t:Number = getTimer();
 
-            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range());
+            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0, 1));
 
             trace("elapsed:", getTimer() - t);
 
@@ -37,9 +37,9 @@
 
             bmd = result[0].thumbnail;
 
-            trace(result[0].emails.length > 0 ? result[0].emails[0] : "");
+//            trace(result[0].emails.length > 0 ? result[0].emails[0] : "");
 
-            trace(result ? result.length : 0, result);
+//            trace(result ? result.length : 0, result);
         }
 
         private function getContactCount_clickHandler(event:MouseEvent):void
@@ -75,6 +75,8 @@
                                                                 trace("elapsed:", getTimer() - t);
 
                                                                 contacts = data as Array;
+
+                                                                bmd = contacts[0].thumbnail;
                                                             },
                                                             function (info:Object):void
                                                             {
