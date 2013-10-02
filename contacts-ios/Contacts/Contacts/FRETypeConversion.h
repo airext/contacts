@@ -18,5 +18,6 @@
 +(FREResult) convertFREDateToNSDate:(FREObject) date asDate:(NSDate*) toDate;
 +(FREResult) convertNSDateToFREDate:(NSDate*) date asDate:(FREObject*) toDate;
 
++(FREResult) convertNSDataToFREBitmapData:(NSData*) data asBitmapData:(FREObject*) toData;
 
 @end
