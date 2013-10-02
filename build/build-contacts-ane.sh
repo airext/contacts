@@ -10,5 +10,12 @@ cp -R contacts.ane ../contacts-air/contacts-debug/ane/contacts.ane
 
 cp -R contacts.ane ../bin/contacts.ane
 
+mkdir launch/ext
+cp -R contacts.ane launch/ext/contacts.ane
+unzip -o launch/ext/contacts.ane -d launch/ext
+
+rm library.swf
+rm catalog.xml
+
 rm default/library.swf
 rm default/catalog.xml

@@ -4,7 +4,8 @@
 build/catalog.xml
 build/library.swf
 build/contacts.ane
-build/build-contacts-debug.sh
+
+build/launch
 
 contacts-air/contacts-debug/bin-debug/
 
