@@ -94,7 +94,7 @@
 //                                                                    trace("decoding thumbnail:", getTimer() - t);
 //                                                                }
 
-                                                                trace(contacts[0].hasThumbnail, contacts[0].thumbnail);
+                                                                trace(contacts[0].hasImage, contacts[0].thumbnail);
                                                                 bmd = contacts[0].thumbnail;
                                                             },
                                                             function (info:Object):void

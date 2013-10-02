@@ -58,7 +58,7 @@
 -(void) holdAsyncCallResult:(NSObject*) result forCallId:(NSUInteger) callId;
 
 -(BOOL) pickIsModifiedResult:(NSUInteger) callId;
--(NSArray*) pickGetContactsResult:(NSUInteger) callId;
+-(NSString*) pickGetContactsResult:(NSUInteger) callId;
 -(NSInteger) pickGetContactCountResult:(NSUInteger) callId;
 
 #pragma mark Internal methods

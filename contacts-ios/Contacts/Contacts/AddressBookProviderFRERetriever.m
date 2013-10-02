@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Max Rozdobudko. All rights reserved.
 //
 
-#import "AddressBookProviderFRERoutines.h"
+#import "AddressBookProviderFRERetriever.h"
 
-@implementation AddressBookProviderFRERoutines
+@implementation AddressBookProviderFRERetriever
 
 #pragma mark Utility methods
 

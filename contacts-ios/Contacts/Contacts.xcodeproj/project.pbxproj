@@ -24,14 +24,14 @@
 		0E09666617DE55A40071D966 /* ContactsTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E09666517DE55A40071D966 /* ContactsTestViewController.m */; };
 		0E09666C17DE569F0071D966 /* libContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E85671117DDCF2400927073 /* libContacts.a */; };
 		0E09666E17DE5F7D0071D966 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E09666D17DE5F7D0071D966 /* AddressBook.framework */; };
-		0E09667717DF20B20071D966 /* AddressBookProviderRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E09667617DF20B20071D966 /* AddressBookProviderRoutines.m */; };
+		0E09667717DF20B20071D966 /* AddressBookProviderJSONRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E09667617DF20B20071D966 /* AddressBookProviderJSONRetriever.m */; };
 		0E28344B17FAE116004265C8 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E28344917FAE116004265C8 /* NSData+Base64.h */; };
 		0E28344C17FAE116004265C8 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E28344A17FAE116004265C8 /* NSData+Base64.m */; };
 		0E6A62F417E05E4C0071AC01 /* libContacts.a in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0E85671117DDCF2400927073 /* libContacts.a */; };
 		0E6A62FD17E07F090071AC01 /* ContactsRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E6A62FC17E07F090071AC01 /* ContactsRoutines.h */; };
 		0E6A62FF17E07F180071AC01 /* ContactsRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6A62FE17E07F180071AC01 /* ContactsRoutines.m */; };
-		0E75311917FC0DCB001360E6 /* AddressBookProviderFRERoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E75311717FC0DCA001360E6 /* AddressBookProviderFRERoutines.h */; };
-		0E75311A17FC0DCB001360E6 /* AddressBookProviderFRERoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E75311817FC0DCB001360E6 /* AddressBookProviderFRERoutines.m */; };
+		0E75311917FC0DCB001360E6 /* AddressBookProviderFRERetriever.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E75311717FC0DCA001360E6 /* AddressBookProviderFRERetriever.h */; };
+		0E75311A17FC0DCB001360E6 /* AddressBookProviderFRERetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E75311817FC0DCB001360E6 /* AddressBookProviderFRERetriever.m */; };
 		0E85671517DDCF2400927073 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E85671417DDCF2400927073 /* Foundation.framework */; };
 		0E85671A17DDCF2400927073 /* Contacts.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0E85671917DDCF2400927073 /* Contacts.h */; };
 		0E85671C17DDCF2400927073 /* Contacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E85671B17DDCF2400927073 /* Contacts.m */; };
@@ -40,7 +40,7 @@
 		0EE759A917DF6B79001C7ABD /* Contacts.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E85671917DDCF2400927073 /* Contacts.h */; };
 		0EE759AA17DF6B79001C7ABD /* AddressBookAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E85672217DDE8BC00927073 /* AddressBookAccessor.h */; };
 		0EE759AB17DF6B79001C7ABD /* AddressBookProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E85672517DDE9A600927073 /* AddressBookProvider.h */; };
-		0EE759AC17DF6B79001C7ABD /* AddressBookProviderRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E09667517DF20B20071D966 /* AddressBookProviderRoutines.h */; };
+		0EE759AC17DF6B79001C7ABD /* AddressBookProviderJSONRetriever.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E09667517DF20B20071D966 /* AddressBookProviderJSONRetriever.h */; };
 		0EE759AD17DF6B79001C7ABD /* Contacts-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0E85671817DDCF2400927073 /* Contacts-Prefix.pch */; };
 		0EE759AE17DF6B97001C7ABD /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E09666D17DE5F7D0071D966 /* AddressBook.framework */; };
 		0EE759B017DF6B97001C7ABD /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE759AF17DF6B97001C7ABD /* AddressBookUI.framework */; };
@@ -107,14 +107,14 @@
 		0E09666417DE55A40071D966 /* ContactsTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsTestViewController.h; sourceTree = "<group>"; };
 		0E09666517DE55A40071D966 /* ContactsTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsTestViewController.m; sourceTree = "<group>"; };
 		0E09666D17DE5F7D0071D966 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		0E09667517DF20B20071D966 /* AddressBookProviderRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderRoutines.h; sourceTree = "<group>"; };
-		0E09667617DF20B20071D966 /* AddressBookProviderRoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProviderRoutines.m; sourceTree = "<group>"; };
+		0E09667517DF20B20071D966 /* AddressBookProviderJSONRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderJSONRetriever.h; sourceTree = "<group>"; };
+		0E09667617DF20B20071D966 /* AddressBookProviderJSONRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProviderJSONRetriever.m; sourceTree = "<group>"; };
 		0E28344917FAE116004265C8 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		0E28344A17FAE116004265C8 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		0E6A62FC17E07F090071AC01 /* ContactsRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsRoutines.h; sourceTree = "<group>"; };
 		0E6A62FE17E07F180071AC01 /* ContactsRoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsRoutines.m; sourceTree = "<group>"; };
-		0E75311717FC0DCA001360E6 /* AddressBookProviderFRERoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderFRERoutines.h; sourceTree = "<group>"; };
-		0E75311817FC0DCB001360E6 /* AddressBookProviderFRERoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProviderFRERoutines.m; sourceTree = "<group>"; };
+		0E75311717FC0DCA001360E6 /* AddressBookProviderFRERetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderFRERetriever.h; sourceTree = "<group>"; };
+		0E75311817FC0DCB001360E6 /* AddressBookProviderFRERetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProviderFRERetriever.m; sourceTree = "<group>"; };
 		0E85671117DDCF2400927073 /* libContacts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libContacts.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E85671417DDCF2400927073 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0E85671817DDCF2400927073 /* Contacts-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Contacts-Prefix.pch"; sourceTree = "<group>"; };
@@ -233,17 +233,17 @@
 				0E85672317DDE8BC00927073 /* AddressBookAccessor.m */,
 				0E85672517DDE9A600927073 /* AddressBookProvider.h */,
 				0E85672617DDE9A600927073 /* AddressBookProvider.m */,
-				0E09667517DF20B20071D966 /* AddressBookProviderRoutines.h */,
-				0E09667617DF20B20071D966 /* AddressBookProviderRoutines.m */,
+				0E09667517DF20B20071D966 /* AddressBookProviderJSONRetriever.h */,
+				0E09667617DF20B20071D966 /* AddressBookProviderJSONRetriever.m */,
 				0E061C1817F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h */,
 				0E061C1917F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m */,
-				0E85671717DDCF2400927073 /* Supporting Files */,
+				0E75311717FC0DCA001360E6 /* AddressBookProviderFRERetriever.h */,
+				0E75311817FC0DCB001360E6 /* AddressBookProviderFRERetriever.m */,
 				0E061C1C17F2CB9B007BCAAD /* FRETypeConversion.h */,
 				0E061C1D17F2CB9B007BCAAD /* FRETypeConversion.m */,
 				0E28344917FAE116004265C8 /* NSData+Base64.h */,
 				0E28344A17FAE116004265C8 /* NSData+Base64.m */,
-				0E75311717FC0DCA001360E6 /* AddressBookProviderFRERoutines.h */,
-				0E75311817FC0DCB001360E6 /* AddressBookProviderFRERoutines.m */,
+				0E85671717DDCF2400927073 /* Supporting Files */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -287,13 +287,13 @@
 				0EE759A917DF6B79001C7ABD /* Contacts.h in Headers */,
 				0EE759AA17DF6B79001C7ABD /* AddressBookAccessor.h in Headers */,
 				0EE759AB17DF6B79001C7ABD /* AddressBookProvider.h in Headers */,
-				0EE759AC17DF6B79001C7ABD /* AddressBookProviderRoutines.h in Headers */,
+				0EE759AC17DF6B79001C7ABD /* AddressBookProviderJSONRetriever.h in Headers */,
 				0EE759AD17DF6B79001C7ABD /* Contacts-Prefix.pch in Headers */,
 				0E6A62FD17E07F090071AC01 /* ContactsRoutines.h in Headers */,
 				0E061C1A17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h in Headers */,
 				0E061C1E17F2CB9B007BCAAD /* FRETypeConversion.h in Headers */,
 				0E28344B17FAE116004265C8 /* NSData+Base64.h in Headers */,
-				0E75311917FC0DCB001360E6 /* AddressBookProviderFRERoutines.h in Headers */,
+				0E75311917FC0DCB001360E6 /* AddressBookProviderFRERetriever.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,12 +430,12 @@
 				0E85671C17DDCF2400927073 /* Contacts.m in Sources */,
 				0E85672417DDE8BC00927073 /* AddressBookAccessor.m in Sources */,
 				0E85672717DDE9A600927073 /* AddressBookProvider.m in Sources */,
-				0E09667717DF20B20071D966 /* AddressBookProviderRoutines.m in Sources */,
+				0E09667717DF20B20071D966 /* AddressBookProviderJSONRetriever.m in Sources */,
 				0E6A62FF17E07F180071AC01 /* ContactsRoutines.m in Sources */,
 				0E061C1B17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m in Sources */,
 				0E061C1F17F2CB9B007BCAAD /* FRETypeConversion.m in Sources */,
 				0E28344C17FAE116004265C8 /* NSData+Base64.m in Sources */,
-				0E75311A17FC0DCB001360E6 /* AddressBookProviderFRERoutines.m in Sources */,
+				0E75311A17FC0DCB001360E6 /* AddressBookProviderFRERetriever.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

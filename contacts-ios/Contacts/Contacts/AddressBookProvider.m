@@ -10,8 +10,8 @@
 
 #import "FlashRuntimeExtensions.h"
 
-#import "AddressBookProviderRoutines.h"
-#import "AddressBookProviderFRERoutines.h"
+#import "AddressBookProviderJSONRetriever.h"
+#import "AddressBookProviderFRERetriever.h"
 #import "AddressBookProviderUpdateRoutines.h"
 
 #import "AddressBookProvider.h"
@@ -78,7 +78,7 @@
     return result;
 }
 
--(NSArray*) getPeople:(NSRange)range withOptions:(NSDictionary *)options
+-(NSString*) getContactsAsJSON:(NSRange)range withOptions:(NSDictionary *)options
 {
     uint64_t start;
     uint64_t end;
@@ -108,12 +108,16 @@
     {
         ABRecordRef person = CFArrayGetValueAtIndex(people, i);
         
-        NSDictionary* contact = [AddressBookProviderRoutines createContact:person withDateFormatter:formatter];
+        NSDictionary* contact = [AddressBookProviderJSONRetriever createContact:person withDateFormatter:formatter];
         
         [result addObject:contact];
     }
     
     CFRelease(people);
+    
+    NSData* data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
+    
+    NSString* json = [NSString stringWithUTF8String:[data bytes]];
     
     end = mach_absolute_time();
     
@@ -125,9 +129,9 @@
     
     uint64_t nanoseconds = elapsed * info.numer / info.denom;
     
-    NSLog(@"Provider.getPeople: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
+    NSLog(@"Provider.getContactsAsJSON: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
-    return result;
+    return json;
 }
 
 -(NSInteger) getPersonCount
@@ -139,7 +143,7 @@
 {
     ABRecordRef person = ABAddressBookGetPersonWithRecordID(_addressBook, (ABRecordID) recordId);
     
-    return [AddressBookProviderRoutines getContactThumbnail:person];
+    return [AddressBookProviderJSONRetriever getContactThumbnail:person];
 }
 
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
@@ -147,7 +151,7 @@
     return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
 }
 
--(FREObject) getContacts:(NSRange)range withOptions:(NSDictionary *)options
+-(FREObject) getContactsAsFRE:(NSRange)range withOptions:(NSDictionary *)options
 {
     uint64_t start;
     uint64_t end;
@@ -177,7 +181,7 @@
     {
         ABRecordRef person = CFArrayGetValueAtIndex(people, i);
         
-        FREObject contact = [AddressBookProviderFRERoutines createContactFromPerson:person];
+        FREObject contact = [AddressBookProviderFRERetriever createContactFromPerson:person];
         
         FRESetArrayElementAt(contacts, (uint32_t) i, contact);
     }

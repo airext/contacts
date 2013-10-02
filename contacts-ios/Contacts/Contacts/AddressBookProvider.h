@@ -27,7 +27,8 @@
 //-(BOOL) getRecords;
 
 -(NSInteger) getPersonCount;
--(NSArray*) getPeople:(NSRange) range withOptions:(NSDictionary*) options;
+
+-(NSString*) getContactsAsJSON:(NSRange) range withOptions:(NSDictionary*) options;
 
 -(NSData*) getPersonThumbnail:(NSInteger) recordId;
 
@@ -37,6 +38,6 @@
 
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options;
 
--(FREObject) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
+-(FREObject) getContactsAsFRE:(NSRange) range withOptions:(NSDictionary*) options;
 
 @end

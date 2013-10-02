@@ -16,7 +16,7 @@
 
 #import "FRETypeConversion.h"
 
-@interface AddressBookProviderFRERoutines : NSObject
+@interface AddressBookProviderFRERetriever : NSObject
 
 +(FREObject) createContactFromPerson:(ABRecordRef) person;
 

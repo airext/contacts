@@ -15,9 +15,9 @@
 
 #import "NSData+Base64.h"
 
-#import "AddressBookProviderRoutines.h"
+#import "AddressBookProviderJSONRetriever.h"
 
-@implementation AddressBookProviderRoutines
+@implementation AddressBookProviderJSONRetriever
 
 #pragma mark Main tasks
 

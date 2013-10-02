@@ -10,7 +10,7 @@
 
 #import <AddressBook/AddressBook.h>
 
-@interface AddressBookProviderRoutines : NSObject
+@interface AddressBookProviderJSONRetriever : NSObject
 
 +(NSDictionary*) createContact:(ABRecordRef) person withDateFormatter:(NSDateFormatter*) dateFormatter;
 

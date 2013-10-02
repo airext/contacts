@@ -204,7 +204,7 @@ public class Contacts extends EventDispatcher
 
                         for each (var contact:Object in contacts)
                         {
-                            if (contact.hasThumbnail)
+                            if (contact.hasImage)
                                 contact.thumbnail = getContactThumbnail(contact.recordId);
                         }
 

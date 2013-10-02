@@ -88,7 +88,7 @@ static Contacts* _sharedInstance = nil;
              
              provider.addressBook = addressBook;
              
-             result = [provider getContacts:range withOptions:options];
+             result = [provider getContactsAsFRE:range withOptions:options];
          }
          else
          {
@@ -178,18 +178,14 @@ static Contacts* _sharedInstance = nil;
                 
                 provider.addressBook = addressBook;
 
-                NSArray* result = [provider getPeople:range withOptions:options];
+                NSString* result = [provider getContactsAsJSON:range withOptions:options];
                 
                 dispatch_async(dispatch_get_main_queue(),
                 ^(void)
                 {
                     [self holdAsyncCallResult:result forCallId:callId];
                     
-                    NSData* data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
-                    
-                    NSString* json = [NSString stringWithUTF8String:[data bytes]];
-                    
-                    dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync", json);
+                    dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync", result);
                                    
                     dispatchStatusEvent(self.context, @"Contacts.GetContacts.Result");
                 });
@@ -315,14 +311,14 @@ static Contacts* _sharedInstance = nil;
     return FALSE;
 }
 
--(NSArray*) pickGetContactsResult:(NSUInteger) callId
+-(NSString*) pickGetContactsResult:(NSUInteger) callId
 {
     if (resultStorage == nil)
         return nil;
     
     NSString* key = [NSString stringWithFormat:@"%i", callId];
     
-    NSArray* result = [resultStorage objectForKey:key];
+    NSString* result = [resultStorage objectForKey:key];
     
     if (result)
     {
@@ -585,11 +581,9 @@ FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t
     
     FREGetObjectAsUint32(argv[0], &callId);
     
-    NSArray* people = [[Contacts sharedInstance] pickGetContactsResult: callId];
-    
-    NSData* json = [NSJSONSerialization dataWithJSONObject:people options:NSJSONWritingPrettyPrinted error:nil];
-    
-    [FRETypeConversion convertNSStringToFREString:[NSString stringWithUTF8String:[json bytes]] asString:&result];
+    NSString* json = [[Contacts sharedInstance] pickGetContactsResult: callId];
+
+    [FRETypeConversion convertNSStringToFREString:json asString:&result];
     
     end = mach_absolute_time();
     
