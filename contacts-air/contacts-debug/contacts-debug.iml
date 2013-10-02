@@ -11,7 +11,9 @@
           </entries>
           <sdk name="4.9.1 (AIR 3.6)" />
         </dependencies>
-        <compiler-options />
+        <compiler-options>
+          <option name="additionalOptions" value="-advanced-telemetry" />
+        </compiler-options>
         <packaging-air-desktop />
         <packaging-android use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ContactsDebug-app.xml" package-file-name="ContactsDebug" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ContactsDebug-app.xml" package-file-name="ContactsDebug">

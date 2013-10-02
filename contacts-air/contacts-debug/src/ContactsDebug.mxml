@@ -13,6 +13,8 @@
 
         use namespace contacts;
 
+        new Test();
+
         [Bindable]
         private var bmd:BitmapData;
 

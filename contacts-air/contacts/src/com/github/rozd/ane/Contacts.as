@@ -9,18 +9,17 @@ package com.github.rozd.ane
 {
 import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
+import com.github.rozd.ane.core.queue.Queue;
+import com.github.rozd.ane.core.queue.tasks.ContactFillThumbnailTask;
 import com.github.rozd.ane.data.IRange;
 import com.github.rozd.ane.events.ResponseEvent;
-import com.github.rozd.ane.utils.Base64;
 
 import flash.display.BitmapData;
-
+import flash.events.ErrorEvent;
+import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
-import flash.geom.Rectangle;
-import flash.system.Worker;
-import flash.utils.ByteArray;
 import flash.utils.getTimer;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
@@ -198,22 +197,41 @@ public class Contacts extends EventDispatcher
 
                 if (event.info.status == "result")
                 {
-                    try
-                    {
-                        var contacts:Array = event.info.data;
+                    var tasks:Array = [];
 
-                        for each (var contact:Object in contacts)
+                    var contacts:Array = event.info.data;
+
+                    for each (var contact:Object in contacts)
+                    {
+                        if (contact.hasImage)
                         {
-                            if (contact.hasImage)
-                                contact.thumbnail = getContactThumbnail(contact.recordId);
+                            tasks.push(new ContactFillThumbnailTask(context, contact));
                         }
+                    }
+
+                    response.result(contacts);
+
+                    var queueCompleteHandler:Function = function(event:Event):void
+                    {
+                        queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                        queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
 
                         response.result(contacts);
                     }
-                    catch (error:Error)
+
+                    var queueErrorHandler:Function = function(event:ErrorEvent):void
                     {
-                        response.error(error);
+                        queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                        queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                        response.error(event);
                     }
+
+                    var queue:Queue = new Queue(tasks);
+                    queue.addEventListener(Event.COMPLETE, queueCompleteHandler);
+                    queue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                    queue.start();
                 }
                 else // event.info.status == error
                 {
@@ -242,7 +260,7 @@ public class Contacts extends EventDispatcher
                 {
                     try
                     {
-                        response.result(pickGetContactCountResult(callId));
+                        response.result(event.info.data);
                     }
                     catch (error:Error)
                     {

@@ -26,7 +26,7 @@
 //
 //-(BOOL) getRecords;
 
--(NSInteger) getPersonCount;
+-(NSString*) getContactCountAsString;
 
 -(NSString*) getContactsAsJSON:(NSRange) range withOptions:(NSDictionary*) options;
 
@@ -36,8 +36,12 @@
 //
 //-(BOOL) updateRecord;
 
--(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options;
+-(FREObject) getContactCountAsFRE;
 
 -(FREObject) getContactsAsFRE:(NSRange) range withOptions:(NSDictionary*) options;
+
+//
+
+-(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options;
 
 @end

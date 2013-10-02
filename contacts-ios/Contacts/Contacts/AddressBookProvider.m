@@ -134,9 +134,11 @@
     return json;
 }
 
--(NSInteger) getPersonCount
+-(NSString*) getContactCountAsString
 {
-    return ABAddressBookGetPersonCount(_addressBook);
+    NSNumber* result = [NSNumber numberWithLong:ABAddressBookGetPersonCount(_addressBook)];
+    
+    return [result stringValue];
 }
 
 -(NSData*) getPersonThumbnail:(NSInteger) recordId
@@ -149,6 +151,14 @@
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
 {
     return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
+}
+
+-(FREObject) getContactCountAsFRE
+{
+    FREObject result;
+    FRENewObjectFromInt32(ABAddressBookGetPersonCount(_addressBook), &result);
+    
+    return result;
 }
 
 -(FREObject) getContactsAsFRE:(NSRange)range withOptions:(NSDictionary *)options

@@ -99,9 +99,9 @@ static Contacts* _sharedInstance = nil;
     return result;
 }
 
--(NSInteger) getContactCount
+-(FREObject) getContactCount
 {
-    __block NSInteger result = -1;
+    __block FREObject result = NULL;
     
     [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
      {
@@ -111,7 +111,7 @@ static Contacts* _sharedInstance = nil;
              
              provider.addressBook = addressBook;
              
-             result = [provider getPersonCount];
+             result = [provider getContactCountAsFRE];
          }
          else
          {
@@ -214,14 +214,14 @@ static Contacts* _sharedInstance = nil;
                  
                 provider.addressBook = addressBook;
                  
-                NSInteger result = [provider getPersonCount];
+                NSString* result = [provider getContactCountAsString];
                  
                 dispatch_async(dispatch_get_main_queue(),
                 ^(void)
                 {
-                    [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
+                    [self holdAsyncCallResult:result forCallId:callId];
                                     
-                    dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync", nil);
+                    dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync", result);
                                     
                     dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
                 });

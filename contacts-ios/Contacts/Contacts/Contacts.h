@@ -36,10 +36,11 @@
 
 #pragma mark Synchronous methods
 
--(BOOL) isModified:(NSDate*) since;
--(NSInteger) getContactCount;
+-(FREObject) isModified:(NSDate*) since;
+-(FREObject) getContactCount;
 -(FREObject) getContacts:(NSRange) range;
 -(FREObject) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
+
 -(BOOL) updateContact:(FREObject) contact;
 -(NSData*) getContactThumbnail:(NSInteger) recordId;
 

@@ -59,6 +59,11 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = ""
+            value = ""
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "FLEX_AIR"
             value = "~/sdks/air/3.8.0/bin"
             isEnabled = "YES">
