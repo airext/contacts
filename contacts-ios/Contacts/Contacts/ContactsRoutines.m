@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Max Rozdobudko. All rights reserved.
 //
 
+#import <mach/mach_time.h>
+
 #import <UIKit/UIKit.h>
 
 #import "FlashRuntimeExtensions.h"
@@ -32,9 +34,9 @@ void dispatchStatusEvent(FREContext context, NSString* code)
     FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "status");
 }
 
-void dispatchResponseEvent(FREContext context, NSUInteger callId, NSString* status, NSString* method)
+void dispatchResponseEvent(FREContext context, NSUInteger callId, NSString* status, NSString* method, NSString* data)
 {
-    NSString* code = [NSString stringWithFormat:@"{\"object\":\"response\", \"callId\":%i, \"method\":\"%@\", \"status\":\"%@\"}", callId, method, status];
+    NSString* code = [NSString stringWithFormat:@"{\"object\":\"response\", \"callId\":%i, \"method\":\"%@\", \"status\":\"%@\", \"data\":%@}", callId, method, status, data];
     
     FREDispatchStatusEventAsync(context, (const uint8_t*) [code UTF8String], (const uint8_t*) "response");
 }
@@ -456,6 +458,12 @@ FREObject personToContact(NSDictionary* person)
 
 FREObject peopleToContacts(NSArray* people)
 {
+    uint64_t start;
+    uint64_t end;
+    uint64_t elapsed;
+    
+    start = mach_absolute_time();
+    
     FREObject result = NULL;
     
     if (people)
@@ -475,6 +483,18 @@ FREObject peopleToContacts(NSArray* people)
             FRESetArrayElementAt(result, (uint32_t) i, contact);
         }
     }
+    
+    end = mach_absolute_time();
+    
+    elapsed = end - start;
+    
+    static mach_timebase_info_data_t info;
+    
+    mach_timebase_info(&info);
+    
+    uint64_t nanoseconds = elapsed * info.numer / info.denom;
+    
+    NSLog(@"peopleToContacts: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return result;
 }

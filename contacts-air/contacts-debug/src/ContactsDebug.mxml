@@ -29,7 +29,7 @@
         {
             var t:Number = getTimer();
 
-            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0, 1));
+            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0));
 
             trace("elapsed:", getTimer() - t);
 
@@ -68,7 +68,7 @@
         {
             var t:Number = getTimer();
 
-            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(), null,
+            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(0), null,
                                                     new Response(
                                                             function (data:Object):void
                                                             {
@@ -76,6 +76,25 @@
 
                                                                 contacts = data as Array;
 
+//                                                                for each (var contact:Object in contacts)
+//                                                                {
+//                                                                    var t:Number = getTimer();
+//
+//                                                                    var thumbnail:Object = contact.thumbnail;
+//
+//                                                                    if (thumbnail)
+//                                                                    {
+//                                                                        var bytes:ByteArray = Base64.decode(thumbnail.pixels);
+//
+//                                                                        var bmd:BitmapData = new BitmapData(thumbnail.width, thumbnail.height);
+//
+//                                                                        bmd.setPixels(new Rectangle(0, 0, thumbnail.width, thumbnail.height), bytes);
+//                                                                    }
+//
+//                                                                    trace("decoding thumbnail:", getTimer() - t);
+//                                                                }
+
+                                                                trace(contacts[0].hasThumbnail, contacts[0].thumbnail);
                                                                 bmd = contacts[0].thumbnail;
                                                             },
                                                             function (info:Object):void
@@ -231,7 +250,7 @@
         <s:VerticalLayout paddingTop="20" paddingBottom="20" horizontalAlign="center" />
     </s:layout>
 
-    <!--<s:Image source="{bmd}" />-->
+    <s:Image source="{bmd}" />
 
     <s:Button label="updateContact" click="updateContact_clickHandler(event)" />
 

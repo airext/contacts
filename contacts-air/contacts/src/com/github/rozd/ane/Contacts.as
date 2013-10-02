@@ -11,10 +11,17 @@ import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
 import com.github.rozd.ane.events.ResponseEvent;
+import com.github.rozd.ane.utils.Base64;
+
+import flash.display.BitmapData;
 
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
+import flash.geom.Rectangle;
+import flash.system.Worker;
+import flash.utils.ByteArray;
+import flash.utils.getTimer;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
 
@@ -129,6 +136,11 @@ public class Contacts extends EventDispatcher
         return context.call("updateContact", contact, options);
     }
 
+    public function getContactThumbnail(recordId:Object):BitmapData
+    {
+        return context.call("getContactThumbnail", recordId as int) as BitmapData;
+    }
+
     //-------------------------------------
     //  Methods: Asynchronous
     //-------------------------------------
@@ -188,7 +200,15 @@ public class Contacts extends EventDispatcher
                 {
                     try
                     {
-                        response.result(pickGetContactsResult(callId));
+                        var contacts:Array = event.info.data;
+
+                        for each (var contact:Object in contacts)
+                        {
+                            if (contact.hasThumbnail)
+                                contact.thumbnail = getContactThumbnail(contact.recordId);
+                        }
+
+                        response.result(contacts);
                     }
                     catch (error:Error)
                     {
@@ -251,9 +271,9 @@ public class Contacts extends EventDispatcher
         return context.call("pickIsModifiedResult", callId) as Boolean;
     }
 
-    contacts function pickGetContactsResult(callId:uint):Array
+    contacts function pickGetContactsResult(callId:uint):Object
     {
-        return context.call("pickGetContactsResult", callId) as Array;
+        return context.call("pickGetContactsResult", callId);
     }
 
     contacts function pickGetContactCountResult(callId:uint):int
@@ -273,7 +293,11 @@ public class Contacts extends EventDispatcher
         {
             var e:ResponseEvent = ResponseEvent.create(event.code, event.level);
 
+            var t:Number = getTimer();
+
             e.info = JSON.parse(event.code);
+
+            trace("JSON decoding takes: ", getTimer() - t);
 
             dispatchEvent(e);
         }

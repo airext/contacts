@@ -12,6 +12,8 @@ import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
 import com.github.rozd.ane.events.ResponseEvent;
 
+import flash.display.BitmapData;
+
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.system.Capabilities;
@@ -102,6 +104,13 @@ public class Contacts extends EventDispatcher
         trace("Contacts is not supported for " + Capabilities.os);
 
         return false;
+    }
+
+    public function getContactThumbnail(recordId:Object):BitmapData
+    {
+        trace("Contacts is not supported for " + Capabilities.os);
+
+        return null;
     }
 
     //-------------------------------------

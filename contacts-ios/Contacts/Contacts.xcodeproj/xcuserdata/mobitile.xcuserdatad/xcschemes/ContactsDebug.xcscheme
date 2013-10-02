@@ -57,6 +57,13 @@
             ReferencedContainer = "container:Contacts.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FLEX_AIR"
+            value = "~/sdks/air/3.8.0/bin"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
             key = "OBJC_PRINT_EXCEPTIONS"

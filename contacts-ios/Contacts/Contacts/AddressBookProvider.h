@@ -19,7 +19,6 @@
 
 -(void) setAddressBook:(ABAddressBookRef) value;
 
-
 #pragma mark Methods
 
 -(BOOL) isModified:(NSDate*) since;
@@ -30,10 +29,14 @@
 -(NSInteger) getPersonCount;
 -(NSArray*) getPeople:(NSRange) range withOptions:(NSDictionary*) options;
 
+-(NSData*) getPersonThumbnail:(NSInteger) recordId;
+
 //-(BOOL) getGroups;
 //
 //-(BOOL) updateRecord;
 
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options;
+
+-(FREObject) getContacts:(NSRange) range withOptions:(NSDictionary*) options;
 
 @end

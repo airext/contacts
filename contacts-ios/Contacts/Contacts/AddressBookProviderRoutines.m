@@ -1,3 +1,6 @@
+
+
+
 //
 //  AddressBookProviderRoutines.m
 //  Contacts
@@ -6,7 +9,11 @@
 //  Copyright (c) 2013 Max Rozdobudko. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 #import <AddressBook/AddressBook.h>
+
+#import "NSData+Base64.h"
 
 #import "AddressBookProviderRoutines.h"
 
@@ -14,7 +21,7 @@
 
 #pragma mark Main tasks
 
-+(NSDictionary*) createContact:(ABRecordRef)person
++(NSDictionary*) createContact:(ABRecordRef)person withDateFormatter:(NSDateFormatter*) dateFormatter
 {
     NSMutableDictionary* contact = [NSMutableDictionary dictionaryWithCapacity:10];
     
@@ -79,18 +86,18 @@
     // note
     
     [self setStringProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonNoteProperty)) forKey:@"note"];
-    
+        
     // birthday
     
-    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonBirthdayProperty)) forKey:@"birthday"];
-    
+    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonBirthdayProperty)) forKey:@"birthday" formattedWith:dateFormatter];
+
     // creationDate
     
-    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonCreationDateProperty)) forKey:@"creationDate"];
+    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonCreationDateProperty)) forKey:@"creationDate" formattedWith:dateFormatter];
     
     // modificationDate
     
-    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonModificationDateProperty)) forKey:@"modificationDate"];
+    [self setDateProperty:contact withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonModificationDateProperty)) forKey:@"modificationDate" formattedWith:dateFormatter];
     
     // emails
     
@@ -134,23 +141,38 @@
     
     [self setMultiDictionaryProperty:contact withValue:ABRecordCopyValue(person, kABPersonSocialProfileProperty) forKey:@"profiles"];
     
-    // thumbnail
+    // hasImage
     
-    if (ABPersonHasImageData(person))
-    {
-        NSData* image = CFBridgingRelease(ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail));
-        
-        [contact setValue:image forKey:@"thumbnail"];
-    }
-    else
-    {
-        [contact setValue:nil forKey:@"thumbnail"];
-    }
+    [self setBooleanProperty:contact withValue:ABPersonHasImageData(person) forKey:@"hasImage"];
     
     return contact;
 }
 
++(NSData*) getContactThumbnail:(ABRecordRef) person
+{
+    if (ABPersonHasImageData(person))
+    {
+        return CFBridgingRelease(ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail));
+    }
+    else
+    {
+        return nil;
+    }
+}
+
 #pragma mark Utility methods
+
++(void) setBooleanProperty:(NSDictionary*) contact withValue:(BOOL) value forKey:(NSString*) key
+{
+    if (value)
+    {
+        [contact setValue:[NSNumber numberWithBool:value] forKey:key];
+    }
+    else
+    {
+        [contact setValue:nil forKey:key];
+    }
+}
 
 +(void) setStringProperty:(NSDictionary*) contact withValue:(NSString*) value forKey:(NSString*) key
 {
@@ -227,11 +249,11 @@ void setDictionaryProperty(const void *key, const void *value, void *context)
 
 }
 
-+(void) setDateProperty:(NSDictionary*) contact withValue:(NSDate*) value forKey:(NSString*) key
++(void) setDateProperty:(NSDictionary*) contact withValue:(NSDate*) value forKey:(NSString*) key formattedWith:(NSDateFormatter*) formatter
 {
     if (value)
     {
-        [contact setValue:value forKey:key];
+        [contact setValue:[NSNumber numberWithDouble: [value timeIntervalSince1970] * 1000] forKey:key];
     }
     else
     {

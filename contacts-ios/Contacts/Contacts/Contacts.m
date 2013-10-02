@@ -6,7 +6,11 @@
 //  Copyright (c) 2013 Max Rozdobudko. All rights reserved.
 //
 
+#import <mach/mach_time.h>
+
 #import "FlashRuntimeExtensions.h"
+
+#import "FRETypeConversion.h"
 
 #import "AddressBookAccessor.h"
 #import "AddressBookProvider.h"
@@ -67,14 +71,14 @@ static Contacts* _sharedInstance = nil;
     return result;
 }
 
--(NSArray*) getContacts:(NSRange) range
+-(FREObject) getContacts:(NSRange) range
 {
     return [self getContacts:range withOptions:NULL];
 }
 
--(NSArray*) getContacts:(NSRange) range withOptions:(NSDictionary*) options
+-(FREObject) getContacts:(NSRange) range withOptions:(NSDictionary*) options
 {
-    __block NSArray* result = NULL;
+    __block FREObject result = NULL;
     
     [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
      {
@@ -84,7 +88,7 @@ static Contacts* _sharedInstance = nil;
              
              provider.addressBook = addressBook;
              
-             result = [provider getPeople:range withOptions:options];
+             result = [provider getContacts:range withOptions:options];
          }
          else
          {
@@ -141,7 +145,7 @@ static Contacts* _sharedInstance = nil;
             {
                 [self holdAsyncCallResult:[NSNumber numberWithBool:result] forCallId:callId];
                                 
-                dispatchResponseEvent(self.context, callId, @"result", @"isModifiedAsync");
+                dispatchResponseEvent(self.context, callId, @"result", @"isModifiedAsync", nil);
                                 
                 dispatchStatusEvent(self.context, @"Contacts.IsModified.Result");
             });
@@ -181,7 +185,11 @@ static Contacts* _sharedInstance = nil;
                 {
                     [self holdAsyncCallResult:result forCallId:callId];
                     
-                    dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync");
+                    NSData* data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
+                    
+                    NSString* json = [NSString stringWithUTF8String:[data bytes]];
+                    
+                    dispatchResponseEvent(self.context, callId, @"result", @"getContactsAsync", json);
                                    
                     dispatchStatusEvent(self.context, @"Contacts.GetContacts.Result");
                 });
@@ -217,7 +225,7 @@ static Contacts* _sharedInstance = nil;
                 {
                     [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
                                     
-                    dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync");
+                    dispatchResponseEvent(self.context, callId, @"result", @"getContactCountAsync", nil);
                                     
                     dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
                 });
@@ -253,7 +261,7 @@ static Contacts* _sharedInstance = nil;
                 {
                     [self holdAsyncCallResult:[NSNumber numberWithInteger:result] forCallId:callId];
                     
-                    dispatchResponseEvent(self.context, callId, @"result", @"updateContactAsync");
+                    dispatchResponseEvent(self.context, callId, @"result", @"updateContactAsync", nil);
                                     
                     dispatchStatusEvent(self.context, @"Contacts.GetContactCount.Result");
                 });
@@ -361,7 +369,30 @@ static Contacts* _sharedInstance = nil;
          }
          else
          {
-             dispatchErrorEvent(self.context, @"Contacts.GetContacts.Failed");
+             dispatchErrorEvent(self.context, @"Contacts.UpdateContact.Failed");
+         }
+     }];
+    
+    return result;
+}
+
+-(NSData*) getContactThumbnail:(NSInteger) recordId
+{
+    __block NSData* result;
+    
+    [[AddressBookAccessor sharedInstance] request:^(ABAddressBookRef addressBook, BOOL available)
+     {
+         if (available)
+         {
+             AddressBookProvider* provider = [[AddressBookProvider alloc] init];
+             
+             provider.addressBook = addressBook;
+             
+             result = [provider getPersonThumbnail:recordId];
+         }
+         else
+         {
+             dispatchErrorEvent(self.context, @"Contacts.GetContactThumbnail.Failed");
          }
      }];
     
@@ -456,18 +487,10 @@ FREObject isModified(FREContext context, void* functionData, uint32_t argc, FREO
 }
 
 FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
-{
-    FREObject result;
-    
+{  
     NSRange range = convertToNSRange(argv[0]);
     
-    NSArray* people = NULL;
-    
-    people = [[Contacts sharedInstance] getContacts:range];
-    
-    result = peopleToContacts(people);
-    
-    return result;
+    return [[Contacts sharedInstance] getContacts:range];
 }
 
 FREObject getContactCount(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
@@ -552,13 +575,33 @@ FREObject pickGetContactsResult(FREContext context, void* functionData, uint32_t
 {
     FREObject result;
     
+    uint64_t start;
+    uint64_t end;
+    uint64_t elapsed;
+    
+    start = mach_absolute_time();
+    
     uint32_t callId;
     
     FREGetObjectAsUint32(argv[0], &callId);
     
     NSArray* people = [[Contacts sharedInstance] pickGetContactsResult: callId];
     
-    result = peopleToContacts(people);
+    NSData* json = [NSJSONSerialization dataWithJSONObject:people options:NSJSONWritingPrettyPrinted error:nil];
+    
+    [FRETypeConversion convertNSStringToFREString:[NSString stringWithUTF8String:[json bytes]] asString:&result];
+    
+    end = mach_absolute_time();
+    
+    elapsed = end - start;
+    
+    static mach_timebase_info_data_t info;
+    
+    mach_timebase_info(&info);
+    
+    uint64_t nanoseconds = elapsed * info.numer / info.denom;
+    
+    NSLog(@"Contacts.pickGetContactsResult: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return result;
 }
@@ -576,11 +619,29 @@ FREObject updateContact(FREContext context, void* functionData, uint32_t argc, F
     return result;
 }
 
+FREObject getContactThumbnail(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
+{
+    FREObject result = NULL;
+    
+    int32_t recordId;
+    
+    FREGetObjectAsInt32(argv[0], &recordId);
+    
+    NSData* data = [[Contacts sharedInstance] getContactThumbnail:recordId];
+    
+    if (data != NULL)
+    {
+        [FRETypeConversion convertNSDataToFREBitmapData:data asBitmapData:&result];
+    }
+    
+    return result;
+}
+
 #pragma mark ContextInitialize/ContextFinalizer
 
 void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-    *numFunctionsToTest = 11;
+    *numFunctionsToTest = 12;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * (*numFunctionsToTest));
     
@@ -624,10 +685,13 @@ void ContactsContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     func[9].functionData = NULL;
     func[9].function = &pickGetContactCountResult;
     
-    
     func[10].name = (const uint8_t*) "updateContact";
     func[10].functionData = NULL;
     func[10].function = &updateContact;
+    
+    func[11].name = (const uint8_t*) "getContactThumbnail";
+    func[11].functionData = NULL;
+    func[11].function = &getContactThumbnail;
     
     *functionsToSet = func;
     

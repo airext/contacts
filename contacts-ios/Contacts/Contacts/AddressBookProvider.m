@@ -11,6 +11,7 @@
 #import "FlashRuntimeExtensions.h"
 
 #import "AddressBookProviderRoutines.h"
+#import "AddressBookProviderFRERoutines.h"
 #import "AddressBookProviderUpdateRoutines.h"
 
 #import "AddressBookProvider.h"
@@ -99,12 +100,15 @@
     
     CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(_addressBook);
     
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MM/dd/yyyy hh:mm:ss zzz"];
+    
     CFIndex n = NSMaxRange(range);
     for (int i = range.location; i < n; i++)
     {
         ABRecordRef person = CFArrayGetValueAtIndex(people, i);
         
-        NSDictionary* contact = [AddressBookProviderRoutines createContact:person];
+        NSDictionary* contact = [AddressBookProviderRoutines createContact:person withDateFormatter:formatter];
         
         [result addObject:contact];
     }
@@ -121,7 +125,7 @@
     
     uint64_t nanoseconds = elapsed * info.numer / info.denom;
     
-    NSLog(@"getPeople: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
+    NSLog(@"Provider.getPeople: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return result;
 }
@@ -131,9 +135,68 @@
     return ABAddressBookGetPersonCount(_addressBook);
 }
 
+-(NSData*) getPersonThumbnail:(NSInteger) recordId
+{
+    ABRecordRef person = ABAddressBookGetPersonWithRecordID(_addressBook, (ABRecordID) recordId);
+    
+    return [AddressBookProviderRoutines getContactThumbnail:person];
+}
+
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
 {
     return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
+}
+
+-(FREObject) getContacts:(NSRange)range withOptions:(NSDictionary *)options
+{
+    uint64_t start;
+    uint64_t end;
+    uint64_t elapsed;
+    
+    start = mach_absolute_time();
+    
+    CFIndex total = ABAddressBookGetPersonCount(_addressBook);
+    
+    if (range.location == NSNotFound)
+        range.location = 0;
+    
+    if (range.length == NSNotFound)
+        range.length = total - range.location;
+    else
+        range.length = MIN(range.length, total - range.location);
+    
+    FREObject contacts;
+    FRENewObject((const uint8_t*) "Array", 0, NULL, &contacts, NULL);
+    
+    FRESetArrayLength(contacts, (uint32_t) range.length);
+    
+    CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(_addressBook);
+    
+    CFIndex n = NSMaxRange(range);
+    for (int i = range.location; i < n; i++)
+    {
+        ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+        
+        FREObject contact = [AddressBookProviderFRERoutines createContactFromPerson:person];
+        
+        FRESetArrayElementAt(contacts, (uint32_t) i, contact);
+    }
+    
+    CFRelease(people);
+    
+    end = mach_absolute_time();
+    
+    elapsed = end - start;
+    
+    static mach_timebase_info_data_t info;
+    
+    mach_timebase_info(&info);
+    
+    uint64_t nanoseconds = elapsed * info.numer / info.denom;
+    
+    NSLog(@"Provider.getContacts: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
+    
+    return contacts;
 }
 
 @end

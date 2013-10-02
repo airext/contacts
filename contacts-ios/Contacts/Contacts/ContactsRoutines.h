@@ -18,7 +18,7 @@
      
 void dispatchErrorEvent(FREContext context, NSString* code);
 void dispatchStatusEvent(FREContext context, NSString* code);
-void dispatchResponseEvent(FREContext context, NSUInteger callId, NSString* status, NSString* method);
+void dispatchResponseEvent(FREContext context, NSUInteger callId, NSString* status, NSString* method, NSString* data);
 
 FREObject personToContact(NSDictionary* person);
 

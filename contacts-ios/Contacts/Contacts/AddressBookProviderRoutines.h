@@ -12,6 +12,8 @@
 
 @interface AddressBookProviderRoutines : NSObject
 
-+(NSDictionary*) createContact:(ABRecordRef) person;
++(NSDictionary*) createContact:(ABRecordRef) person withDateFormatter:(NSDateFormatter*) dateFormatter;
+
++(NSData*) getContactThumbnail:(ABRecordRef) person;
 
 @end
