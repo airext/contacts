@@ -10,6 +10,7 @@ package com.github.rozd.ane
 import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.core.queue.Queue;
+import com.github.rozd.ane.core.queue.tasks.ContactFillDatesTask;
 import com.github.rozd.ane.core.queue.tasks.ContactFillThumbnailTask;
 import com.github.rozd.ane.data.IRange;
 import com.github.rozd.ane.events.ResponseEvent;
@@ -203,13 +204,13 @@ public class Contacts extends EventDispatcher
 
                     for each (var contact:Object in contacts)
                     {
+                        tasks.push(new ContactFillDatesTask(context, contact));
+
                         if (contact.hasImage)
                         {
                             tasks.push(new ContactFillThumbnailTask(context, contact));
                         }
                     }
-
-                    response.result(contacts);
 
                     var queueCompleteHandler:Function = function(event:Event):void
                     {

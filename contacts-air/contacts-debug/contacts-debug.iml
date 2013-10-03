@@ -12,12 +12,30 @@
           <sdk name="4.9.1 (AIR 3.6)" />
         </dependencies>
         <compiler-options>
-          <option name="additionalOptions" value="-advanced-telemetry" />
+          <option name="additionalOptions" value="-advanced-telemetry=true" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ContactsDebug-app.xml" package-file-name="ContactsDebug" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ContactsDebug-app.xml" package-file-name="ContactsDebug">
           <AirSigningOptions sdk="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk" keystore-path="$USER_HOME$/ios/certificate/ios_air_development.p12" provisioning-profile-path="$USER_HOME$/ios/provisioning/Mobitile_Development.mobileprovision" />
+        </packaging-ios>
+      </configuration>
+      <configuration name="contacts-debug-flash" target-platform="Mobile" pure-as="true" main-class="ContactsDebugFlash" output-file="contacts-debug-flash.swf" output-folder="$MODULE_DIR$/bin-debug">
+        <dependencies>
+          <entries>
+            <entry library-id="d8931631-4ee7-43b2-a3e4-4f00489abd0a">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="3.8.0.1350" />
+        </dependencies>
+        <compiler-options>
+          <option name="additionalOptions" value="-advanced-telemetry=true" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android package-file-name="contacts-debug-flash" />
+        <packaging-ios enabled="true" package-file-name="contacts-debug-flash">
+          <AirSigningOptions keystore-path="$USER_HOME$/ios/certificate/ios_air_development.p12" provisioning-profile-path="$USER_HOME$/ios/provisioning/Mobitile_Development.mobileprovision" />
         </packaging-ios>
       </configuration>
     </configurations>
@@ -28,11 +46,22 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="4.9.1 (AIR 3.6)" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="3.8.0.1350&#9;4.9.1 (AIR 3.6)" jdkType="__CompositeFlexSdk__" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
         <properties id="3d63e08b-f9df-44f1-aa04-d3215349fb42" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/ane" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/ane" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="d8931631-4ee7-43b2-a3e4-4f00489abd0a" />
         <CLASSES>
           <root url="file://$MODULE_DIR$/ane" />
         </CLASSES>
