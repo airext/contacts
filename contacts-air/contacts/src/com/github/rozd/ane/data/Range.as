@@ -17,9 +17,9 @@ public class Range implements IRange
         this.limit = limit;
     }
 
-    public var offset:int;
+    public var offset:uint;
 
-    public var limit:int;
+    public var limit:uint;
 
     public function toArray():Array
     {

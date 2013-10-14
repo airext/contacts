@@ -9,9 +9,6 @@ package com.github.rozd.ane
 {
 import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
-import com.github.rozd.ane.core.queue.Queue;
-import com.github.rozd.ane.core.queue.tasks.ContactFillDatesTask;
-import com.github.rozd.ane.core.queue.tasks.ContactFillThumbnailTask;
 import com.github.rozd.ane.data.IRange;
 import com.github.rozd.ane.events.ResponseEvent;
 
@@ -21,7 +18,8 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
-import flash.utils.getTimer;
+
+import skein.async.Async;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
 
@@ -181,70 +179,70 @@ public class Contacts extends EventDispatcher
 
     public function getContactsAsync(range:IRange, options:Object=null, response:Response=null):void
     {
-        var callId:uint;
-
         var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
 
-        if (options == null)
-            callId = context.call("getContactsAsync", rangeArray) as uint;
-        else
-            callId = context.call("getContactsAsync", rangeArray, options) as uint;
+        var offset:uint = rangeArray[0];
+        var limit:uint = rangeArray[1] == uint.MAX_VALUE ? getContactCount() : rangeArray[1];
 
-        function handler(event:ResponseEvent):void
+        var contacts:Array = [];
+
+        var functions:Array = [];
+
+        var size:uint = 10;
+
+        var n:uint = offset + limit;
+        for (var i:uint = offset; i < n; i += size)
         {
-            if (event.info.callId == callId)
-            {
-                addEventListener(ResponseEvent.RESPONSE, handler);
-
-                if (event.info.status == "result")
+            functions.push(
+                function(i:int):Function
                 {
-                    var tasks:Array = [];
-
-                    var contacts:Array = event.info.data;
-
-                    for each (var contact:Object in contacts)
+                    var f:Function = function (callback:Function):void
                     {
-                        tasks.push(new ContactFillDatesTask(context, contact));
-
-                        if (contact.hasImage)
+                        try
                         {
-                            tasks.push(new ContactFillThumbnailTask(context, contact));
+                            var result:Array;
+
+                            if (options == null)
+                                result = context.call("getContacts", [i, 10]) as Array;
+                            else
+                                result = context.call("getContacts", [i, 10], options) as Array;
+
+                            contacts = contacts.concat(result);
+
+                            callback(true);
+                        }
+                        catch (error:Error)
+                        {
+                            callback(error);
                         }
                     }
 
-                    var queueCompleteHandler:Function = function(event:Event):void
-                    {
-                        queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
-                        queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
-
-                        response.result(contacts);
-                    }
-
-                    var queueErrorHandler:Function = function(event:ErrorEvent):void
-                    {
-                        queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
-                        queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
-
-                        response.error(event);
-                    }
-
-                    var queue:Queue = new Queue(tasks);
-                    queue.addEventListener(Event.COMPLETE, queueCompleteHandler);
-                    queue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
-
-                    queue.start();
-                }
-                else // event.info.status == error
-                {
-                    response.error(new Error(event.info.detail));
-                }
-            }
+                    return f;
+                }(i)
+            )
         }
 
-        if (response != null)
+        var queueCompleteHandler:Function = function(event:Event):void
         {
-            addEventListener(ResponseEvent.RESPONSE, handler);
+            queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+            queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+            response.result(contacts);
         }
+
+        var queueErrorHandler:Function = function(event:ErrorEvent):void
+        {
+            queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+            queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+            response.error(event);
+        }
+
+        var queue:Async = new Async(functions);
+        queue.addEventListener(Event.COMPLETE, queueCompleteHandler);
+        queue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+        queue.start();
     }
 
     public function getContactCountAsync(response:Response=null):void
@@ -312,11 +310,7 @@ public class Contacts extends EventDispatcher
         {
             var e:ResponseEvent = ResponseEvent.create(event.code, event.level);
 
-            var t:Number = getTimer();
-
             e.info = JSON.parse(event.code);
-
-            trace("JSON decoding takes: ", getTimer() - t);
 
             dispatchEvent(e);
         }

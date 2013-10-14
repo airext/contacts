@@ -491,11 +491,7 @@ FREObject getContacts(FREContext context, void* functionData, uint32_t argc, FRE
 
 FREObject getContactCount(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
-    FREObject result;
-    
-    FRENewObjectFromInt32((int32_t) [[Contacts sharedInstance] getContactCount], &result);
-    
-    return result;
+    return [[Contacts sharedInstance] getContactCount];
 }
 
 #pragma mark FRE Asynchronous functions

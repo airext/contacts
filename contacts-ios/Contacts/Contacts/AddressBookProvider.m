@@ -156,7 +156,12 @@
 -(FREObject) getContactCountAsFRE
 {
     FREObject result;
-    FRENewObjectFromInt32(ABAddressBookGetPersonCount(_addressBook), &result);
+    
+    int32_t count = (int32_t) ABAddressBookGetPersonCount(_addressBook);    
+    
+    NSLog(@"getContactCount:%i", count);
+    
+    FRENewObjectFromInt32(count, &result);
     
     return result;
 }
@@ -193,7 +198,7 @@
         
         FREObject contact = [AddressBookProviderFRERetriever createContactFromPerson:person];
         
-        FRESetArrayElementAt(contacts, (uint32_t) i, contact);
+        FRESetArrayElementAt(contacts, (uint32_t) (i - range.location), contact);
     }
     
     CFRelease(people);

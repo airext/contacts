@@ -12,6 +12,9 @@ import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.data.Range;
 
 import flash.display.Sprite;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.utils.getTimer;
 
@@ -34,14 +37,22 @@ public class ContactsDebugFlash extends Sprite
                     new Response(
                         function(data:Object):void
                         {
-                            trace("elapsed:", getTimer() - t);
+                            trace("getContactsAsync: elapsed:", getTimer() - t);
                         },
                         function(info:Object):void
                         {
-
+                            trace("getContactsAsync:", info);
                         }
                     )
                 );
+            }
+        );
+
+        addEventListener(Event.ADDED_TO_STAGE,
+            function addedToStageHandler(event:Event):void
+            {
+                stage.scaleMode = StageScaleMode.NO_SCALE;
+                stage.align = StageAlign.TOP_LEFT;
             }
         );
     }

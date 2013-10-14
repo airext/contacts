@@ -13,8 +13,6 @@
 
         use namespace contacts;
 
-        new Test();
-
         [Bindable]
         private var bmd:BitmapData;
 
@@ -31,7 +29,7 @@
         {
             var t:Number = getTimer();
 
-            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(0));
+            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(10, 2));
 
             trace("elapsed:", getTimer() - t);
 
@@ -70,7 +68,7 @@
         {
             var t:Number = getTimer();
 
-            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(0), null,
+            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(0, 1000), null,
                                                     new Response(
                                                             function (data:Object):void
                                                             {

@@ -13,8 +13,6 @@
 
 #import <AddressBook/AddressBook.h>
 
-#import "NSData+Base64.h"
-
 #import "AddressBookProviderJSONRetriever.h"
 
 @implementation AddressBookProviderJSONRetriever
