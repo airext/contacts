@@ -182,7 +182,7 @@ public class Contacts extends EventDispatcher
         var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
 
         var offset:uint = rangeArray[0];
-        var limit:uint = rangeArray[1] == uint.MAX_VALUE ? getContactCount() : rangeArray[1];
+        var limit:uint = rangeArray[1] == uint.MAX_VALUE ? getContactCount() - offset : rangeArray[1];
 
         var contacts:Array = [];
 

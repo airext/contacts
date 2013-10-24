@@ -25,8 +25,6 @@
 		0E09666C17DE569F0071D966 /* libContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E85671117DDCF2400927073 /* libContacts.a */; };
 		0E09666E17DE5F7D0071D966 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E09666D17DE5F7D0071D966 /* AddressBook.framework */; };
 		0E09667717DF20B20071D966 /* AddressBookProviderJSONRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E09667617DF20B20071D966 /* AddressBookProviderJSONRetriever.m */; };
-		0E28344B17FAE116004265C8 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E28344917FAE116004265C8 /* NSData+Base64.h */; };
-		0E28344C17FAE116004265C8 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E28344A17FAE116004265C8 /* NSData+Base64.m */; };
 		0E6A62F417E05E4C0071AC01 /* libContacts.a in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0E85671117DDCF2400927073 /* libContacts.a */; };
 		0E6A62FD17E07F090071AC01 /* ContactsRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E6A62FC17E07F090071AC01 /* ContactsRoutines.h */; };
 		0E6A62FF17E07F180071AC01 /* ContactsRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6A62FE17E07F180071AC01 /* ContactsRoutines.m */; };
@@ -109,8 +107,6 @@
 		0E09666D17DE5F7D0071D966 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0E09667517DF20B20071D966 /* AddressBookProviderJSONRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderJSONRetriever.h; sourceTree = "<group>"; };
 		0E09667617DF20B20071D966 /* AddressBookProviderJSONRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProviderJSONRetriever.m; sourceTree = "<group>"; };
-		0E28344917FAE116004265C8 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		0E28344A17FAE116004265C8 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		0E6A62FC17E07F090071AC01 /* ContactsRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsRoutines.h; sourceTree = "<group>"; };
 		0E6A62FE17E07F180071AC01 /* ContactsRoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsRoutines.m; sourceTree = "<group>"; };
 		0E75311717FC0DCA001360E6 /* AddressBookProviderFRERetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProviderFRERetriever.h; sourceTree = "<group>"; };
@@ -125,6 +121,7 @@
 		0E85672517DDE9A600927073 /* AddressBookProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookProvider.h; sourceTree = "<group>"; };
 		0E85672617DDE9A600927073 /* AddressBookProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookProvider.m; sourceTree = "<group>"; };
 		0E85672817DE1A6E00927073 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../../../../sdks/air/3.8.0.1350/include/FlashRuntimeExtensions.h; sourceTree = "<group>"; };
+		0EC4A1471819B2F900452F7C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0EE759AF17DF6B97001C7ABD /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		0EE759F117DFA207001C7ABD /* ContactsDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE759F717DFA207001C7ABD /* ContactsDebug-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ContactsDebug-Info.plist"; sourceTree = "<group>"; };
@@ -191,6 +188,7 @@
 		0E85670817DDCF2400927073 = {
 			isa = PBXGroup;
 			children = (
+				0EC4A1471819B2F900452F7C /* Default-568h@2x.png */,
 				0EE759AF17DF6B97001C7ABD /* AddressBookUI.framework */,
 				0E09666D17DE5F7D0071D966 /* AddressBook.framework */,
 				0E85672817DE1A6E00927073 /* FlashRuntimeExtensions.h */,
@@ -241,8 +239,6 @@
 				0E75311817FC0DCB001360E6 /* AddressBookProviderFRERetriever.m */,
 				0E061C1C17F2CB9B007BCAAD /* FRETypeConversion.h */,
 				0E061C1D17F2CB9B007BCAAD /* FRETypeConversion.m */,
-				0E28344917FAE116004265C8 /* NSData+Base64.h */,
-				0E28344A17FAE116004265C8 /* NSData+Base64.m */,
 				0E85671717DDCF2400927073 /* Supporting Files */,
 			);
 			path = Contacts;
@@ -292,7 +288,6 @@
 				0E6A62FD17E07F090071AC01 /* ContactsRoutines.h in Headers */,
 				0E061C1A17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.h in Headers */,
 				0E061C1E17F2CB9B007BCAAD /* FRETypeConversion.h in Headers */,
-				0E28344B17FAE116004265C8 /* NSData+Base64.h in Headers */,
 				0E75311917FC0DCB001360E6 /* AddressBookProviderFRERetriever.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,7 +403,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nPATH=${PATH}:~/sdks/air/3.6.0/bin\n\necho \"Please provide the complete path of the IPA before building this target\"\n#PATH_TO_IPA=`~/dev/contacts/contacts-ios/Contacts/ContactsDebug.ipa`\n\nBUILD_DIR=~/dev/contacts/build/\nANE_NAME=\"Contacts.ane\"\n\n#IPA_DIR=`/usr/bin/dirname \"$PATH_TO_IPA\"`\nIPA_DIR=~/dev/contacts/build/launch/\n#IPA_NAME=`/usr/bin/basename \"$PATH_TO_IPA\"`\nIPA_NAME=\"ContactsDebug.ipa\"\n#IPA_BASE_NAME=`/usr/bin/basename \"$PATH_TO_IPA\" .ipa`\nIPA_BASE_NAME=\"ContactsDebug\"\n\n#package Contacts.ane\n\npushd \"$BUILD_DIR\"\n\necho \"packaging contacts.ane extension...\"\n\nsh build-contacts-ane.sh\n\necho \"contacts.ane packaged.\"\n\necho \"packaging ContactsDebug.ipa application...\"\n\nsh build-contacts-debug.sh\n\necho \"ContactsDebug.ipa packaged.\"\n\npopd\n\n#package ContactsDebug.ipa\n\n#debug ContactsDebug.ipa\n\necho start\necho \"$IPA_DIR\"\necho $IPA_NAME\necho $IPA_BASE_NAME\n\n# change to the proper directory\npushd \"$IPA_DIR\"\n\n# extract the IPA\ncp \"$IPA_NAME\" \"$IPA_NAME\".zip\nunzip -o \"$IPA_NAME\".zip\nrm \"$IPA_NAME\".zip\n\n# copy the contents of the IPA to the location xcode wants\ncp -r Payload/\"$IPA_BASE_NAME\".app/ \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/\"\ncp -r \"$IPA_BASE_NAME\".app.dSYM \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/\"\n\n# remove the following files and folders to avoid signature errors when installing the app\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/_CodeSignature/CodeResources\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/_CodeSignature\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/CodeResources\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/PkgInfo\" 2>/dev/null\n\n\n# restore working directory\npopd";
+			shellScript = "#!/bin/sh\n\nsource ~/.profile\n\nPATH=${PATH}:~/sdks/air/3.6.0/bin\n\necho \"Please provide the complete path of the IPA before building this target\"\n#PATH_TO_IPA=`~/dev/contacts/contacts-ios/Contacts/ContactsDebug.ipa`\n\nBUILD_DIR=~/dev/contacts/build/\nANE_NAME=\"Contacts.ane\"\n\n#IPA_DIR=`/usr/bin/dirname \"$PATH_TO_IPA\"`\nIPA_DIR=~/dev/contacts/build/launch/\n#IPA_NAME=`/usr/bin/basename \"$PATH_TO_IPA\"`\nIPA_NAME=\"ContactsDebug.ipa\"\n#IPA_BASE_NAME=`/usr/bin/basename \"$PATH_TO_IPA\" .ipa`\nIPA_BASE_NAME=\"ContactsDebug\"\n\n#package Contacts.ane\n\npushd \"$BUILD_DIR\"\n\necho \"packaging contacts.ane extension...\"\n\nsh build-contacts-ane.sh\n\necho \"contacts.ane packaged.\"\n\necho \"packaging ContactsDebug.ipa application...\"\n\nsh build-contacts-debug.sh\n\necho \"ContactsDebug.ipa packaged.\"\n\npopd\n\n#package ContactsDebug.ipa\n\n#debug ContactsDebug.ipa\n\necho start\necho \"$IPA_DIR\"\necho $IPA_NAME\necho $IPA_BASE_NAME\n\n# change to the proper directory\npushd \"$IPA_DIR\"\n\n# extract the IPA\ncp \"$IPA_NAME\" \"$IPA_NAME\".zip\nunzip -o \"$IPA_NAME\".zip\nrm \"$IPA_NAME\".zip\n\n# copy the contents of the IPA to the location xcode wants\ncp -r Payload/\"$IPA_BASE_NAME\".app/ \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/\"\ncp -r \"$IPA_BASE_NAME\".app.dSYM \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/\"\n\n# remove the following files and folders to avoid signature errors when installing the app\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/_CodeSignature/CodeResources\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/_CodeSignature\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/CodeResources\"\nrm \"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/PkgInfo\" 2>/dev/null\n\n\n# restore working directory\npopd";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -434,7 +429,6 @@
 				0E6A62FF17E07F180071AC01 /* ContactsRoutines.m in Sources */,
 				0E061C1B17F08BD9007BCAAD /* AddressBookProviderUpdateRoutines.m in Sources */,
 				0E061C1F17F2CB9B007BCAAD /* FRETypeConversion.m in Sources */,
-				0E28344C17FAE116004265C8 /* NSData+Base64.m in Sources */,
 				0E75311A17FC0DCB001360E6 /* AddressBookProviderFRERetriever.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
