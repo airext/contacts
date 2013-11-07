@@ -15,7 +15,7 @@
         <packaging-air-desktop />
         <packaging-android use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ContactsDebug-app.xml" package-file-name="ContactsDebug" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ContactsDebug-app.xml" package-file-name="ContactsDebug">
-          <AirSigningOptions sdk="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk" keystore-path="$USER_HOME$/ios/certificate/ios_air_development.p12" provisioning-profile-path="$USER_HOME$/ios/provisioning/Mobitile_Development.mobileprovision" />
+          <AirSigningOptions sdk="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk" keystore-path="$USER_HOME$/ios/certificate/ios_air_development.p12" provisioning-profile-path="$USER_HOME$/ios/provisioning/Mobitile_Development.mobileprovision" />
         </packaging-ios>
       </configuration>
       <configuration name="contacts-debug-flash" target-platform="Mobile" pure-as="true" main-class="ContactsDebugFlash" output-file="contacts-debug-flash.swf" output-folder="$MODULE_DIR$/bin-debug">

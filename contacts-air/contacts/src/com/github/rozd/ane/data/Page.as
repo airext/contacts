@@ -7,23 +7,23 @@
  */
 package com.github.rozd.ane.data
 {
-public class Range implements IRange
+public class Page implements IRange
 {
-    public function Range(offset:uint=0, limit:uint=uint.MAX_VALUE)
+    public function Page(offset:uint=0, size:uint=uint.MAX_VALUE)
     {
         super();
 
         this.offset = offset;
-        this.limit = limit;
+        this.size = size;
     }
 
     public var offset:uint;
 
-    public var limit:uint;
+    public var size:uint;
 
     public function toArray():Array
     {
-        return [offset, limit];
+        return [offset, size];
     }
 }
 }

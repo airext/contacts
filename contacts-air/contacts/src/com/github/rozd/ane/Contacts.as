@@ -10,6 +10,7 @@ package com.github.rozd.ane
 import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
+import com.github.rozd.ane.data.Page;
 import com.github.rozd.ane.events.ResponseEvent;
 
 import flash.display.BitmapData;
@@ -19,7 +20,7 @@ import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
 
-import skein.async.Async;
+import skein.async.Queue;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
 
@@ -38,6 +39,14 @@ public class Contacts extends EventDispatcher
     //--------------------------------------------------------------------------
 
     contacts static const EXTENSION_ID:String = "com.github.rozd.ane.Contacts";
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class variables
+    //
+    //--------------------------------------------------------------------------
+
+    contacts static var BUNCH_SIZE:uint = 5;
 
     //--------------------------------------------------------------------------
     //
@@ -98,6 +107,8 @@ public class Contacts extends EventDispatcher
     //  Variables
     //
     //--------------------------------------------------------------------------
+
+    private var getContactsAsyncQueue:Queue;
 
     //--------------------------------------------------------------------------
     //
@@ -181,68 +192,92 @@ public class Contacts extends EventDispatcher
     {
         var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
 
-        var offset:uint = rangeArray[0];
-        var limit:uint = rangeArray[1] == uint.MAX_VALUE ? getContactCount() - offset : rangeArray[1];
+        var offset:uint = Math.max(0, rangeArray[0]);
+
+        if (offset == uint.MAX_VALUE)
+            offset = getContactCount();
+
+        var limit:uint = Math.max(0, rangeArray[1]);
+
+        if (limit == uint.MAX_VALUE)
+            limit = getContactCount();
 
         var contacts:Array = [];
 
         var functions:Array = [];
 
-        var size:uint = 10;
+        var total:uint = offset + limit;
 
-        var n:uint = offset + limit;
-        for (var i:uint = offset; i < n; i += size)
+        for (var i:uint = offset; i < total; i += BUNCH_SIZE)
         {
-            functions.push(
-                function(i:int):Function
+            var closure:Function = function(i:int):Function
+            {
+                var f:Function = function (callback:Function):void
                 {
-                    var f:Function = function (callback:Function):void
+                    try
                     {
-                        try
-                        {
-                            var result:Array;
+                        contacts = contacts.concat(getContacts(new Page(i, BUNCH_SIZE), options));
 
-                            if (options == null)
-                                result = context.call("getContacts", [i, 10]) as Array;
-                            else
-                                result = context.call("getContacts", [i, 10], options) as Array;
-
-                            contacts = contacts.concat(result);
-
-                            callback(true);
-                        }
-                        catch (error:Error)
-                        {
-                            callback(error);
-                        }
+                        callback(true);
                     }
+                    catch (error:Error)
+                    {
+                        callback(error);
+                    }
+                }
 
-                    return f;
-                }(i)
-            )
+                return f;
+            };
+
+            functions.push(closure(i));
         }
 
-        var queueCompleteHandler:Function = function(event:Event):void
+        function errorHandler(event:ErrorEvent):void
         {
-            queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
-            queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
-
-            response.result(contacts);
-        }
-
-        var queueErrorHandler:Function = function(event:ErrorEvent):void
-        {
-            queue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
-            queue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+            queue.removeEventListener(ErrorEvent.ERROR, errorHandler);
+            queue.removeEventListener(Event.COMPLETE, completeHandler);
 
             response.error(event);
         }
 
-        var queue:Async = new Async(functions);
-        queue.addEventListener(Event.COMPLETE, queueCompleteHandler);
-        queue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
+        function completeHandler(event:Event):void
+        {
+            queue.removeEventListener(ErrorEvent.ERROR, errorHandler);
+            queue.removeEventListener(Event.COMPLETE, completeHandler);
 
-        queue.start();
+            response.result(contacts);
+        }
+
+        var queue:Queue = new Queue(functions);
+        queue.addEventListener(ErrorEvent.ERROR, errorHandler);
+        queue.addEventListener(Event.COMPLETE, completeHandler);
+
+        if (getContactsAsyncQueue == null)
+        {
+            var queueCompleteHandler:Function = function(event:Event):void
+            {
+                getContactsAsyncQueue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                getContactsAsyncQueue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                getContactsAsyncQueue = null;
+            }
+
+            var queueErrorHandler:Function = function(event:ErrorEvent):void
+            {
+                getContactsAsyncQueue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                getContactsAsyncQueue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                getContactsAsyncQueue = null;
+            }
+
+            getContactsAsyncQueue = new Queue();
+            getContactsAsyncQueue.addEventListener(Event.COMPLETE, queueCompleteHandler);
+            getContactsAsyncQueue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
+        }
+
+        getContactsAsyncQueue.add([queue]);
+
+        getContactsAsyncQueue.start();
     }
 
     public function getContactCountAsync(response:Response=null):void

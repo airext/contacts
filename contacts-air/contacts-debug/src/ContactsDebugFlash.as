@@ -9,16 +9,21 @@ package
 {
 import com.github.rozd.ane.Contacts;
 import com.github.rozd.ane.core.Response;
-import com.github.rozd.ane.data.Range;
+import com.github.rozd.ane.data.Page;
 
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
+import flash.events.ErrorEvent;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.utils.getTimer;
 
 import mx.charts.BubbleChart;
+
+import skein.async.Queue;
+
+import skein.async.Queue2;
 
 public class ContactsDebugFlash extends Sprite
 {
@@ -28,23 +33,145 @@ public class ContactsDebugFlash extends Sprite
 
         mouseChildren = mouseEnabled = true;
 
+
         new PlainButton(this, "getContactsAsync", 0xFF0000, 0xFFFF00, {x: 100, y: 0, width : 200, height : 60},
             function clickHandler(event:MouseEvent):void
             {
                 var t:Number = getTimer();
 
-                Contacts.getInstance().getContactsAsync(new Range(), null,
-                    new Response(
-                        function(data:Object):void
+                var size:int = 10;
+
+                var n:int = Contacts.getInstance().getContactCount();
+
+                for (var i:int = 0; i < int(n / size); i+=size)
+                {
+                    Contacts.getInstance().getContactsAsync(new Page(i, size), null,
+                        new Response(
+                            function(data:Object):void
+                            {
+                                trace("getContactsAsync: elapsed:", getTimer() - t);
+                            },
+                            function(info:Object):void
+                            {
+                                trace("getContactsAsync:", info);
+                            }
+                        )
+                    );
+                }
+
+            }
+        );
+
+        new PlainButton(this, "TEST", 0x234858, 0xF48E21, {x: 100, y: 80, width : 200, height : 60},
+            function(event:MouseEvent):void
+            {
+                if (range == null)
+                    range = new Page(0, 100);
+                else
+                    range = new Page(range.offset + 100, 100);
+
+                var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
+
+                var offset:uint = rangeArray[0];
+                var limit:uint = rangeArray[1] == uint.MAX_VALUE ? Contacts.getInstance().getContactCount() - offset : rangeArray[1];
+
+                var contacts:Array = [];
+
+                var functions:Array = [];
+
+                var size:uint = 8;
+
+                var n:uint = offset + limit;
+                for (var i:uint = offset; i < n; i += size)
+                {
+                    var closure:Function = function(i:int):Function
+                    {
+                        var f:Function = function (callback:Function):void
                         {
-                            trace("getContactsAsync: elapsed:", getTimer() - t);
-                        },
-                        function(info:Object):void
-                        {
-                            trace("getContactsAsync:", info);
+                            try
+                            {
+                                var result:Array;
+
+                                var t:Number = getTimer();
+
+                                result = Contacts.getInstance().getContacts(new Page(i, size));
+
+                                trace("Contacts.getContacts() takes:", getTimer() - t);
+
+                                contacts = contacts.concat(result);
+
+                                callback(true);
+                            }
+                            catch (error:Error)
+                            {
+                                callback(error);
+                            }
                         }
-                    )
-                );
+
+                        return f;
+                    };
+
+                    functions.push(closure(i));
+                }
+
+                function errorHandler(event:ErrorEvent):void
+                {
+                    queue.removeEventListener(ErrorEvent.ERROR, errorHandler);
+                    queue.removeEventListener(Event.COMPLETE, completeHandler);
+                }
+
+                function completeHandler(event:Event):void
+                {
+                    queue.removeEventListener(ErrorEvent.ERROR, errorHandler);
+                    queue.removeEventListener(Event.COMPLETE, completeHandler);
+
+                    trace(getTimer(), i, contacts);
+                }
+
+                var queue:Queue2 = new Queue2(functions);
+                queue.addEventListener(ErrorEvent.ERROR, errorHandler);
+                queue.addEventListener(Event.COMPLETE, completeHandler);
+
+                var queueCompleteHandler:Function = function(event:Event):void
+                {
+                    getContactsAsyncQueue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                    getContactsAsyncQueue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                    getContactsAsyncQueue = null;
+                }
+
+                var queueErrorHandler:Function = function(event:ErrorEvent):void
+                {
+                    getContactsAsyncQueue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                    getContactsAsyncQueue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                    getContactsAsyncQueue = null;
+                }
+
+                if (getContactsAsyncQueue == null)
+                {
+                    getContactsAsyncQueue = new Queue2();
+                    getContactsAsyncQueue.addEventListener(Event.COMPLETE, queueCompleteHandler);
+                    getContactsAsyncQueue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
+                }
+
+                getContactsAsyncQueue.add([queue]);
+
+                getContactsAsyncQueue.start();
+            }
+        );
+
+        new PlainButton(this, "2", 0x234858, 0xF48E21, {x: 100, y: 160, width : 200, height : 60},
+            function(event:MouseEvent):void
+            {
+                new Queue2();
+            }
+        );
+
+        new PlainButton(this, "new Test()", 0x234858, 0xF48E21, {x: 100, y: 220, width : 200, height : 60},
+            function(event:MouseEvent):void
+            {
+                new Test();
             }
         );
 
@@ -56,6 +183,10 @@ public class ContactsDebugFlash extends Sprite
             }
         );
     }
+
+    private var getContactsAsyncQueue:Queue2;
+
+    private var range:Page;
 }
 }
 

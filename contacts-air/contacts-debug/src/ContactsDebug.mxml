@@ -11,6 +11,8 @@
 
         import mx.events.FlexEvent;
 
+        import skein.async.Queue2;
+
         use namespace contacts;
 
         [Bindable]
@@ -243,6 +245,89 @@
 
             Contacts.getInstance().updateContact(contact);
         }
+
+        private function test_clickHandler(event:MouseEvent):void
+        {
+            if (range == null)
+                range = new com.github.rozd.ane.data.Range(0, 100);
+            else
+                range = new com.github.rozd.ane.data.Range(range.offset + 100, 100);
+
+            var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
+
+            var offset:uint = rangeArray[0];
+            var limit:uint = rangeArray[1] == uint.MAX_VALUE ? Contacts.getInstance().getContactCount() - offset : rangeArray[1];
+
+            var contacts:Array = [];
+
+            var functions:Array = [];
+
+            var size:uint = 10;
+
+            var n:uint = offset + limit;
+            for (var i:uint = offset; i < n; i += size)
+            {
+                var closure:Function = function(i:int):Function
+                {
+                    var f:Function = function (callback:Function):void
+                    {
+                        try
+                        {
+                            var result:Array;
+
+                            result = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(i, size));
+
+                            contacts = contacts.concat(result);
+
+                            callback(true);
+                        }
+                        catch (error:Error)
+                        {
+                            callback(error);
+                        }
+                    }
+
+                    return f;
+                };
+
+                functions.push(closure(i));
+            }
+
+            var queueCompleteHandler:Function = function(event:Event):void
+            {
+                getContactsAsyncQueue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                getContactsAsyncQueue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                getContactsAsyncQueue = null;
+
+//                trace(contacts);
+            }
+
+            var queueErrorHandler:Function = function(event:ErrorEvent):void
+            {
+                getContactsAsyncQueue.removeEventListener(Event.COMPLETE, queueCompleteHandler);
+                getContactsAsyncQueue.removeEventListener(ErrorEvent.ERROR, queueErrorHandler);
+
+                getContactsAsyncQueue = null;
+            }
+
+            if (getContactsAsyncQueue == null)
+            {
+                getContactsAsyncQueue = new Queue2(functions);
+                getContactsAsyncQueue.addEventListener(Event.COMPLETE, queueCompleteHandler);
+                getContactsAsyncQueue.addEventListener(ErrorEvent.ERROR, queueErrorHandler);
+            }
+            else
+            {
+                getContactsAsyncQueue.add(functions);
+            }
+
+            getContactsAsyncQueue.start();
+        }
+        private var getContactsAsyncQueue:Queue2;
+
+        private var range:Range;
+
         ]]>
     </fx:Script>
 
@@ -251,6 +336,8 @@
     </s:layout>
 
     <s:Image source="{bmd}" />
+
+    <s:Button label="TEST" click="test_clickHandler(event)" />
 
     <s:Button label="updateContact" click="updateContact_clickHandler(event)" />
 
