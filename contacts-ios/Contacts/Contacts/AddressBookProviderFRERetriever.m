@@ -23,93 +23,134 @@
     
     // compositeName
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "compositeName" withValue:ABRecordCopyCompositeName(person)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "compositeName" withValue:CFBridgingRelease(ABRecordCopyCompositeName(person))];
     
     // firstName
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "firstName" withValue:ABRecordCopyValue(person, kABPersonFirstNameProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "firstName" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonFirstNameProperty))];
     
     // lastName
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastName" withValue:ABRecordCopyValue(person, kABPersonLastNameProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastName" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNameProperty))];
     
     // middleName
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastName" withValue:ABRecordCopyValue(person, kABPersonLastNameProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastName" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNameProperty))];
     
     // prefix
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "middleName" withValue:ABRecordCopyValue(person, kABPersonMiddleNameProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "middleName" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonMiddleNameProperty))];
     
     // suffix
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "suffix" withValue:ABRecordCopyValue(person, kABPersonSuffixProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "suffix" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonSuffixProperty))];
     
     // nickname
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "nickname" withValue:ABRecordCopyValue(person, kABPersonNicknameProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "nickname" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonNicknameProperty))];
     
     // firstNamePhonetic
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "firstNamePhonetic" withValue:ABRecordCopyValue(person, kABPersonFirstNamePhoneticProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "firstNamePhonetic" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonFirstNamePhoneticProperty))];
     
     // lastNamePhonetic
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastNamePhonetic" withValue:ABRecordCopyValue(person, kABPersonLastNamePhoneticProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastNamePhonetic" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNamePhoneticProperty))];
     
     // middleNamePhonetic
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "middleNamePhonetic" withValue:ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "middleNamePhonetic" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonMiddleNamePhoneticProperty))];
     
     // organization
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "organization" withValue:ABRecordCopyValue(person, kABPersonOrganizationProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "organization" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonOrganizationProperty))];
     
     // jobTitle
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "jobTitle" withValue:ABRecordCopyValue(person, kABPersonJobTitleProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "jobTitle" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonJobTitleProperty))];
     
     // department
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "department" withValue:ABRecordCopyValue(person, kABPersonDepartmentProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "department" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonDepartmentProperty))];
     
     // note
     
-    [self setContactStringProperty:contact forProperty:(const uint8_t *) "note" withValue:ABRecordCopyValue(person, kABPersonNoteProperty)];
-    
-    // emails
-    
-    [self setContactMultiStringProperty:contact forProperty:(const uint8_t *) "emails" withValue:ABRecordCopyValue(person, kABPersonEmailProperty)];
-    
-    // phones
-    
-    [self setContactMultiStringProperty:contact forProperty:(const uint8_t *) "phones" withValue:ABRecordCopyValue(person, kABPersonPhoneProperty)];
+    [self setContactStringProperty:contact forProperty:(const uint8_t *) "note" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonNoteProperty))];
     
     // birthday
     
-    [self setContactDateProperty:contact forProperty:(const uint8_t *) "birthday" withValue:ABRecordCopyValue(person, kABPersonBirthdayProperty)];
+    [self setContactDateProperty:contact forProperty:(const uint8_t *) "birthday" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonBirthdayProperty))];
     
     // creationDate
     
-    [self setContactDateProperty:contact forProperty:(const uint8_t *) "creationDate" withValue:ABRecordCopyValue(person, kABPersonCreationDateProperty)];
+    [self setContactDateProperty:contact forProperty:(const uint8_t *) "creationDate" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonCreationDateProperty))];
     
     // modificationDate
     
-    [self setContactDateProperty:contact forProperty:(const uint8_t *) "modificationDate" withValue:ABRecordCopyValue(person, kABPersonModificationDateProperty)];
+    [self setContactDateProperty:contact forProperty:(const uint8_t *) "modificationDate" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonModificationDateProperty))];
+    
+    // emails
+    
+    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+    
+    CFIndex emailCount = ABMultiValueGetCount(emails);
+    
+    if (emailCount > 0)
+        [self setContactMultiStringProperty:contact forProperty:(const uint8_t *) "emails" withValue:emails];
+    else
+        FRESetObjectProperty(contact, (const uint8_t *) "emails", NULL, NULL);
+    
+    if (emails)
+        CFRelease(emails);
+    
+    // phones
+    
+    ABMultiValueRef phones = ABRecordCopyValue(person, kABPersonPhoneProperty);
+    
+    CFIndex phoneCount = ABMultiValueGetCount(phones);
+    
+    if (phoneCount > 0)
+        [self setContactMultiStringProperty:contact forProperty:(const uint8_t *) "phones" withValue:phones];
+
+    else
+        FRESetObjectProperty(contact, (const uint8_t *) "phones", NULL, NULL);
+    
+    if (phones)
+        CFRelease(phones);
     
     // address
     
-    [self setContactMultiObjectProperty:contact forProperty:(const uint8_t *) "address" withValue:ABRecordCopyValue(person, kABPersonAddressProperty)];
+    ABMultiValueRef address = ABRecordCopyValue(person, kABPersonAddressProperty);
+    
+    CFIndex addressCount = ABMultiValueGetCount(address);
+    
+    if (addressCount > 0)
+        [self setContactMultiObjectProperty:contact forProperty:(const uint8_t *) "address" withValue:address];
+    else
+        FRESetObjectProperty(contact, (const uint8_t *) "address", NULL, NULL);
+    
+    if (address)
+        CFRelease(address);
     
     // profiles
     
-    [self setContactMultiObjectProperty:contact forProperty:(const uint8_t *) "profiles" withValue:ABRecordCopyValue(person, kABPersonSocialProfileProperty)];
+    ABMultiValueRef profiles = ABRecordCopyValue(person, kABPersonSocialProfileProperty);
+    
+    CFIndex profileCount = ABMultiValueGetCount(profiles);
+    
+    if (profileCount > 0)
+        [self setContactMultiObjectProperty:contact forProperty:(const uint8_t *) "profiles" withValue:profiles];
+    else
+        FRESetObjectProperty(contact, (const uint8_t *) "profiles", NULL, NULL);
+    
+    if (profiles)
+        CFRelease(profiles);
     
     // thumbnail
     
     if (ABPersonHasImageData(person))
     {
-        [self setContactBitmapDataProperty:contact forProperty:(const uint8_t *) "thumbnail" withValue:ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail)];
+        [self setContactBitmapDataProperty:contact forProperty:(const uint8_t *) "thumbnail" withValue:CFBridgingRelease(ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail))];
     }
     else
     {
@@ -128,13 +169,13 @@
 }
 
 
-+(void) setContactStringProperty:(FREObject) contact forProperty:(const uint8_t*) propertyName withValue:(CFStringRef) value
++(void) setContactStringProperty:(FREObject) contact forProperty:(const uint8_t*) propertyName withValue:(NSString*) value
 {
     if (value)
     {
         FREObject propertyValue;
         
-        [FRETypeConversion convertNSStringToFREString:CFBridgingRelease(value) asString:&propertyValue];
+        [Contacts_FRETypeConversion Contacts_convertNSStringToFREString:value asString:&propertyValue];
         
         FRESetObjectProperty(contact, propertyName, propertyValue, NULL);
     }
@@ -144,13 +185,13 @@
     }    
 }
 
-+(void) setContactDateProperty:(FREObject) contact forProperty:(const uint8_t*) propertyName withValue:(CFDateRef) value
++(void) setContactDateProperty:(FREObject) contact forProperty:(const uint8_t*) propertyName withValue:(NSDate*) value
 {
     if (value)
     {
         FREObject propertyValue;
         
-        [FRETypeConversion convertNSDateToFREDate:CFBridgingRelease(value) asDate:&propertyValue];
+        [Contacts_FRETypeConversion Contacts_convertNSDateToFREDate:value asDate:&propertyValue];
         
         FRESetObjectProperty(contact, propertyName, propertyValue, NULL);
     }
@@ -183,7 +224,7 @@
             {
                 FREObject itemLabel;
                 
-                [FRETypeConversion convertNSStringToFREString:CFBridgingRelease(propertyLabel) asString:&itemLabel];
+                [Contacts_FRETypeConversion Contacts_convertNSStringToFREString:CFBridgingRelease(propertyLabel) asString:&itemLabel];
                 
                 FRESetObjectProperty(item, (const uint8_t*) "label", itemLabel, NULL);
             }
@@ -192,15 +233,13 @@
             {
                 FREObject itemValue;
                 
-                [FRETypeConversion convertNSStringToFREString:CFBridgingRelease(propertyValue) asString:&itemValue];
+                [Contacts_FRETypeConversion Contacts_convertNSStringToFREString:CFBridgingRelease(propertyValue) asString:&itemValue];
                 
                 FRESetObjectProperty(item, (const uint8_t*) "value", itemValue, NULL);
             }
             
             FRESetArrayElementAt(array, i, item);
         }
-        
-        CFRelease(valueToInsert);
         
         FRESetObjectProperty(contact, propertyName, array, NULL);
     }
@@ -236,8 +275,6 @@
             CFRelease(dictionary);
         }
         
-        CFRelease(valueToInsert);
-        
         FRESetObjectProperty(contact, propertyName, array, NULL);
     }
     else
@@ -256,18 +293,18 @@ void dictionaryApplier(const void *key, const void *value, void *context)
     
     FREObject itemValue;
     
-    [FRETypeConversion convertNSStringToFREString:(__bridge NSString *)(value) asString:&itemValue];
+    [Contacts_FRETypeConversion Contacts_convertNSStringToFREString:(__bridge NSString *)(value) asString:&itemValue];
     
     FRESetObjectProperty(item, (const uint8_t*) itemKeyInUTF8, itemValue, NULL);
 }
 
-+(void) setContactBitmapDataProperty:(FREObject) contact forProperty:(const uint8_t*) propertyName withValue:(CFDataRef) valueToInsert
++(void) setContactBitmapDataProperty:(FREObject) contact forProperty:(const uint8_t*) propertyName withValue:(NSData*) valueToInsert
 {
     if (valueToInsert)
     {
         // drawing UIImage to BitmapData http://tyleregeto.com/article/drawing-ios-uiviews-to-as3-bitmapdata-via-air
         
-        UIImage* image = [UIImage imageWithData:CFBridgingRelease(valueToInsert)];
+        UIImage* image = [UIImage imageWithData:valueToInsert];
         
         // Now we'll pull the raw pixels values out of the image data
         

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Max Rozdobudko. All rights reserved.
 //
 
-#import "FRETypeConversion.h"
+#import "Contacts_FRETypeConversion.h"
 
 #import "AddressBookProviderUpdateRoutines.h"
 
@@ -311,7 +311,7 @@
     {
         NSDate* date;
         
-        [FRETypeConversion convertFREDateToNSDate:value asDate:date];
+        [Contacts_FRETypeConversion Contacts_convertFREDateToNSDate:value asDate:&date];
         
         return (__bridge CFDateRef) date;
     }
@@ -343,13 +343,13 @@
 
             NSString* label;
             
-            [FRETypeConversion convertFREStringToNSString:itemLabel asString:&label];
+            [Contacts_FRETypeConversion Contacts_convertFREStringToNSString:itemLabel asString:&label];
             
             FREObject itemValue;
             FREGetObjectProperty(item, (const uint8_t*) "value", &itemValue, NULL);
             
             NSString* value;
-            [FRETypeConversion convertFREStringToNSString:itemValue asString:&value];
+            [Contacts_FRETypeConversion Contacts_convertFREStringToNSString:itemValue asString:&value];
 
             NSLog(@"label:%@", label);
             NSLog(@"value:%@", value);

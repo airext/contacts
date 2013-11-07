@@ -104,7 +104,7 @@
     {
         ABRecordRef person = CFArrayGetValueAtIndex(people, i);
         
-        NSDictionary* contact = [AddressBookProviderJSONRetriever createContact:person withDateFormatter:formatter];
+        NSDictionary* contact = [AddressBookProviderJSONRetriever createContactFromPerson:person withDateFormatter:formatter];
         
         [result addObject:contact];
     }

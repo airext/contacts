@@ -168,7 +168,7 @@ public class Contacts extends EventDispatcher
                 {
                     try
                     {
-                        response.result(pickIsModifiedResult(callId));
+                        response.result(event.info.data);
                     }
                     catch (error:Error)
                     {
@@ -312,25 +312,6 @@ public class Contacts extends EventDispatcher
         {
             addEventListener(ResponseEvent.RESPONSE, handler);
         }
-    }
-
-    //-------------------------------------
-    //  Methods: Asynchronous Result
-    //-------------------------------------
-
-    contacts function pickIsModifiedResult(callId:uint):Boolean
-    {
-        return context.call("pickIsModifiedResult", callId) as Boolean;
-    }
-
-    contacts function pickGetContactsResult(callId:uint):Object
-    {
-        return context.call("pickGetContactsResult", callId);
-    }
-
-    contacts function pickGetContactCountResult(callId:uint):int
-    {
-        return context.call("pickGetContactCountResult", callId) as int;
     }
 
     //--------------------------------------------------------------------------

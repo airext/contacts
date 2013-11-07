@@ -7,7 +7,7 @@
         import com.github.rozd.ane.Contacts;
         import com.github.rozd.ane.core.Response;
         import com.github.rozd.ane.core.contacts;
-        import com.github.rozd.ane.data.Range;
+        import com.github.rozd.ane.data.Page;
 
         import mx.events.FlexEvent;
 
@@ -31,7 +31,7 @@
         {
             var t:Number = getTimer();
 
-            var result:Array = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(10, 2));
+            var result:Array = Contacts.getInstance().getContacts(new Page(10, 2));
 
             trace("elapsed:", getTimer() - t);
 
@@ -54,15 +54,15 @@
         private function isModifiedAsync_clickHandler(event:MouseEvent):void
         {
             Contacts.getInstance().isModifiedAsync(new Date(2012),
-                                                   new Response(
-                                                           function (data:Object):void
-                                                           {
-                                                               trace(data);
-                                                           },
-                                                           function (info:Object):void
-                                                           {
-                                                               trace(info)
-                                                           })
+                new Response(
+                    function (data:Object):void
+                    {
+                        trace(data);
+                    },
+                    function (info:Object):void
+                    {
+                        trace(info)
+                    })
             );
         }
 
@@ -70,13 +70,13 @@
         {
             var t:Number = getTimer();
 
-            Contacts.getInstance().getContactsAsync(new com.github.rozd.ane.data.Range(0, 1000), null,
-                                                    new Response(
-                                                            function (data:Object):void
-                                                            {
-                                                                trace("elapsed:", getTimer() - t);
+            Contacts.getInstance().getContactsAsync(new Page(0, 1000), null,
+        new Response(
+                function (data:Object):void
+                {
+                    trace("elapsed:", getTimer() - t);
 
-                                                                contacts = data as Array;
+                    contacts = data as Array;
 
 //                                                                for each (var contact:Object in contacts)
 //                                                                {
@@ -96,13 +96,13 @@
 //                                                                    trace("decoding thumbnail:", getTimer() - t);
 //                                                                }
 
-                                                                trace(contacts[0].hasImage, contacts[0].thumbnail);
-                                                                bmd = contacts[0].thumbnail;
-                                                            },
-                                                            function (info:Object):void
-                                                            {
-                                                                trace(info)
-                                                            })
+                    trace(contacts[0].hasImage, contacts[0].thumbnail);
+                    bmd = contacts[0].thumbnail;
+                },
+                function (info:Object):void
+                {
+                    trace(info)
+                })
             );
 
         }
@@ -122,31 +122,16 @@
         private function getContactCountAsync_clickHandler(event:MouseEvent):void
         {
             Contacts.getInstance().getContactCountAsync(
-                    new Response(
-                            function (data:Object):void
-                            {
-                                trace(data);
-                            },
-                            function (info:Object):void
-                            {
-                                trace(info)
-                            })
+                new Response(
+                    function (data:Object):void
+                    {
+                        trace(data);
+                    },
+                    function (info:Object):void
+                    {
+                        trace(info)
+                    })
             );
-        }
-
-        private function pickIsModifiedResult_clickHandler(event:MouseEvent):void
-        {
-            trace(Contacts.getInstance().pickIsModifiedResult(0));
-        }
-
-        private function pickGetContactsResult_clickHandler(event:MouseEvent):void
-        {
-            trace(Contacts.getInstance().pickGetContactsResult(0));
-        }
-
-        private function pickContactCountResult_clickHandler(event:MouseEvent):void
-        {
-            trace(Contacts.getInstance().pickGetContactCountResult(0));
         }
 
         private function creationCompleteHandler(event:FlexEvent):void
@@ -249,9 +234,9 @@
         private function test_clickHandler(event:MouseEvent):void
         {
             if (range == null)
-                range = new com.github.rozd.ane.data.Range(0, 100);
+                range = new Page(0, 100);
             else
-                range = new com.github.rozd.ane.data.Range(range.offset + 100, 100);
+                range = new Page(range.offset + 100, 100);
 
             var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
 
@@ -275,7 +260,7 @@
                         {
                             var result:Array;
 
-                            result = Contacts.getInstance().getContacts(new com.github.rozd.ane.data.Range(i, size));
+                            result = Contacts.getInstance().getContacts(new Page(i, size));
 
                             contacts = contacts.concat(result);
 
@@ -326,7 +311,7 @@
         }
         private var getContactsAsyncQueue:Queue2;
 
-        private var range:Range;
+        private var range:Page;
 
         ]]>
     </fx:Script>
@@ -348,12 +333,9 @@
     <s:Button label="getContactCount" click="getContactCount_clickHandler(event)" />
 
     <s:Button label="isModifiedAsync" click="isModifiedAsync_clickHandler(event)" />
-    <s:Button label="pickIsModifiedResult" click="pickIsModifiedResult_clickHandler(event)" />
 
     <s:Button label="getContactsAsync" click="getContactsAsync_clickHandler(event)" />
-    <s:Button label="pickGetContactsResult" click="pickGetContactsResult_clickHandler(event)" />
 
     <s:Button label="getContactCountAsync" click="getContactCountAsync_clickHandler(event)" />
-    <s:Button label="pickContactCountResult" click="pickContactCountResult_clickHandler(event)" />
 
 </s:Application>

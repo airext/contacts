@@ -12,7 +12,7 @@
 
 @interface AddressBookProviderJSONRetriever : NSObject
 
-+(NSDictionary*) createContact:(ABRecordRef) person withDateFormatter:(NSDateFormatter*) dateFormatter;
++(NSDictionary*) createContactFromPerson:(ABRecordRef) person withDateFormatter:(NSDateFormatter*) dateFormatter;
 
 +(NSData*) getContactThumbnail:(ABRecordRef) person;
 

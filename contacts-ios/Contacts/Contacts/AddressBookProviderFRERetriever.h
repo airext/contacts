@@ -14,7 +14,7 @@
 
 #import "FlashRuntimeExtensions.h"
 
-#import "FRETypeConversion.h"
+#import "Contacts_FRETypeConversion.h"
 
 @interface AddressBookProviderFRERetriever : NSObject
 

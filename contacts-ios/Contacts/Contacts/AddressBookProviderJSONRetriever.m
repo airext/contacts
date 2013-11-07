@@ -19,7 +19,7 @@
 
 #pragma mark Main tasks
 
-+(NSDictionary*) createContact:(ABRecordRef)person withDateFormatter:(NSDateFormatter*) dateFormatter
++(NSDictionary*) createContactFromPerson:(ABRecordRef)person withDateFormatter:(NSDateFormatter*) dateFormatter
 {
     NSMutableDictionary* contact = [NSMutableDictionary dictionaryWithCapacity:10];
     
@@ -104,15 +104,12 @@
     CFIndex emailCount = ABMultiValueGetCount(emails);
     
     if (emailCount > 0)
-    {
         [self setMultiStringValueProperty:contact withValue:emails inNumber:emailCount forKey:@"emails"];
-    }
     else
-    {
         [contact setValue:nil forKey:@"emails"];
-    }
     
-    CFRelease(emails);
+    if (emails)
+        CFRelease(emails);
     
     // phones
     
@@ -121,23 +118,40 @@
     CFIndex phoneCount = ABMultiValueGetCount(phones);
     
     if (phoneCount > 0)
-    {
         [self setMultiStringValueProperty:contact withValue:phones inNumber:phoneCount forKey:@"phones"];
-    }
     else
-    {
         [contact setValue:nil forKey:@"phones"];
-    }
     
-    CFRelease(phones);
+    if (phones)
+        CFRelease(phones);
     
     // address
     
-    [self setMultiDictionaryProperty:contact withValue:ABRecordCopyValue(person, kABPersonAddressProperty) forKey:@"address"];
+    ABMultiValueRef address = ABRecordCopyValue(person, kABPersonAddressProperty);
+    
+    CFIndex addressCount = ABMultiValueGetCount(address);
+    
+    if (addressCount > 0)
+        [self setMultiDictionaryProperty:contact withValue:address forKey:@"address"];
+    else
+        [contact setValue:nil forKey:@"address"];
+    
+    if (address)
+        CFRelease(address);
     
     // profiles
     
-    [self setMultiDictionaryProperty:contact withValue:ABRecordCopyValue(person, kABPersonSocialProfileProperty) forKey:@"profiles"];
+    ABMultiValueRef profiles = ABRecordCopyValue(person, kABPersonSocialProfileProperty);
+    
+    CFIndex profileCount = ABMultiValueGetCount(profiles);
+    
+    if (profileCount > 0)
+        [self setMultiDictionaryProperty:contact withValue:profiles forKey:@"profiles"];
+    else
+        [contact setValue:nil forKey:@"profiles"];
+    
+    if (profiles)
+        CFRelease(profiles);
     
     // hasImage
     
@@ -204,8 +218,6 @@
         }
         
         [contact setValue:array forKey:key];
-        
-        CFRelease(value);
     }
     else
     {
@@ -222,29 +234,27 @@ void setDictionaryProperty(const void *key, const void *value, void *context)
 
 +(void) setMultiStringValueProperty:(NSDictionary*) contact withValue:(ABMultiValueRef) value inNumber:(CFIndex) count forKey:(NSString*) key
 {
-        NSMutableArray* array = [NSMutableArray arrayWithCapacity:count];
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:count];
         
-        for (CFIndex i = 0; i < count; i++)
-        {
-            CFStringRef propertyLabel = ABMultiValueCopyLabelAtIndex(value, i);
-            CFStringRef propertyValue = ABMultiValueCopyValueAtIndex(value, i);
+    for (CFIndex i = 0; i < count; i++)
+    {
+        CFStringRef propertyLabel = ABMultiValueCopyLabelAtIndex(value, i);
+        CFStringRef propertyValue = ABMultiValueCopyValueAtIndex(value, i);
 
-            NSDictionary* item;
+        NSDictionary* item;
             
-            if (propertyLabel)
-            {
-                item = [NSDictionary dictionaryWithObject:CFBridgingRelease(propertyValue) forKey:CFBridgingRelease(propertyLabel)];
-            }
-            else
-            {
-                item = [NSDictionary dictionaryWithObject:CFBridgingRelease(propertyValue) forKey:@""];
-            }
-
-            [array insertObject:item atIndex:i];
+        if (propertyLabel)
+        {
+            item = [NSDictionary dictionaryWithObject:CFBridgingRelease(propertyValue) forKey:CFBridgingRelease(propertyLabel)];
         }
+        else
+        {
+            item = [NSDictionary dictionaryWithObject:CFBridgingRelease(propertyValue) forKey:@""];
+        }
+        [array insertObject:item atIndex:i];
+    }
         
-        [contact setValue:array forKey:key];
-
+    [contact setValue:array forKey:key];
 }
 
 +(void) setDateProperty:(NSDictionary*) contact withValue:(NSDate*) value forKey:(NSString*) key formattedWith:(NSDateFormatter*) formatter

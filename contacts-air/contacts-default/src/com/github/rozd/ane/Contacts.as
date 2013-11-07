@@ -131,30 +131,5 @@ public class Contacts extends EventDispatcher
     {
         trace("Contacts is not supported for " + Capabilities.os);
     }
-
-    //-------------------------------------
-    //  Methods: Asynchronous Result
-    //-------------------------------------
-
-    contacts function pickIsModifiedResult(callId:uint):Boolean
-    {
-        trace("Contacts is not supported for " + Capabilities.os);
-
-        return false;
-    }
-
-    contacts function pickGetContactsResult(callId:uint):Array
-    {
-        trace("Contacts is not supported for " + Capabilities.os);
-
-        return null;
-    }
-
-    contacts function pickGetContactCountResult(callId:uint):int
-    {
-        trace("Contacts is not supported for " + Capabilities.os);
-
-        return -1;
-    }
 }
 }

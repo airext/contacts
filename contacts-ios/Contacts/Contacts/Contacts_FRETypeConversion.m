@@ -10,11 +10,11 @@
 
 #import "FlashRuntimeExtensions.h"
 
-#import "FRETypeConversion.h"
+#import "Contacts_FRETypeConversion.h"
 
-@implementation FRETypeConversion
+@implementation Contacts_FRETypeConversion
 
-+(FREResult) convertFREStringToNSString:(FREObject) string asString:(NSString**) toString
++(FREResult) Contacts_convertFREStringToNSString:(FREObject) string asString:(NSString**) toString
 {
     FREResult result;
     
@@ -30,7 +30,7 @@
     return FRE_OK;
 }
 
-+(FREResult) convertNSStringToFREString:(NSString*) string asString:(FREObject*) toString
++(FREResult) Contacts_convertNSStringToFREString:(NSString*) string asString:(FREObject*) toString
 {
     if (string == nil) return FRE_INVALID_ARGUMENT;
     
@@ -41,7 +41,7 @@
     return FRENewObjectFromUTF8(length + 1, (const uint8_t*) utf8String, toString);
 }
 
-+(FREResult) convertFREDateToNSDate:(FREObject) date asDate:(NSDate*) toDate
++(FREResult) Contacts_convertFREDateToNSDate:(FREObject) date asDate:(NSDate**) toDate
 {
     FREResult result;
     
@@ -55,12 +55,12 @@
     
     interval = interval / 1000;
     
-    toDate = [NSDate dateWithTimeIntervalSince1970:interval];
+    *toDate = [NSDate dateWithTimeIntervalSince1970:interval];
     
     return result;
 }
 
-+(FREResult) convertNSDateToFREDate:(NSDate*) date asDate:(FREObject*) toDate
++(FREResult) Contacts_convertNSDateToFREDate:(NSDate*) date asDate:(FREObject*) toDate
 {
     NSTimeInterval timestamp = date.timeIntervalSince1970 * 1000;
     
@@ -77,7 +77,7 @@
     return FRE_OK;
 }
 
-+(FREResult) convertNSDataToFREBitmapData:(NSData*) data asBitmapData:(FREObject*) toData
++(FREResult) Contacts_convertNSDataToFREBitmapData:(NSData*) data asBitmapData:(FREObject*) toData
 {
     FREResult result;
     
@@ -177,6 +177,33 @@
     // free the the memory we allocated
     
     result = FREReleaseBitmapData(*toData);
+    
+    return result;
+}
+
++(FREResult) Contacts_convertFREObjectToNSRange:(FREObject) object asRange:(NSRange*) toRange;
+{
+    FREResult result;
+    
+    FREObject freOffset;
+    FREObject freLimit;
+    
+    result = FREGetArrayElementAt(object, 0, &freOffset);
+    if( result != FRE_OK ) return result;
+    
+    result = FREGetArrayElementAt(object, 1, &freLimit);
+    if( result != FRE_OK ) return result;
+    
+    uint32_t offset;
+    uint32_t limit;
+    
+    result = FREGetObjectAsUint32(freOffset, &offset);
+    if( result != FRE_OK ) return result;
+    
+    result = FREGetObjectAsUint32(freLimit, &limit);
+    if( result != FRE_OK ) return result;
+    
+    *toRange = NSMakeRange(offset, limit);
     
     return result;
 }
