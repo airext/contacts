@@ -19,28 +19,19 @@
 
 -(void) setAddressBook:(ABAddressBookRef) value;
 
-#pragma mark Methods
+#pragma mark Public API
 
 -(BOOL) isModified:(NSDate*) since;
 
-//
-//-(BOOL) getRecords;
-
 -(NSString*) getContactCountAsString;
-
--(NSString*) getContactsAsJSON:(NSRange) range withOptions:(NSDictionary*) options;
-
--(NSData*) getPersonThumbnail:(NSInteger) recordId;
-
-//-(BOOL) getGroups;
-//
-//-(BOOL) updateRecord;
 
 -(FREObject) getContactCountAsFRE;
 
+-(NSString*) getContactsAsJSON:(NSRange) range withOptions:(NSDictionary*) options;
+
 -(FREObject) getContactsAsFRE:(NSRange) range withOptions:(NSDictionary*) options;
 
-//
+-(NSData*) getPersonThumbnail:(NSInteger) recordId;
 
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options;
 

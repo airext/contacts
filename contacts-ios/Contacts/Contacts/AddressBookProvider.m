@@ -25,7 +25,7 @@
     _addressBook = value;
 }
 
-#pragma mark Main methods
+#pragma mark Public API
 
 -(BOOL) isModified:(NSDate *)since
 {
@@ -78,6 +78,8 @@
     return result;
 }
 
+#pragma mark Get Contacts
+
 -(NSString*) getContactsAsJSON:(NSRange)range withOptions:(NSDictionary *)options
 {
     uint64_t start;
@@ -90,13 +92,7 @@
     
     CFIndex total = ABAddressBookGetPersonCount(_addressBook);
     
-    if (range.location == NSNotFound)
-        range.location = 0;
-    
-    if (range.length == NSNotFound)
-        range.length = total - range.location;
-    else
-        range.length = MIN(range.length, total - range.location);
+    [self checkRangeBounds:range withMaxValue:total withMinValue:0];
     
     CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(_addressBook);
     
@@ -134,37 +130,6 @@
     return json;
 }
 
--(NSString*) getContactCountAsString
-{
-    NSNumber* result = [NSNumber numberWithLong:ABAddressBookGetPersonCount(_addressBook)];
-    
-    return [result stringValue];
-}
-
--(NSData*) getPersonThumbnail:(NSInteger) recordId
-{
-    ABRecordRef person = ABAddressBookGetPersonWithRecordID(_addressBook, (ABRecordID) recordId);
-    
-    return [AddressBookProviderJSONRetriever getContactThumbnail:person];
-}
-
--(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
-{
-    return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
-}
-
--(FREObject) getContactCountAsFRE
-{
-    FREObject result;
-    
-    int32_t count = (int32_t) ABAddressBookGetPersonCount(_addressBook);    
-    
-    NSLog(@"getContactCount:%i", count);
-    
-    FRENewObjectFromInt32(count, &result);
-    
-    return result;
-}
 
 -(FREObject) getContactsAsFRE:(NSRange)range withOptions:(NSDictionary *)options
 {
@@ -176,13 +141,7 @@
     
     CFIndex total = ABAddressBookGetPersonCount(_addressBook);
     
-    if (range.location == NSNotFound)
-        range.location = 0;
-    
-    if (range.length == NSNotFound)
-        range.length = total - range.location;
-    else
-        range.length = MIN(range.length, total - range.location);
+    [self checkRangeBounds:range withMaxValue:total withMinValue:0];
     
     FREObject contacts;
     FRENewObject((const uint8_t*) "Array", 0, NULL, &contacts, NULL);
@@ -216,6 +175,59 @@
     NSLog(@"Provider.getContacts: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return contacts;
+}
+
+#pragma mark Get Contact Count
+
+-(NSString*) getContactCountAsString
+{
+    NSNumber* result = [NSNumber numberWithLong:ABAddressBookGetPersonCount(_addressBook)];
+    
+    return [result stringValue];
+}
+
+-(FREObject) getContactCountAsFRE
+{
+    FREObject result;
+    
+    int32_t count = (int32_t) ABAddressBookGetPersonCount(_addressBook);
+    
+    NSLog(@"getContactCount:%i", count);
+    
+    FRENewObjectFromInt32(count, &result);
+    
+    return result;
+}
+
+#pragma mark Get Thumbnail
+
+-(NSData*) getPersonThumbnail:(NSInteger) recordId
+{
+    ABRecordRef person = ABAddressBookGetPersonWithRecordID(_addressBook, (ABRecordID) recordId);
+    
+    return [AddressBookProviderJSONRetriever getContactThumbnail:person];
+}
+
+#pragma mark Update Contact
+
+-(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
+{
+    return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
+}
+
+#pragma mark Utilities
+
+-(void) checkRangeBounds: (NSRange) range withMaxValue: (NSInteger) maxValue withMinValue:(NSInteger) minValue
+{
+    if (range.location == NSNotFound)
+        range.location = minValue;
+    else
+        range.location = MIN(range.location, maxValue);
+    
+    if (range.length == NSNotFound)
+        range.length = maxValue - range.location;
+    else
+        range.length = MIN(range.length, maxValue - range.location);
 }
 
 @end
