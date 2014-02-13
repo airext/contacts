@@ -5,7 +5,7 @@
  * Time: 7:53 PM
  * To change this template use File | Settings | File Templates.
  */
-package skein.async
+package com.github.rozd.ane.utils
 {
 import flash.debugger.enterDebugger;
 import flash.display.Sprite;

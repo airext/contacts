@@ -19,10 +19,6 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.utils.getTimer;
 
-import mx.charts.BubbleChart;
-
-import skein.async.Queue;
-
 import skein.async.Queue2;
 
 public class ContactsDebugFlash extends Sprite
@@ -32,7 +28,6 @@ public class ContactsDebugFlash extends Sprite
         super();
 
         mouseChildren = mouseEnabled = true;
-
 
         new PlainButton(this, "getContactsAsync", 0xFF0000, 0xFFFF00, {x: 100, y: 0, width : 200, height : 60},
             function clickHandler(event:MouseEvent):void
@@ -175,6 +170,16 @@ public class ContactsDebugFlash extends Sprite
             }
         );
 
+
+        new PlainButton(this, "Parse JSON", 0x234858, 0xF48E21, {x: 100, y: 300, width : 200, height : 60},
+            function(event:MouseEvent):void
+            {
+                var o:Object = JSON.parse('[{"a":[1, 2, 3], "b":{"b1":1, "b2":{"b21":11, "b22":22}}}]', reviver);
+
+                trace(o.a);
+            }
+        );
+
         addEventListener(Event.ADDED_TO_STAGE,
             function addedToStageHandler(event:Event):void
             {
@@ -187,7 +192,17 @@ public class ContactsDebugFlash extends Sprite
     private var getContactsAsyncQueue:Queue2;
 
     private var range:Page;
+
+    private static var reviver:Function  = function (k:*, v:*):*
+    {
+        var self:* = this;
+
+        trace(k, v);
+
+        return this[k];
+    }
 }
+
 }
 
 import flash.display.DisplayObjectContainer;

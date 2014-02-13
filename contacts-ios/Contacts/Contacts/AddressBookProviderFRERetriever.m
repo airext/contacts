@@ -33,7 +33,7 @@
     
     [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastName" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNameProperty))];
     
-    // middleName
+    // middleName TODO
     
     [self setContactStringProperty:contact forProperty:(const uint8_t *) "lastName" withValue:CFBridgingRelease(ABRecordCopyValue(person, kABPersonLastNameProperty))];
     

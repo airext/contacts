@@ -183,6 +183,8 @@ void ContactsContextFinalizer(FREContext ctx)
 
 void ContactsInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet)
 {
+    NSLog(@"ContactsInitializer");
+    
     *extDataToSet = NULL;
     
     *ctxInitializerToSet = &ContactsContextInitializer;
@@ -191,5 +193,5 @@ void ContactsInitializer(void** extDataToSet, FREContextInitializer* ctxInitiali
 
 void ContactsFinalizer(void* extData)
 {
-    
+    NSLog(@"ContactsFinalizer");
 }

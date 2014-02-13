@@ -92,7 +92,15 @@
     
     CFIndex total = ABAddressBookGetPersonCount(_addressBook);
     
-    [self checkRangeBounds:range withMaxValue:total withMinValue:0];
+    if (range.location == NSNotFound)
+        range.location = 0;
+    else
+        range.location = MIN(range.location, total);
+    
+    if (range.length == NSNotFound)
+        range.length = total - range.location;
+    else
+        range.length = MIN(range.length, total - range.location);
     
     CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(_addressBook);
     
@@ -141,7 +149,19 @@
     
     CFIndex total = ABAddressBookGetPersonCount(_addressBook);
     
-    [self checkRangeBounds:range withMaxValue:total withMinValue:0];
+    if (range.location == NSNotFound)
+        range.location = 0;
+    else
+        range.location = MIN(range.location, total);
+    
+    if (range.length == NSNotFound)
+        range.length = total - range.location;
+    else
+        range.length = MIN(range.length, total - range.location);
+
+    
+    NSLog(@"range.location: %i", range.location);
+    NSLog(@"range.length: %i", range.length);
     
     FREObject contacts;
     FRENewObject((const uint8_t*) "Array", 0, NULL, &contacts, NULL);
@@ -213,21 +233,6 @@
 -(BOOL) updateContactWithOptions:(FREObject) contact withOptions:(FREObject) options
 {
     return [AddressBookProviderUpdateRoutines updateContactWithOptions:contact withOptions:options];
-}
-
-#pragma mark Utilities
-
--(void) checkRangeBounds: (NSRange) range withMaxValue: (NSInteger) maxValue withMinValue:(NSInteger) minValue
-{
-    if (range.location == NSNotFound)
-        range.location = minValue;
-    else
-        range.location = MIN(range.location, maxValue);
-    
-    if (range.length == NSNotFound)
-        range.length = maxValue - range.location;
-    else
-        range.length = MIN(range.length, maxValue - range.location);
 }
 
 @end

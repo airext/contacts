@@ -20,7 +20,7 @@ import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
 
-import skein.async.Queue;
+import com.github.rozd.ane.utils.Queue;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
 
@@ -192,23 +192,23 @@ public class Contacts extends EventDispatcher
     {
         var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
 
-        var offset:uint = Math.max(0, rangeArray[0]);
+        var total:uint = getContactCount();
 
-        if (offset == uint.MAX_VALUE)
-            offset = getContactCount();
+        var offset:uint = rangeArray[0];
+        offset = Math.max(offset, 0);
+        offset = Math.min(offset, total);
 
-        var limit:uint = Math.max(0, rangeArray[1]);
-
-        if (limit == uint.MAX_VALUE)
-            limit = getContactCount();
+        var limit:uint = rangeArray[1];
+        limit = Math.max(limit, offset);
+        limit = Math.min(limit, total - offset);
 
         var contacts:Array = [];
 
         var functions:Array = [];
 
-        var total:uint = offset + limit;
+        trace(">>>", offset, limit);
 
-        for (var i:uint = offset; i < total; i += BUNCH_SIZE)
+        for (var i:uint = offset, n:int = offset + limit; i < n; i += BUNCH_SIZE)
         {
             var closure:Function = function(i:int):Function
             {
