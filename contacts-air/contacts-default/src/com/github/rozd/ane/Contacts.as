@@ -7,15 +7,11 @@
  */
 package com.github.rozd.ane
 {
-import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
-import com.github.rozd.ane.events.ResponseEvent;
 
 import flash.display.BitmapData;
-
 import flash.events.EventDispatcher;
-import flash.events.StatusEvent;
 import flash.system.Capabilities;
 
 [Event(name="error", type="flash.events.ErrorEvent")]
@@ -117,17 +113,17 @@ public class Contacts extends EventDispatcher
     //  Methods: Asynchronous
     //-------------------------------------
 
-    public function isModifiedAsync(since:Date, response:Response=null):void
+    public function isModifiedAsync(since:Date, callback:Function):void
     {
         trace("Contacts is not supported for " + Capabilities.os);
     }
 
-    public function getContactsAsync(range:IRange, options:Object=null, response:Response=null):void
+    public function getContactsAsync(range:IRange, options:Object, callback:Function):void
     {
         trace("Contacts is not supported for " + Capabilities.os);
     }
 
-    public function getContactCountAsync(response:Response=null):void
+    public function getContactCountAsync(callback:Function):void
     {
         trace("Contacts is not supported for " + Capabilities.os);
     }

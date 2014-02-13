@@ -7,7 +7,6 @@
  */
 package com.github.rozd.ane
 {
-import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.core.contacts;
 import com.github.rozd.ane.data.IRange;
 import com.github.rozd.ane.data.Page;
@@ -154,7 +153,7 @@ public class Contacts extends EventDispatcher
     //  Methods: Asynchronous
     //-------------------------------------
 
-    public function isModifiedAsync(since:Date, response:Response=null):void
+    public function isModifiedAsync(since:Date, callback:Function):void
     {
         var callId:uint = context.call("isModifiedAsync", since.time) as uint;
 
@@ -168,27 +167,25 @@ public class Contacts extends EventDispatcher
                 {
                     try
                     {
-                        response.result(event.info.data);
+                        callback(event.info.data);
                     }
                     catch (error:Error)
                     {
-                        response.error(error);
+                        callback(error);
                     }
                 }
                 else
                 {
-                    response.error(new Error(event.info.detail));
+                    callback(new Error(event.info.detail));
                 }
             }
         }
 
-        if (response != null)
-        {
+        if (callback != null)
             addEventListener(ResponseEvent.RESPONSE, handler);
-        }
     }
 
-    public function getContactsAsync(range:IRange, options:Object=null, response:Response=null):void
+    public function getContactsAsync(range:IRange, options:Object, callback:Function):void
     {
         var rangeArray:Array = range ? range.toArray() : [0, uint.MAX_VALUE];
 
@@ -205,8 +202,6 @@ public class Contacts extends EventDispatcher
         var contacts:Array = [];
 
         var functions:Array = [];
-
-        trace(">>>", offset, limit);
 
         for (var i:uint = offset, n:int = offset + limit; i < n; i += BUNCH_SIZE)
         {
@@ -237,7 +232,7 @@ public class Contacts extends EventDispatcher
             queue.removeEventListener(ErrorEvent.ERROR, errorHandler);
             queue.removeEventListener(Event.COMPLETE, completeHandler);
 
-            response.error(event);
+            callback(new Error(event.errorID, event.text));
         }
 
         function completeHandler(event:Event):void
@@ -245,7 +240,7 @@ public class Contacts extends EventDispatcher
             queue.removeEventListener(ErrorEvent.ERROR, errorHandler);
             queue.removeEventListener(Event.COMPLETE, completeHandler);
 
-            response.result(contacts);
+            callback(contacts);
         }
 
         var queue:Queue = new Queue(functions);
@@ -280,7 +275,7 @@ public class Contacts extends EventDispatcher
         getContactsAsyncQueue.start();
     }
 
-    public function getContactCountAsync(response:Response=null):void
+    public function getContactCountAsync(callback:Function):void
     {
         var callId:uint = context.call("getContactCountAsync") as uint;
 
@@ -294,24 +289,22 @@ public class Contacts extends EventDispatcher
                 {
                     try
                     {
-                        response.result(event.info.data);
+                        callback(event.info.data);
                     }
                     catch (error:Error)
                     {
-                        response.error(error);
+                        callback(error);
                     }
                 }
                 else // event.info.status == "error"
                 {
-                    response.error(new Error(event.info.detail));
+                    callback(new Error(event.info.detail));
                 }
             }
         }
 
-        if (response != null)
-        {
+        if (callback != null)
             addEventListener(ResponseEvent.RESPONSE, handler);
-        }
     }
 
     //--------------------------------------------------------------------------
