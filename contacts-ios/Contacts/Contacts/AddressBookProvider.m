@@ -29,17 +29,17 @@
 
 -(BOOL) isModified:(NSDate *)since
 {
-    uint64_t start;
-    uint64_t end;
-    uint64_t elapsed;
-    
-    start = mach_absolute_time();
+//    uint64_t start;
+//    uint64_t end;
+//    uint64_t elapsed;
+//    
+//    start = mach_absolute_time();
     
     BOOL result = FALSE;
     
     CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(_addressBook);
     
-    NSLog(@"Since: %@", since);
+//    NSLog(@"Since: %@", since);
     
     CFIndex n = CFArrayGetCount(people);
     for (int i = 0; i < n; i++)
@@ -63,17 +63,17 @@
     
     CFRelease(people);
     
-    end = mach_absolute_time();
-    
-    elapsed = end - start;
-    
-    static mach_timebase_info_data_t info;
-    
-    mach_timebase_info(&info);
-    
-    uint64_t nanoseconds = elapsed * info.numer / info.denom;
-    
-    NSLog(@"isModified: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
+//    end = mach_absolute_time();
+//    
+//    elapsed = end - start;
+//    
+//    static mach_timebase_info_data_t info;
+//    
+//    mach_timebase_info(&info);
+//    
+//    uint64_t nanoseconds = elapsed * info.numer / info.denom;
+//    
+//    NSLog(@"isModified: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return result;
 }
@@ -82,11 +82,11 @@
 
 -(NSString*) getContactsAsJSON:(NSRange)range withOptions:(NSDictionary *)options
 {
-    uint64_t start;
-    uint64_t end;
-    uint64_t elapsed;
-    
-    start = mach_absolute_time();
+//    uint64_t start;
+//    uint64_t end;
+//    uint64_t elapsed;
+//    
+//    start = mach_absolute_time();
 
     NSMutableArray* result = [NSMutableArray array];
     
@@ -123,17 +123,17 @@
     
     NSString* json = [NSString stringWithUTF8String:[data bytes]];
     
-    end = mach_absolute_time();
-    
-    elapsed = end - start;
-    
-    static mach_timebase_info_data_t info;
-    
-    mach_timebase_info(&info);
-    
-    uint64_t nanoseconds = elapsed * info.numer / info.denom;
-    
-    NSLog(@"Provider.getContactsAsJSON: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
+//    end = mach_absolute_time();
+//    
+//    elapsed = end - start;
+//    
+//    static mach_timebase_info_data_t info;
+//    
+//    mach_timebase_info(&info);
+//    
+//    uint64_t nanoseconds = elapsed * info.numer / info.denom;
+//    
+//    NSLog(@"Provider.getContactsAsJSON: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return json;
 }
@@ -141,11 +141,11 @@
 
 -(FREObject) getContactsAsFRE:(NSRange)range withOptions:(NSDictionary *)options
 {
-    uint64_t start;
-    uint64_t end;
-    uint64_t elapsed;
-    
-    start = mach_absolute_time();
+//    uint64_t start;
+//    uint64_t end;
+//    uint64_t elapsed;
+//    
+//    start = mach_absolute_time();
     
     CFIndex total = ABAddressBookGetPersonCount(_addressBook);
     
@@ -160,8 +160,8 @@
         range.length = MIN(range.length, total - range.location);
 
     
-    NSLog(@"range.location: %i", range.location);
-    NSLog(@"range.length: %i", range.length);
+//    NSLog(@"range.location: %i", range.location);
+//    NSLog(@"range.length: %i", range.length);
     
     FREObject contacts;
     FRENewObject((const uint8_t*) "Array", 0, NULL, &contacts, NULL);
@@ -182,17 +182,17 @@
     
     CFRelease(people);
     
-    end = mach_absolute_time();
-    
-    elapsed = end - start;
-    
-    static mach_timebase_info_data_t info;
-    
-    mach_timebase_info(&info);
-    
-    uint64_t nanoseconds = elapsed * info.numer / info.denom;
-    
-    NSLog(@"Provider.getContacts: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
+//    end = mach_absolute_time();
+//    
+//    elapsed = end - start;
+//    
+//    static mach_timebase_info_data_t info;
+//    
+//    mach_timebase_info(&info);
+//    
+//    uint64_t nanoseconds = elapsed * info.numer / info.denom;
+//    
+//    NSLog(@"Provider.getContacts: before %llu, after %llu, time elapsed was: %llu", start, end, nanoseconds);
     
     return contacts;
 }
@@ -212,7 +212,7 @@
     
     int32_t count = (int32_t) ABAddressBookGetPersonCount(_addressBook);
     
-    NSLog(@"getContactCount:%i", count);
+//    NSLog(@"getContactCount:%i", count);
     
     FRENewObjectFromInt32(count, &result);
     

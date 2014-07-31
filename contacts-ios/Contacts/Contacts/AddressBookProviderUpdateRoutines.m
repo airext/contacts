@@ -26,25 +26,25 @@
             
             CFStringRef firstName = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "firstName"];
             
-            if (firstName != NULL)
+            if (firstName)
             {
                 ABRecordSetValue(person, kABPersonFirstNameProperty, firstName, NULL);
                 
                 CFRelease(firstName);
             }
-            NSLog(@"firstName is %@", firstName);
+//            NSLog(@"firstName is %@", firstName);
             
             // lastName
             
             CFStringRef lastName = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "lastName"];
             
-            if (lastName != NULL)
+            if (lastName)
             {
                 ABRecordSetValue(person, kABPersonLastNameProperty, lastName, NULL);
                 
                 CFRelease(lastName);
             }
-            NSLog(@"lastName is %@", lastName);
+//            NSLog(@"lastName is %@", lastName);
             
             // middleName
             
@@ -56,114 +56,114 @@
                 
                 CFRelease(middleName);
             }
-            NSLog(@"middleName is %@", middleName);
+//            NSLog(@"middleName is %@", middleName);
             
             // prefixProperty
             
             CFStringRef prefixProperty = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "prefixProperty"];
             
-            if (prefixProperty != NULL)
+            if (prefixProperty)
             {
                 ABRecordSetValue(person, kABPersonPrefixProperty, prefixProperty, NULL);
                 
                 CFRelease(prefixProperty);                
             }
             
-            NSLog(@"prefixProperty is %@", prefixProperty);
+//            NSLog(@"prefixProperty is %@", prefixProperty);
             
             // suffixProperty
             
             CFStringRef suffixProperty = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "suffixProperty"];
             
-            if (suffixProperty != NULL)
+            if (suffixProperty)
             {
                 ABRecordSetValue(person, kABPersonSuffixProperty, suffixProperty, NULL);
                 
                 CFRelease(suffixProperty);
             }
-            NSLog(@"suffixProperty is %@", suffixProperty);
+//            NSLog(@"suffixProperty is %@", suffixProperty);
             
             // nickname
             
             CFStringRef nickname = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "nickname"];
             
-            if (nickname != NULL)
+            if (nickname)
             {
                 ABRecordSetValue(person, kABPersonNicknameProperty, nickname, NULL);
                 
                 CFRelease(nickname);
             }
-            NSLog(@"nickname is %@", nickname);
+//            NSLog(@"nickname is %@", nickname);
             
             // firstNamePhonetic
             
             CFStringRef firstNamePhonetic = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "firstNamePhonetic"];
             
-            if (firstNamePhonetic != NULL)
+            if (firstNamePhonetic)
             {
                 ABRecordSetValue(person, kABPersonFirstNamePhoneticProperty, firstNamePhonetic, NULL);
             
                 CFRelease(firstNamePhonetic);
             }
-            NSLog(@"firstNamePhonetic is %@", firstNamePhonetic);
+//            NSLog(@"firstNamePhonetic is %@", firstNamePhonetic);
             
             // lastNamePhonetic
             
             CFStringRef lastNamePhonetic = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "lastNamePhonetic"];
             
-            if (lastNamePhonetic != NULL)
+            if (lastNamePhonetic)
             {
                 ABRecordSetValue(person, kABPersonLastNamePhoneticProperty, lastNamePhonetic, NULL);
                 
                 CFRelease(lastNamePhonetic);
             }
-            NSLog(@"lastNamePhonetic is %@", lastNamePhonetic);
+//            NSLog(@"lastNamePhonetic is %@", lastNamePhonetic);
             
             // middleNamePhonetic
             
             CFStringRef middleNamePhonetic = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "middleNamePhonetic"];
             
-            if (middleNamePhonetic != NULL)
+            if (middleNamePhonetic)
             {
                 ABRecordSetValue(person, kABPersonMiddleNamePhoneticProperty, middleNamePhonetic, NULL);
                 
                 CFRelease(middleNamePhonetic);
             }
-            NSLog(@"middleNamePhonetic is %@", middleNamePhonetic);
+//            NSLog(@"middleNamePhonetic is %@", middleNamePhonetic);
             
             // organization
             
             CFStringRef organization = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "organization"];
             
-            if (organization != NULL)
+            if (organization)
             {
                 ABRecordSetValue(person, kABPersonOrganizationProperty, organization, NULL);
                 
                 CFRelease(organization);
             }
-            NSLog(@"organization is %@", organization);
+//            NSLog(@"organization is %@", organization);
             
             // jobTitle
             
             CFStringRef jobTitle = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "jobTitle"];
             
-            if (jobTitle != NULL)
+            if (jobTitle)
             {
                 ABRecordSetValue(person, kABPersonJobTitleProperty, jobTitle, NULL);
                 
                 CFRelease(jobTitle);
             }
-            NSLog(@"jobTitle is %@", jobTitle);
+//            NSLog(@"jobTitle is %@", jobTitle);
             
             // department
             
             CFStringRef department = [self copyContactStringProperty:contact fromProperty:(const uint8_t*) "department"];
             
-            if (department != NULL)
+            if (department)
             {
                 ABRecordSetValue(person, kABPersonDepartmentProperty, department, NULL);
                 
-                NSLog(@"department is %@", department);
+//                NSLog(@"department is %@", department);
                 CFRelease(department);
             }
             
@@ -175,7 +175,7 @@
             {
                 ABRecordSetValue(person, kABPersonNoteProperty, note, NULL);
                 
-                NSLog(@"note is %@", note);
+//                NSLog(@"note is %@", note);
                 CFRelease(note);
             }
             
@@ -187,7 +187,7 @@
             {
                 ABRecordSetValue(person, kABPersonEmailProperty, emails, NULL);
                 
-                NSLog(@"emails is %@", emails);
+//                NSLog(@"emails is %@", emails);
                 CFRelease(emails);
             }
             
@@ -199,8 +199,20 @@
             {
                 ABRecordSetValue(person, kABPersonPhoneProperty, phones, NULL);
                 
-                NSLog(@"phones is %@", phones);
+//                NSLog(@"phones is %@", phones);
                 CFRelease(phones);
+            }
+            
+            // related
+            
+            ABMultiValueRef related = [self copyContactMultiStringProperty:contact fromProperty:(const uint8_t *) "related"];
+            
+            if (related != NULL)
+            {
+                ABRecordSetValue(person, kABPersonRelatedNamesProperty, related, NULL);
+                
+//                NSLog(@"related is %@", related);
+                CFRelease(related);
             }
             
 //            // birthday
@@ -229,7 +241,7 @@
             {
                 ABRecordSetValue(person, kABPersonSocialProfileProperty, profiles, NULL);
                 
-                NSLog(@"profiles is %@", profiles);
+//                NSLog(@"profiles is %@", profiles);
                 CFRelease(profiles);
             }
             
@@ -250,7 +262,7 @@
             {
                 ABRecordSetValue(person, kABPersonAddressProperty, address, NULL);
                 
-                NSLog(@"address is %@", address);
+//                NSLog(@"address is %@", address);
                 CFRelease(address);
             }
             
@@ -271,43 +283,50 @@
 {
     FREObject value = NULL;
     
-    FREGetObjectProperty(contact, (const uint8_t*) "recordId", &value, NULL);
+    FREResult result = FREGetObjectProperty(contact, (const uint8_t*) "recordId", &value, NULL);
     
-    int32_t result;
+    if (result == FRE_OK)
+    {
+        int32_t id;
+        
+        result = FREGetObjectAsInt32(value, &id);
+        
+        if (result == FRE_OK)
+            return id;
+    }
     
-    FREGetObjectAsInt32(value, &result);
-    
-    return result;
+    return -1;
 }
 
 +(CFStringRef) copyContactStringProperty:(FREObject) contact fromProperty:(const uint8_t*) propertyName
 {
     FREObject value = NULL;
     
-    FREGetObjectProperty(contact, propertyName, &value, NULL);
+    FREResult result = FREGetObjectProperty(contact, propertyName, &value, NULL);
     
-    if (value)
+    if (value && result == FRE_OK)
     {
         uint32_t length;
         
         const uint8_t* buffer;
         
-        FREGetObjectAsUTF8(value, &length, &buffer);
+        result = FREGetObjectAsUTF8(value, &length, &buffer);
         
-        return CFStringCreateWithCString(NULL, (const char*) buffer, kCFStringEncodingUTF8);
+        if (buffer != NULL && result == FRE_OK)
+        {
+            return CFStringCreateWithCString(NULL, (const char*) buffer, kCFStringEncodingUTF8);
+        }
     }
-    else
-    {
-        return  NULL;
-    }
+    
+    return  NULL;
 }
 
 +(CFDateRef) getContactPropertyAsDate:(FREObject) contact fromProperty:(const uint8_t*) propertyName
 {
     FREObject value;
-    FREGetObjectProperty(contact, propertyName, &value, NULL);
+    FREResult result = FREGetObjectProperty(contact, propertyName, &value, NULL);
     
-    if (value)
+    if (value && result == FRE_OK)
     {
         NSDate* date;
         
@@ -315,20 +334,18 @@
         
         return (__bridge CFDateRef) date;
     }
-    else
-    {
-        return NULL;
-    }
+    
+    return NULL;
 }
 
 +(ABMultiValueRef) copyContactMultiStringProperty:(FREObject) contact fromProperty:(const uint8_t*) propertyName
 {
     FREObject array = NULL;
-    FREGetObjectProperty(contact, propertyName, &array, NULL);
+    FREResult result = FREGetObjectProperty(contact, propertyName, &array, NULL);
     
-    if (array)
+    if (array && result == FRE_OK)
     {
-        ABMultiValueRef result = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        ABMultiValueRef dictionary = ABMultiValueCreateMutable(kABMultiStringPropertyType);
         
         uint32_t n;
         FREGetArrayLength(array, &n);
@@ -336,28 +353,37 @@
         for (uint32_t i = 0; i < n; i++)
         {
             FREObject item;
-            FREGetArrayElementAt(array, i, &item);
+            result = FREGetArrayElementAt(array, i, &item);
+            
+            if (result != FRE_OK)
+                continue;
             
             FREObject itemLabel;
-            FREGetObjectProperty(item, (const uint8_t*) "label", &itemLabel, NULL);
+            result = FREGetObjectProperty(item, (const uint8_t*) "label", &itemLabel, NULL);
+            
+            if (result != FRE_OK)
+                continue;
 
             NSString* label;
             
             [Contacts_FRETypeConversion Contacts_convertFREStringToNSString:itemLabel asString:&label];
             
             FREObject itemValue;
-            FREGetObjectProperty(item, (const uint8_t*) "value", &itemValue, NULL);
+            result = FREGetObjectProperty(item, (const uint8_t*) "value", &itemValue, NULL);
+            
+            if (result != FRE_OK)
+                continue;
             
             NSString* value;
             [Contacts_FRETypeConversion Contacts_convertFREStringToNSString:itemValue asString:&value];
 
-            NSLog(@"label:%@", label);
-            NSLog(@"value:%@", value);
+//            NSLog(@"label:%@", label);
+//            NSLog(@"value:%@", value);
 
-            ABMultiValueAddValueAndLabel(result, CFBridgingRetain(value), CFBridgingRetain(label), NULL);
+            ABMultiValueAddValueAndLabel(dictionary, CFBridgingRetain(value), CFBridgingRetain(label), NULL);
         }
         
-        return result;
+        return dictionary;
     }
     else
     {
@@ -368,19 +394,25 @@
 +(ABMultiValueRef) copyContactMultiDictionaryProperty:(FREObject) contact fromProperty:(const uint8_t*) propertyName withKeys:(NSArray*) dictionaryKeys
 {
     FREObject array = NULL;
-    FREGetObjectProperty(contact, propertyName, &array, NULL);
+    FREResult result = FREGetObjectProperty(contact, propertyName, &array, NULL);
     
-    if (array)
+    if (array && result == FRE_OK)
     {
-        ABMultiValueRef result = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
-        
         uint32_t n;
-        FREGetArrayLength(array, &n);
+        result = FREGetArrayLength(array, &n);
         
+        if (result != FRE_OK)
+            return NULL;
+     
+        ABMultiValueRef dictionary = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
+
         for (uint32_t i = 0; i < n; i++)
         {
             FREObject item;
-            FREGetArrayElementAt(array, i, &item);
+            result = FREGetArrayElementAt(array, i, &item);
+            
+            if (result != FRE_OK)
+                continue;
             
             NSUInteger dictionaryKeyCount = [dictionaryKeys count];
             
@@ -392,12 +424,21 @@
                 NSString* key = [dictionaryKeys objectAtIndex:j];
                 
                 FREObject valueObject;
-                FREGetObjectProperty(item, (const uint8_t *) [key UTF8String], &valueObject, nil);
+                result = FREGetObjectProperty(item, (const uint8_t *) [key UTF8String], &valueObject, nil);
+                
+                if (result != FRE_OK)
+                    continue;
+                
+                if (valueObject == NULL)
+                    continue;
                 
                 uint32_t length;
                 const uint8_t* valueInUTF8;
                 
-                FREGetObjectAsUTF8(valueObject, &length, &valueInUTF8);
+                result = FREGetObjectAsUTF8(valueObject, &length, &valueInUTF8);
+                
+                if (result != FRE_OK)
+                    continue;
                 
                 NSString* value = [NSString stringWithUTF8String:(const char *) valueInUTF8];
                 
@@ -413,17 +454,15 @@
             
             CFDictionaryRef dict = CFDictionaryCreate(kCFAllocatorDefault, (void*) keys, (void*)values, dictionaryKeyCount, NULL, NULL);
             
-            ABMultiValueAddValueAndLabel(result, dict, NULL, NULL);
+            ABMultiValueAddValueAndLabel(dictionary, dict, NULL, NULL);
             
             CFRelease(dict);
         }
         
-        return result;
+        return dictionary;
     }
-    else
-    {
-        return NULL;
-    }
+    
+    return NULL;
 }
 
 @end

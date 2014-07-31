@@ -8,7 +8,6 @@
 package
 {
 import com.github.rozd.ane.Contacts;
-import com.github.rozd.ane.core.Response;
 import com.github.rozd.ane.data.Page;
 
 import flash.display.Sprite;
@@ -41,17 +40,17 @@ public class ContactsDebugFlash extends Sprite
                 for (var i:int = 0; i < int(n / size); i+=size)
                 {
                     Contacts.getInstance().getContactsAsync(new Page(i, size), null,
-                        new Response(
-                            function(data:Object):void
+                        function(data:Object):void
+                        {
+                            if (data is Error)
+                            {
+                                trace("getContactsAsync:", data);
+                            }
+                            else
                             {
                                 trace("getContactsAsync: elapsed:", getTimer() - t);
-                            },
-                            function(info:Object):void
-                            {
-                                trace("getContactsAsync:", info);
                             }
-                        )
-                    );
+                        });
                 }
 
             }

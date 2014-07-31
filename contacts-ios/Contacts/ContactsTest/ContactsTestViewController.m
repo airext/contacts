@@ -73,7 +73,7 @@
 
 - (IBAction)pickGetContactsAction:(id)sender
 {
-    [[Contacts sharedInstance] pickGetContactsResult:0];
+//    [[Contacts sharedInstance] pickGetContactsResult:0];
 }
 
 - (IBAction)getContactCountAsyncAction:(id)sender

@@ -5,7 +5,6 @@
     <fx:Script>
         <![CDATA[
         import com.github.rozd.ane.Contacts;
-        import com.github.rozd.ane.core.Response;
         import com.github.rozd.ane.core.contacts;
         import com.github.rozd.ane.data.Page;
 
@@ -14,6 +13,8 @@
         import skein.async.Queue2;
 
         use namespace contacts;
+
+        private static const version:String = "1.0";
 
         [Bindable]
         private var bmd:BitmapData;
@@ -54,16 +55,10 @@
         private function isModifiedAsync_clickHandler(event:MouseEvent):void
         {
             Contacts.getInstance().isModifiedAsync(new Date(2012),
-                new Response(
-                    function (data:Object):void
-                    {
-                        trace(data);
-                    },
-                    function (info:Object):void
-                    {
-                        trace(info)
-                    })
-            );
+                function(result:Object):void
+                {
+                    trace(result);
+                });
         }
 
         private function getContactsAsync_clickHandler(event:MouseEvent):void
@@ -71,12 +66,17 @@
             var t:Number = getTimer();
 
             Contacts.getInstance().getContactsAsync(new Page(0, 1000), null,
-        new Response(
                 function (data:Object):void
                 {
-                    trace("elapsed:", getTimer() - t);
+                    if (data is Error)
+                    {
+                        trace(data);
+                    }
+                    else
+                    {
+                        trace("elapsed:", getTimer() - t);
 
-                    contacts = data as Array;
+                        contacts = data as Array;
 
 //                                                                for each (var contact:Object in contacts)
 //                                                                {
@@ -96,15 +96,23 @@
 //                                                                    trace("decoding thumbnail:", getTimer() - t);
 //                                                                }
 
-                    trace(contacts[0].hasImage, contacts[0].thumbnail);
-                    bmd = contacts[0].thumbnail;
-                },
-                function (info:Object):void
-                {
-                    trace(info)
-                })
-            );
+                        for each (var contact:Object in contacts)
+                        {
+                            trace("RELATED(s):", contact.related);
 
+                            if (contact.related)
+                            {
+                                for each (var related:Object in contact.related)
+                                {
+                                    trace("RELATED: ", related.label, ":", related.value);
+                                }
+                            }
+                        }
+
+                        trace(contacts[0].hasImage, contacts[0].thumbnail);
+                        bmd = contacts[0].thumbnail;
+                    }
+                });
         }
 
         private function traceContacts(contacts:Object):String
@@ -122,20 +130,16 @@
         private function getContactCountAsync_clickHandler(event:MouseEvent):void
         {
             Contacts.getInstance().getContactCountAsync(
-                new Response(
-                    function (data:Object):void
-                    {
-                        trace(data);
-                    },
-                    function (info:Object):void
-                    {
-                        trace(info)
-                    })
-            );
+                function (data:Object):void
+                {
+                    trace(data);
+                });
         }
 
         private function creationCompleteHandler(event:FlexEvent):void
         {
+            trace("Version:", version);
+
             Contacts.getInstance().addEventListener(StatusEvent.STATUS, statusHandler);
         }
 
@@ -227,6 +231,10 @@
             {
                 phone.value += "*";
             }
+
+            contact.related ||= [];
+
+            contact.related.push({label : "contactId", value : "WQEQEQWE-DSFS-SDFD-A324DSF"});
 
             Contacts.getInstance().updateContact(contact);
         }

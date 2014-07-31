@@ -146,6 +146,20 @@
     if (profiles)
         CFRelease(profiles);
     
+    // related
+    
+    ABMultiValueRef relatedNames = ABRecordCopyValue(person, kABPersonRelatedNamesProperty);
+    
+    CFIndex relatedNameCount = ABMultiValueGetCount(relatedNames);
+    
+    if (relatedNameCount > 0)
+        [self setContactMultiStringProperty:contact forProperty:(const uint8_t *) "related" withValue:relatedNames];
+    else
+        FRESetObjectProperty(contact, (const uint8_t *) "related", NULL, NULL);
+
+    if (relatedNames)
+        CFRelease(relatedNames);
+    
     // thumbnail
     
     if (ABPersonHasImageData(person))

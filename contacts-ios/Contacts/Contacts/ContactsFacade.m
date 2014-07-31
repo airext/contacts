@@ -24,14 +24,16 @@ FREObject Contacts_isModified(FREContext context, void* functionData, uint32_t a
 {
     FREObject result = NULL;
     
-    double time = 0;
+    double ms;
     
-    if (FREGetObjectAsDouble(argv[0], &time) == FRE_OK)
-    {
-        NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)time];
-        
-        FRENewObjectFromBool([[Contacts sharedInstance] isModified:since], &result);
-    }
+    if (FREGetObjectAsDouble(argv[0], &ms) != FRE_OK)
+        return result;
+    
+    double seconds = ms / 1000;
+    
+    NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)seconds];
+    
+    FRENewObjectFromBool([[Contacts sharedInstance] isModified:since], &result);
     
     return result;
 }
@@ -80,13 +82,15 @@ FREObject Contacts_getContactThumbnail(FREContext context, void* functionData, u
 
 FREObject Contacts_isModifiedAsync(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 {
-    FREObject result;
+    FREObject result = NULL;
     
-    double time = 0;
+    double ms;
+    if (FREGetObjectAsDouble(argv[0], &ms) != FRE_OK)
+        return result;
     
-    FREGetObjectAsDouble(argv[0], &time);
+    double seconds = ms / 1000;
     
-    NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)time];
+    NSDate* since = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)seconds];
     
     FRENewObjectFromUint32((uint32_t) [[Contacts sharedInstance] isModifiedAsync:since], &result);
     
