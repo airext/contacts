@@ -580,7 +580,7 @@
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "$(inherited)";
 			};
 			name = Debug;
 		};
@@ -599,7 +599,7 @@
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "$(inherited)";
 			};
 			name = Release;
 		};

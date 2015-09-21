@@ -10,6 +10,13 @@
         <finalizer>ContactsFinalizer</finalizer>
       </applicationDeployment>
     </platform>
+    <platform name="iPhone-x86">
+      <applicationDeployment>
+        <nativeLibrary>libContactsSimulator.a</nativeLibrary>
+        <initializer>ContactsInitializer</initializer>
+        <finalizer>ContactsFinalizer</finalizer>
+      </applicationDeployment>
+    </platform>
     <platform name="default">
       <applicationDeployment />
     </platform>
